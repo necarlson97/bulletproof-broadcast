@@ -11,8 +11,13 @@ var _neutral_x: float = 0.0
 
 
 func _ready() -> void:
-	texture = _TEXTURE_OPEN
 	_neutral_x = position.x
+	# Duplicates may reset script vars; texture copied from the original still shows dead state.
+	if _dead or texture == _TEXTURE_DEAD:
+		_dead = true
+		texture = _TEXTURE_DEAD
+		return
+	texture = _TEXTURE_OPEN
 	_blink_loop()
 	_look_loop()
 
@@ -34,7 +39,7 @@ func _blink_once() -> void:
 	if _dead:
 		return
 	texture = _TEXTURE_BLINK
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.2).timeout
 	if _dead:
 		return
 	texture = _TEXTURE_OPEN

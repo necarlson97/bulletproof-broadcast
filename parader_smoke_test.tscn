@@ -1,10 +1,16 @@
 [gd_scene format=3 uid="uid://hp6i4ukccpo6"]
 
 [ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://parader.tscn" id="1_parader"]
+[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://person.tscn" id="2_pxd34"]
 [ext_resource type="Script" uid="uid://bq5hc5cmhgsqd" path="res://parader_smoke_test.gd" id="2_smoke"]
+[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://ground.tscn" id="4_hb21g"]
+[ext_resource type="PackedScene" path="res://spectator.tscn" id="5_7kffl"]
 
 [node name="ParaderSmokeTest" type="Node3D" unique_id=25755095]
 script = ExtResource("2_smoke")
+
+[node name="Person" parent="." unique_id=1660657085 instance=ExtResource("2_pxd34")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.09275, 0, 0)
 
 [node name="Parader" parent="." unique_id=160539971 instance=ExtResource("1_parader")]
 
@@ -14,3 +20,21 @@ current = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=54558410]
 transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0.2, 0.6, 0.8)
+
+[node name="Ground" parent="." unique_id=231829925 instance=ExtResource("4_hb21g")]
+
+[node name="Spectator" parent="." unique_id=603966073 instance=ExtResource("5_7kffl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -107.76269, 0.05000305, 2.0261536)
+excitement = 0.5
+
+[node name="Spectator2" parent="." unique_id=249238436 instance=ExtResource("5_7kffl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -141.50449, -9.567902, 3.4515686)
+excitement = 0.5
+
+[node name="Spectator3" parent="." unique_id=298902378 instance=ExtResource("5_7kffl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -172.84958, 0.7370148, -4.3990784)
+excitement = 0.5
+
+[node name="Spectator4" parent="." unique_id=1277710578 instance=ExtResource("5_7kffl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -200.56435, -1.1024628, 7.42091)
+excitement = 0.5

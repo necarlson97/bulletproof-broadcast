@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4parade01scene"]
+
+[ext_resource type="Script" path="res://parade.gd" id="1_parade"]
+
+[node name="Parade" type="Node3D"]
+script = ExtResource("1_parade")

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dm4p3x2o5fgwo"
-path.s3tc="res://.godot/imported/glasses.png-cfb48705d6f600ffb43ab04a162a58db.s3tc.ctex"
+uid="uid://decbvkn3ovime"
+path.s3tc="res://.godot/imported/camera.png-817ece2b3822eb2be7786670b43f8a42.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/glasses.png"
-dest_files=["res://.godot/imported/glasses.png-cfb48705d6f600ffb43ab04a162a58db.s3tc.ctex"]
+source_file="res://assets/camera.png"
+dest_files=["res://.godot/imported/camera.png-817ece2b3822eb2be7786670b43f8a42.s3tc.ctex"]
 
 [params]
 

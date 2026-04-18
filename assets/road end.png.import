@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dm4p3x2o5fgwo"
-path.s3tc="res://.godot/imported/glasses.png-cfb48705d6f600ffb43ab04a162a58db.s3tc.ctex"
+uid="uid://skx6rx48up0k"
+path.s3tc="res://.godot/imported/road end.png-3ebef137668ee7a6c192da9f74a8e92e.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/glasses.png"
-dest_files=["res://.godot/imported/glasses.png-cfb48705d6f600ffb43ab04a162a58db.s3tc.ctex"]
+source_file="res://assets/road end.png"
+dest_files=["res://.godot/imported/road end.png-3ebef137668ee7a6c192da9f74a8e92e.s3tc.ctex"]
 
 [params]
 

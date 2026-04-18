@@ -1,11 +1,23 @@
 [gd_scene format=3 uid="uid://ciphyem15ww82"]
 
 [ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://person.tscn" id="1_whu07"]
-[ext_resource type="PackedScene" uid="uid://c7301corw4856" path="res://sign.tscn" id="2_u3c6x"]
+[ext_resource type="PackedScene" uid="uid://c5vhmcnqvrdx" path="res://sign_flippable.tscn" id="2_u3c6x"]
 [ext_resource type="Script" uid="uid://cxlrdfkuys6mw" path="res://parader.gd" id="3_parader"]
+[ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://sign_font.tres" id="4_74hdk"]
 
 [node name="Parader" unique_id=1731856409 instance=ExtResource("1_whu07")]
 script = ExtResource("3_parader")
 
 [node name="Sign" parent="." index="1" unique_id=2013640258 instance=ExtResource("2_u3c6x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 59.8, -5.354988)
+
+[node name="Body" parent="." index="3" unique_id=1678367108]
+modulate = Color(0.30588236, 0.34509805, 0.21176471, 1)
+
+[node name="Label3D" type="Label3D" parent="Body" index="0" unique_id=1425867495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.65851, 0.20695782)
+pixel_size = 0.1
+modulate = Color(0.662474, 0.725739, 0.4792577, 1)
+text = "1"
+font = ExtResource("4_74hdk")
+font_size = 300

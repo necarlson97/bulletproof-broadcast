@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cklqhp4v1uemv"]
+
+[ext_resource type="Texture2D" uid="uid://decbvkn3ovime" path="res://assets/camera.png" id="1_rwsx5"]
+[ext_resource type="Script" uid="uid://bewd0kwdi6wfn" path="res://film_camera.gd" id="1_yrjma"]
+[ext_resource type="Texture2D" uid="uid://dycxi6dq3mvyf" path="res://assets/camera wheel.png" id="2_yrjma"]
+
+[node name="FilmCamera" type="Node3D" unique_id=1813504656]
+script = ExtResource("1_yrjma")
+
+[node name="Cam" type="Sprite3D" parent="." unique_id=929189566]
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("1_rwsx5")
+
+[node name="Wheel" type="Sprite3D" parent="." unique_id=1689706409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.139607, 14.688669, -0.40904236)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("2_yrjma")

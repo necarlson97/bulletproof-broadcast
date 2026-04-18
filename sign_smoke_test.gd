@@ -11,7 +11,7 @@ func _ready() -> void:
 
 
 func _run() -> void:
-	_sign_flippable.set_contents("good text", "bad text")
+	_sign_flippable.set_contents("front text", "back text")
 	_flip_after_delay()
 	_grow_sign_text()
 

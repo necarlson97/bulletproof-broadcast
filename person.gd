@@ -6,3 +6,4 @@ extends Node3D
 
 func kill() -> void:
 	_eyes.kill()
+	Ragdoll.create_ragdoll(self)

@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://dt8vrn37yuj7c"]
 
-[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://parader.tscn" id="1_ig7tw"]
-[ext_resource type="Texture2D" uid="uid://byfpo10aee5w4" path="res://assets/road segment.png" id="2_0xm2m"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
-size = Vector3(10000, 0.1, 10000)
+[ext_resource type="PackedScene" uid="uid://dbc275amwc630" path="res://officer.tscn" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://ground.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://cklqhp4v1uemv" path="res://film_camera.tscn" id="3_h2yge"]
+[ext_resource type="Script" path="res://main.gd" id="4_main"]
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
 fog_enabled = true
@@ -15,29 +14,18 @@ fog_depth_curve = 5.2780275
 fog_depth_end = 1514.3
 
 [node name="Main" type="Node3D" unique_id=1948751274]
+script = ExtResource("4_main")
 
-[node name="Parader" parent="." unique_id=969364045 instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4928594, 0, -1.1320214)
+[node name="Officer" parent="." unique_id=1660657085 instance=ExtResource("1_1bvp3")]
+transform = Transform3D(0.8459607, 0, -0.5332455, 0.2795399, 0.85158056, 0.44347262, 0.4541015, -0.5242238, 0.7204037, 32.284714, 130.91628, 152.27606)
 
-[node name="Ground" type="Node3D" parent="." unique_id=1065721756]
-
-[node name="Sprite3D" type="Sprite3D" parent="Ground" unique_id=1708735894]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -270.17853)
-pixel_size = 0.8
-texture = ExtResource("2_0xm2m")
-
-[node name="Sprite3D2" type="Sprite3D" parent="Ground" unique_id=999132568]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -1055.4287)
-pixel_size = 0.8
-texture = ExtResource("2_0xm2m")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Ground" unique_id=1967114742]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D" unique_id=2145449738]
-shape = SubResource("BoxShape3D_0xm2m")
+[node name="Ground" parent="." unique_id=231829925 instance=ExtResource("2_0xm2m")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=187998376]
-transform = Transform3D(1, 0, 0, 0, 0.8843611, 0.46680343, 0, -0.46680343, 0.8843611, -18.712257, 164.9758, 178.72253)
+transform = Transform3D(1, 0, 0, 0, 0.71263856, 0.7015314, 0, -0.7015314, 0.71263856, -18.712257, 217.69283, 157.58344)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=176286629]
 environment = SubResource("Environment_0xm2m")
+
+[node name="FilmCamera" parent="." unique_id=1813504656 instance=ExtResource("3_h2yge")]
+transform = Transform3D(0.9921177, -0.11596368, -0.047486126, 0.12080933, 0.9857946, 0.11668051, 0.03328088, -0.12149755, 0.99203366, -221.7731, 48.697918, 70.53522)

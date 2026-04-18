@@ -5,32 +5,41 @@
 [ext_resource type="Texture2D" uid="uid://dyow8hnrq8x6o" path="res://assets/body.png" id="3_aoiax"]
 [ext_resource type="Script" uid="uid://cen8j7vsmpme5" path="res://eyes.gd" id="4_eyes"]
 [ext_resource type="Script" uid="uid://cn3l7ceje88vs" path="res://person.gd" id="5_person"]
+[ext_resource type="Script" path="res://person_color.gd" id="6_personcolor"]
 
 [node name="Person" type="Node3D" unique_id=1660657085]
 script = ExtResource("5_person")
 
+[node name="PersonColor" type="Node3D" parent="." unique_id=1700000001]
+script = ExtResource("6_personcolor")
+
 [node name="Face" type="Sprite3D" parent="." unique_id=92908819]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 42.8, 0)
 pixel_size = 0.1
+alpha_cut = 1
 texture = ExtResource("1_3qlke")
 
 [node name="Eyes" type="Sprite3D" parent="Face" unique_id=161895202]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.6, 0.5)
 pixel_size = 0.1
+alpha_cut = 1
 texture = ExtResource("2_g6f2d")
 script = ExtResource("4_eyes")
 
 [node name="Body" type="Sprite3D" parent="." unique_id=1678367108]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.2, 0)
 pixel_size = 0.1
+alpha_cut = 1
 texture = ExtResource("3_aoiax")
 
 [node name="HandL" type="Sprite3D" parent="." unique_id=1368089338]
-transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 36.2, 0)
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 36.2, 1.4910412)
 pixel_size = 0.1
+alpha_cut = 1
 texture = ExtResource("1_3qlke")
 
 [node name="HandR" type="Sprite3D" parent="." unique_id=1403083975]
-transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 36.2, 0)
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 36.2, 1.464036)
 pixel_size = 0.1
+alpha_cut = 1
 texture = ExtResource("1_3qlke")
