@@ -3,7 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://dbc275amwc630" path="res://officer.tscn" id="1_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://ground.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://cklqhp4v1uemv" path="res://film_camera.tscn" id="3_h2yge"]
-[ext_resource type="Script" path="res://main.gd" id="4_main"]
+[ext_resource type="Script" uid="uid://7y20j016r667" path="res://main.gd" id="4_main"]
+[ext_resource type="PackedScene" uid="uid://60nocx6sekte" path="res://audence_spawner.tscn" id="5_lquwl"]
+[ext_resource type="Texture2D" uid="uid://e6xl16m8fkf5" path="res://assets/fence.png" id="6_7mycd"]
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
 fog_enabled = true
@@ -13,19 +15,73 @@ fog_density = 1.0
 fog_depth_curve = 5.2780275
 fog_depth_end = 1514.3
 
+[sub_resource type="BoxMesh" id="BoxMesh_1bvp3"]
+size = Vector3(100, 100, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xx8d8"]
+size = Vector3(1000, 1, 1000)
+
 [node name="Main" type="Node3D" unique_id=1948751274]
 script = ExtResource("4_main")
-
-[node name="Officer" parent="." unique_id=1660657085 instance=ExtResource("1_1bvp3")]
-transform = Transform3D(0.8459607, 0, -0.5332455, 0.2795399, 0.85158056, 0.44347262, 0.4541015, -0.5242238, 0.7204037, 32.284714, 130.91628, 152.27606)
 
 [node name="Ground" parent="." unique_id=231829925 instance=ExtResource("2_0xm2m")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=187998376]
-transform = Transform3D(1, 0, 0, 0, 0.71263856, 0.7015314, 0, -0.7015314, 0.71263856, -18.712257, 217.69283, 157.58344)
+transform = Transform3D(1, 0, 0, 0, 0.6569543, 0.75393045, 0, -0.75393045, 0.6569543, -18.712257, 308.59814, 143.54326)
+
+[node name="Officer" parent="Camera3D" unique_id=1660657085 instance=ExtResource("1_1bvp3")]
+transform = Transform3D(0.8459607, 0, -0.5332455, -0.119355544, 0.9746286, -0.18935013, 0.51971626, 0.2238284, 0.82449746, 50.99697, -58.117035, -64.65869)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=176286629]
 environment = SubResource("Environment_0xm2m")
 
 [node name="FilmCamera" parent="." unique_id=1813504656 instance=ExtResource("3_h2yge")]
 transform = Transform3D(0.9921177, -0.11596368, -0.047486126, 0.12080933, 0.9857946, 0.11668051, 0.03328088, -0.12149755, 0.99203366, -221.7731, 48.697918, 70.53522)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=443208081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1344.8561, 49.253128, 0)
+mesh = SubResource("BoxMesh_1bvp3")
+
+[node name="Audence Spawner" parent="." unique_id=1965368172 instance=ExtResource("5_lquwl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -727.6715, 0.5, -442.82227)
+mesh = SubResource("BoxMesh_xx8d8")
+
+[node name="Audence Spawner2" parent="." unique_id=134344035 instance=ExtResource("5_lquwl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 729.48596, 0.5, -442.82227)
+mesh = SubResource("BoxMesh_xx8d8")
+
+[node name="Fence" type="Sprite3D" parent="." unique_id=1754172796]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -273.87482, 26.612144, -935.4808)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("6_7mycd")
+
+[node name="Fence2" type="Sprite3D" parent="." unique_id=1044400386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -352.23224, 26.612144, -935.4808)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("6_7mycd")
+
+[node name="Fence3" type="Sprite3D" parent="." unique_id=522032216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -433.2698, 26.612144, -935.4808)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("6_7mycd")
+
+[node name="Fence4" type="Sprite3D" parent="." unique_id=494961176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -511.23886, 26.612144, -935.4808)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("6_7mycd")
+
+[node name="Fence5" type="Sprite3D" parent="." unique_id=384164861]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -594.08545, 26.612144, -935.4808)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("6_7mycd")
+
+[node name="Fence6" type="Sprite3D" parent="." unique_id=330908582]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -675.8521, 26.612144, -935.4808)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("6_7mycd")

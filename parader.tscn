@@ -8,8 +8,10 @@
 [node name="Parader" unique_id=1731856409 instance=ExtResource("1_whu07")]
 script = ExtResource("3_parader")
 
-[node name="Sign" parent="." index="1" unique_id=2013640258 instance=ExtResource("2_u3c6x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 59.8, -5.354988)
+[node name="SignScale" type="Node3D" parent="." index="1" unique_id=1687241682]
+transform = Transform3D(0.635, 0, 0, 0, 0.635, 0, 0, 0, 0.635, 0, 59.33761, -0.97922325)
+
+[node name="Sign" parent="SignScale" index="0" unique_id=2013640258 instance=ExtResource("2_u3c6x")]
 
 [node name="Body" parent="." index="3" unique_id=1678367108]
 modulate = Color(0.30588236, 0.34509805, 0.21176471, 1)
@@ -21,3 +23,9 @@ modulate = Color(0.662474, 0.725739, 0.4792577, 1)
 text = "1"
 font = ExtResource("4_74hdk")
 font_size = 300
+
+[node name="HandL" parent="." index="4" unique_id=1368089338]
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 46.74277, 1.4910412)
+
+[node name="HandR" parent="." index="5" unique_id=1403083975]
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 46.74277, 1.464036)

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://60nocx6sekte"]
+
+[ext_resource type="Script" uid="uid://xvn33najkg3n" path="res://audence_spawner.gd" id="1_spawner"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_xx8d8"]
+size = Vector3(1000, 1, 1000)
+
+[node name="AudenceSpawner" type="Node3D" unique_id=1905624601]
+script = ExtResource("1_spawner")
+spacing = 50.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1647866611]
+mesh = SubResource("BoxMesh_xx8d8")

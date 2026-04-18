@@ -1,9 +1,6 @@
 extends Sign
 class_name SignFlippable
 
-@onready var _flip_pivot: Node3D = $FlipPivot
-@onready var _label_back: Label3D = $FlipPivot/LabelBack
-
 var _front_text: String = ""
 var _back_text: String = ""
 var _has_back: bool = false
@@ -13,22 +10,33 @@ var _flipping: bool = false
 var _flip_tween: Tween
 
 
+func _pivot() -> Node3D:
+	return $FlipPivot as Node3D
+
+
+func _lbl_back() -> Label3D:
+	return $FlipPivot/LabelBack as Label3D
+
+
 func _ready() -> void:
 	super._ready()
-	_label_back.visible = _has_back
+	_lbl_back().visible = _has_back
 
 
 func set_text(text: String) -> void:
 	_front_text = text
 	if not _has_back:
 		super.set_text(text)
-		if _label_back != null:
-			_label_back.visible = false
+		_lbl_back().visible = false
 	else:
 		_apply_both_faces()
 
 
 func _apply_both_faces() -> void:
+	if _fixed_font_size <= 0:
+		var l: Label3D = $FlipPivot/Label3D as Label3D
+		_fixed_font_size = l.font_size
+		l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	var inner_front: Vector2 = _measure_inner_for_string(_front_text)
 	var inner_back: Vector2 = _measure_inner_for_string(_back_text)
 	var inner: Vector2 = Vector2(maxf(inner_front.x, inner_back.x), maxf(inner_front.y, inner_back.y))
@@ -36,16 +44,18 @@ func _apply_both_faces() -> void:
 		inner = Vector2(1.0, 1.0)
 	var n_tex: int = maxi(maxi(_front_text.length(), _back_text.length()), 1)
 
-	_label.text = _front_text
-	_label_back.text = _back_text
-	_label.font_size = _fixed_font_size
-	_label_back.font_size = _fixed_font_size
+	var label: Label3D = $FlipPivot/Label3D as Label3D
+	var label_back: Label3D = _lbl_back()
+	label.text = _front_text
+	label_back.text = _back_text
+	label.font_size = _fixed_font_size
+	label_back.font_size = _fixed_font_size
 
 	_apply_sign_geometry(inner, n_tex)
-	var w: float = maxf(inner.x * _label.pixel_size, 0.01)
-	_label.width = w
-	_label_back.width = w
-	_label_back.visible = _has_back and not _back_text.is_empty()
+	var w: float = maxf(inner.x * label.pixel_size, 0.01)
+	label.width = w
+	label_back.width = w
+	label_back.visible = _has_back and not _back_text.is_empty()
 
 
 func set_contents(front_text: String, back_text: Variant = null) -> void:
@@ -64,7 +74,7 @@ func set_contents(front_text: String, back_text: Variant = null) -> void:
 
 	_showing_back = false
 	scale = Vector3(1.0, 1.0, 1.0)
-	_flip_pivot.rotation.y = 0.0
+	_pivot().rotation.y = 0.0
 	set_text(_front_text)
 
 
@@ -75,9 +85,10 @@ func flip(flip_time: float = 1.0) -> bool:
 		return false
 
 	var target_y: float = PI if not _showing_back else 0.0
+	var pivot: Node3D = _pivot()
 
 	if flip_time <= 0.0:
-		_flip_pivot.rotation.y = target_y
+		pivot.rotation.y = target_y
 		_showing_back = not _showing_back
 		return true
 
@@ -85,12 +96,12 @@ func flip(flip_time: float = 1.0) -> bool:
 		_flip_tween.kill()
 
 	_flipping = true
-	var from_y: float = _flip_pivot.rotation.y
+	var from_y: float = pivot.rotation.y
 	_flip_tween = create_tween()
 	(
 		_flip_tween.tween_method(
 			func(v: float) -> void:
-				_flip_pivot.rotation.y = v,
+				pivot.rotation.y = v,
 			from_y,
 			target_y,
 			flip_time

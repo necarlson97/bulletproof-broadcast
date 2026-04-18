@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4parade01scene"]
+[gd_scene format=3 uid="uid://05fs1a5r1b71"]
 
-[ext_resource type="Script" path="res://parade.gd" id="1_parade"]
+[ext_resource type="Script" uid="uid://ddnxto8k47ck1" path="res://parade.gd" id="1_parade"]
 
-[node name="Parade" type="Node3D"]
+[node name="Parade" type="Node3D" unique_id=244925867]
 script = ExtResource("1_parade")
+marching_speed = 100.0
+line_width = 100.0
+sign_target_width_multiplier = 4.0
