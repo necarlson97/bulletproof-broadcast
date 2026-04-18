@@ -18,6 +18,8 @@ modulate = Color(0.30588236, 0.34509805, 0.21176471, 1)
 
 [node name="Label3D" type="Label3D" parent="Body" index="0" unique_id=1425867495]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.65851, 0.20695782)
+alpha_cut = 3
+alpha_hash_scale = 1.0
 pixel_size = 0.1
 modulate = Color(0.662474, 0.725739, 0.4792577, 1)
 text = "1"

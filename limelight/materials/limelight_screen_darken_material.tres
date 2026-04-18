@@ -1,6 +1,6 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://1tl2k5fa5whh"]
 
-[ext_resource type="Shader" path="res://limelight/shaders/limelight_screen_darken.gdshader" id="1_shader"]
+[ext_resource type="Shader" uid="uid://bq2gd4r8cvboq" path="res://limelight/shaders/limelight_screen_darken.gdshader" id="1_shader"]
 
 [resource]
 render_priority = 127

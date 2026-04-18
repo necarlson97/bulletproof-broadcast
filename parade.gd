@@ -20,11 +20,45 @@ func _ready() -> void:
 	_spawn_lines()
 
 
+func _process(_delta: float) -> void:
+	var e: float = _compute_crowd_excitement_from_disloyal()
+	for n: Node in get_tree().get_nodes_in_group("spectator"):
+		if not is_instance_valid(n):
+			continue
+		if "excitement" in n:
+			n.set("excitement", e)
+
+
+## Maps the disloyal parader closest to [member check_z] along Z to [0, 1]: [member start_z] → 0, [member check_z] → 1.
+func _compute_crowd_excitement_from_disloyal() -> float:
+	var best_z: float = 0.0
+	var best_dist: float = INF
+	var found: bool = false
+	for n: Node in get_tree().get_nodes_in_group("parader"):
+		if not is_instance_valid(n):
+			continue
+		var pr: Parader = n as Parader
+		if pr == null or pr.loyal:
+			continue
+		var zz: float = pr.global_position.z
+		var dist: float = absf(zz - check_z)
+		if not found or dist < best_dist or (is_equal_approx(dist, best_dist) and zz > best_z):
+			found = true
+			best_dist = dist
+			best_z = zz
+	if not found:
+		return 0.0
+	if is_equal_approx(check_z, start_z):
+		return 1.0 if is_equal_approx(best_z, check_z) else 0.0
+	return clampf(inverse_lerp(start_z, check_z, best_z), 0.0, 1.0)
+
+
 func _spawn_lines() -> void:
 	var speed: float = maxf(marching_speed, 0.001)
 	var stagger: float = line_spawn_spacing / speed
 	for i: int in range(line_strings.size()):
-		var pl: Node = parade_line_scene.instantiate()
+		var pl: ParadeLine = parade_line_scene.instantiate() as ParadeLine
+		pl.spawn_index = i
 		pl.setup(
 			line_strings[i],
 			marching_speed,

@@ -2,18 +2,5 @@
 
 [ext_resource type="Script" path="res://focused_line.gd" id="1_focused"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_highlight"]
-size = Vector3(1, 1, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_highlight"]
-transparency = 1
-cull_mode = 2
-albedo_color = Color(0.25, 0.92, 1, 0.28)
-roughness = 0.35
-
 [node name="FocusedLine" type="Node3D"]
 script = ExtResource("1_focused")
-
-[node name="HighlightCube" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_highlight")
-surface_material_override/0 = SubResource("StandardMaterial3D_highlight")

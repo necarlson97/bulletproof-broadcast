@@ -1,31 +1,33 @@
 extends Node3D
 class_name FocusedLine
 
-@onready var _highlight: MeshInstance3D = $HighlightCube
+var _limelighter: Limelighter
+## Next [ParadeLine.spawn_index] to use for focus (advances on release or missing line).
+var _focus_spawn_index: int = 0
 @onready var _officer: Officer = get_parent().get_node("Camera3D/Officer") as Officer
 
+
 func _ready() -> void:
-	if _highlight != null:
-		_highlight.visible = false
+	_limelighter = get_parent().get_node_or_null("Limelighter") as Limelighter
 
 
 func _process(_delta: float) -> void:
-	var focused_line: ParadeLine = _pick_foremost_line()
-	if _highlight == null:
+	if _limelighter == null:
 		return
-	if focused_line == null or not is_instance_valid(focused_line):
-		_highlight.visible = false
+	var parade: Node = _get_parade_root()
+	if parade == null:
+		_limelighter.set_targets([])
 		return
-	var bounds: Variant = focused_line.get_focus_bounds_global()
-	if bounds == null:
-		_highlight.visible = false
+	_skip_missing_spawn_slots(parade)
+	var pl: ParadeLine = _line_at_spawn_index(parade, _focus_spawn_index)
+	while pl != null and pl.should_release_focus():
+		_focus_spawn_index += 1
+		_skip_missing_spawn_slots(parade)
+		pl = _line_at_spawn_index(parade, _focus_spawn_index)
+	if pl == null or not is_instance_valid(pl):
+		_limelighter.set_targets([])
 		return
-	var center: Vector3 = bounds["center"]
-	var size: Vector3 = bounds["size"]
-	_highlight.visible = true
-	_highlight.global_position = center
-	_highlight.global_rotation = Vector3.ZERO
-	_highlight.scale = size
+	_limelighter.set_targets(pl.get_limelight_targets())
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -34,7 +36,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	var d: String = _digit_from_keycode((event as InputEventKey).keycode)
 	if d.is_empty():
 		return
-	var pl: ParadeLine = _pick_foremost_line()
+	var parade: Node = _get_parade_root()
+	if parade == null:
+		return
+	_skip_missing_spawn_slots(parade)
+	var pl: ParadeLine = _line_at_spawn_index(parade, _focus_spawn_index)
 	if pl == null or not is_instance_valid(pl):
 		return
 	var target: Parader = pl.get_parader_by_digit(d)
@@ -46,22 +52,39 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
-func _pick_foremost_line() -> ParadeLine:
+func _get_parade_root() -> Node:
 	var parades: Array[Node] = get_tree().get_nodes_in_group("parade")
 	if parades.is_empty():
 		return null
-	var parade: Node = parades[0]
-	var best: ParadeLine = null
-	var best_z: float = -INF
+	return parades[0]
+
+
+func _line_at_spawn_index(parade: Node, index: int) -> ParadeLine:
 	for c: Node in parade.get_children():
 		var pl: ParadeLine = c as ParadeLine
 		if pl == null:
 			continue
-		var z: float = pl.get_line_march_z()
-		if z > best_z:
-			best_z = z
-			best = pl
-	return best
+		if pl.spawn_index == index and is_instance_valid(pl):
+			return pl
+	return null
+
+
+func _any_parade_line_alive(parade: Node) -> bool:
+	for c: Node in parade.get_children():
+		if c is ParadeLine and is_instance_valid(c):
+			return true
+	return false
+
+
+func _skip_missing_spawn_slots(parade: Node) -> void:
+	var guard: int = 0
+	while guard < 64:
+		guard += 1
+		if _line_at_spawn_index(parade, _focus_spawn_index) != null:
+			return
+		if not _any_parade_line_alive(parade):
+			return
+		_focus_spawn_index += 1
 
 
 static func _digit_from_keycode(k: int) -> String:

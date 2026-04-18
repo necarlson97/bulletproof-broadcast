@@ -23,6 +23,7 @@ func _spawn_limelights() -> void:
 
 
 ## Assigns targets in order; if there are fewer than 10 targets, indices wrap (i % targets.size()).
+## Skips [method Limelight.set_target] when the slot already tracks the same node (safe to call each frame).
 func set_targets(targets: Array[Node3D]) -> void:
 	if targets.is_empty():
 		for L in _limelights:
@@ -30,10 +31,14 @@ func set_targets(targets: Array[Node3D]) -> void:
 		return
 	for i in _limelights.size():
 		var t: Node3D = targets[i % targets.size()]
-		if is_instance_valid(t):
-			_limelights[i].set_target(t)
-		else:
-			_limelights[i].clear_target()
+		var L: Limelight = _limelights[i]
+		if not is_instance_valid(t):
+			L.clear_target()
+			continue
+		var cur: Node3D = L.get_follow_target()
+		if cur == t and is_instance_valid(cur):
+			continue
+		L.set_target(t)
 
 
 func get_limelight(index: int) -> Limelight:

@@ -7,6 +7,8 @@ const _PARADER_FLEE_SCRIPT: GDScript = preload("res://people/parader_flee.gd")
 @export var parader_scene: PackedScene = preload("res://people/parader.tscn")
 
 var line_string: String = ""
+## Stable order among siblings; set by [Parade] when spawning (for [FocusedLine]).
+var spawn_index: int = -1
 var marching_speed: float = 300.0
 var start_z: float = -1400.0
 ## March target (off screen); line is freed when reached.
@@ -29,6 +31,9 @@ var _specs: Array[Dictionary] = []
 var _march_tween: Tween
 var _prev_march_z: float = 0.0
 var _check_logged: bool = false
+## March path Z from the line tween (authoritative for focus thresholds).
+var _line_path_z: float = 0.0
+var _had_disloyal_at_spawn: bool = false
 
 
 func _prune_freed_paraders() -> void:
@@ -57,7 +62,9 @@ func setup(
 	check_z = p_check_z
 	sign_target_width_multiplier = p_sign_target_width_multiplier
 	_specs = ParadeLineSyntax.parse_line(line_string)
+	_had_disloyal_at_spawn = _specs_has_any_disloyal()
 	_build_paraders()
+	_line_path_z = start_z
 	_set_target_z(start_z)
 
 
@@ -181,6 +188,59 @@ func _build_paraders() -> void:
 	_scale_signs(spacing)
 	_attach_parader_flee_scripts()
 	_layout_paraders_x(spacing)
+	for p_col: Node3D in _parader_nodes:
+		var pr_col: Parader = p_col as Parader
+		if pr_col != null:
+			pr_col.set_parade_column_x(p_col.position.x)
+			pr_col.set_parade_march_speed(marching_speed)
+
+
+func _specs_has_any_disloyal() -> bool:
+	for s: Dictionary in _specs:
+		if not s["loyal"]:
+			return true
+	return false
+
+
+## Whether [FocusedLine] should move to the next spawned line: reached [member check_z], all disloyal
+## eliminated past the halfway point to [member check_z], or no paraders left.
+func should_release_focus() -> bool:
+	_prune_freed_paraders()
+	if _parader_nodes.is_empty():
+		return true
+	var z: float = _line_path_z
+	if _passed_march_threshold(z, check_z):
+		return true
+	if _had_disloyal_at_spawn and _no_disloyal_alive() and _passed_march_threshold(
+		z, lerpf(start_z, check_z, 0.5)
+	):
+		return true
+	return false
+
+
+func _passed_march_threshold(z: float, threshold: float) -> bool:
+	if is_equal_approx(end_z, start_z):
+		return is_equal_approx(z, threshold)
+	if end_z > start_z:
+		return z >= threshold
+	return z <= threshold
+
+
+func _no_disloyal_alive() -> bool:
+	for p: Node3D in _parader_nodes:
+		var pr: Parader = p as Parader
+		if pr != null and not pr.loyal:
+			return false
+	return true
+
+
+## Live paraders in line order, for [Limelighter] (empty if none).
+func get_limelight_targets() -> Array[Node3D]:
+	_prune_freed_paraders()
+	var out: Array[Node3D] = []
+	for p: Node3D in _parader_nodes:
+		out.append(p)
+	return out
 
 
 func get_parader_by_digit(digit: String) -> Parader:
@@ -233,6 +293,9 @@ func get_focus_bounds_global() -> Variant:
 
 
 func unregister_parader_from_march(parader: Node3D) -> void:
+	var pr: Parader = parader as Parader
+	if pr != null:
+		pr.clear_parade_march_follow()
 	var at: int = _parader_nodes.find(parader)
 	if at >= 0:
 		_parader_nodes.remove_at(at)
@@ -254,7 +317,11 @@ func _nearest_disloyal_index(flee_idx: int) -> int:
 func _set_target_z(z: float) -> void:
 	_prune_freed_paraders()
 	for p: Node3D in _parader_nodes:
-		p.position.z = z
+		var pr: Parader = p as Parader
+		if pr != null:
+			pr.set_parade_march_target_z(z)
+		else:
+			p.position.z = z
 	_update_disloyal_sweating_near_check()
 
 
@@ -295,6 +362,7 @@ func _march_step(z: float) -> void:
 		_check_logged = true
 		_log_disloyal_at_check()
 	_prev_march_z = z
+	_line_path_z = z
 	_set_target_z(z)
 
 
@@ -308,6 +376,7 @@ func begin_march(delay_sec: float) -> void:
 		_march_tween = null
 	_check_logged = false
 	_prev_march_z = start_z
+	_line_path_z = start_z
 	if delay_sec > 0.0:
 		await get_tree().create_timer(delay_sec).timeout
 	var dist: float = absf(end_z - start_z)

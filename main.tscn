@@ -3,15 +3,22 @@
 [ext_resource type="PackedScene" uid="uid://dbc275amwc630" path="res://people/officer.tscn" id="1_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://cklqhp4v1uemv" path="res://scenery/film_camera.tscn" id="3_h2yge"]
-[ext_resource type="PackedScene" path="res://limelight/limelight_mask_viewport.tscn" id="3_mskvp"]
-[ext_resource type="PackedScene" path="res://limelight/limelight_screen_darken_overlay.tscn" id="3_sdark"]
+[ext_resource type="PackedScene" uid="uid://b8lmvp001" path="res://limelight/limelight_mask_viewport.tscn" id="3_mskvp"]
+[ext_resource type="PackedScene" uid="uid://b8lscndrk01" path="res://limelight/limelight_screen_darken_overlay.tscn" id="3_sdark"]
 [ext_resource type="Script" uid="uid://7y20j016r667" path="res://main.gd" id="4_main"]
 [ext_resource type="PackedScene" uid="uid://60nocx6sekte" path="res://people/audence_spawner.tscn" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://ci1qddqgmsi0d" path="res://music_player.gd" id="5_music"]
 [ext_resource type="Texture2D" uid="uid://dtonxkfa3a401" path="res://assets/fence.png" id="6_7mycd"]
+[ext_resource type="Material" uid="uid://1tl2k5fa5whh" path="res://limelight/materials/limelight_screen_darken_material.tres" id="6_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://bdlfs8dexp45g" path="res://assets/grass.png" id="7_272bh"]
 [ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="8_5vw27"]
 [ext_resource type="PackedScene" uid="uid://wohly26t3pk7" path="res://limelight/limelighter.tscn" id="9_kek77"]
 [ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight/limelight.tscn" id="13_w48qg"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_w48qg"]
+material = ExtResource("6_ycdy4")
+radius = 60.0
+height = 120.0
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
 fog_enabled = true
@@ -27,6 +34,11 @@ size = Vector3(100, 100, 100)
 [node name="Main" type="Node3D" unique_id=1948751274]
 script = ExtResource("4_main")
 
+[node name="MusicPlayer" type="Node" parent="." unique_id=2033764468]
+script = ExtResource("5_music")
+
+[node name="MusicStream" type="AudioStreamPlayer" parent="MusicPlayer" unique_id=195918970]
+
 [node name="Ground" parent="." unique_id=231829925 instance=ExtResource("2_0xm2m")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=187998376]
@@ -38,7 +50,11 @@ transform = Transform3D(1, 0, 0, 0, 0.7710025, 0.6368321, 0, -0.6368321, 0.77100
 transform = Transform3D(0.8459607, 0, -0.5332455, -0.119355544, 0.9746286, -0.18935013, 0.51971626, 0.2238284, 0.82449746, 50.99697, -58.117035, -64.65869)
 
 [node name="Limelight" parent="Camera3D" unique_id=1381778601 instance=ExtResource("13_w48qg")]
-transform = Transform3D(1, 0, 0, 0, 0.6569543, -0.75393045, 0, 0.75393045, 0.6569543, 5.3190384, 23.489868, -297.083)
+transform = Transform3D(1, 0, 0, 0, 0.6569542, -0.7539304, 0, 0.7539304, 0.6569542, -36.39315, -32.494797, -80.06174)
+
+[node name="MeshInstance3D" parent="Camera3D/Limelight" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 81.45717, 13.400421, 23.74112)
+mesh = SubResource("SphereMesh_w48qg")
 
 [node name="LimelightMaskViewport" parent="." unique_id=1740944466 instance=ExtResource("3_mskvp")]
 
@@ -428,3 +444,5 @@ alpha_cut = 1
 texture = ExtResource("8_5vw27")
 
 [node name="Limelighter" parent="." unique_id=345578488 instance=ExtResource("9_kek77")]
+
+[editable path="Camera3D/Limelight"]
