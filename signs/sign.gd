@@ -15,6 +15,8 @@ const _WRAP_MEASURE_WIDTH: float = 100_000.0
 var _fixed_font_size: int = 0
 ## Horizontal extent of the sign board after last layout (Sign local space, before parent scale).
 var _layout_width: float = 0.0
+## Vertical extent of the sign board after last layout (Sign local space, before parent scale).
+var _layout_height: float = 0.0
 
 
 func _lbl() -> Label3D:
@@ -79,6 +81,7 @@ func _apply_sign_geometry(inner: Vector2, n_for_texture: int) -> void:
 	var ps: float = label.pixel_size
 	label.width = maxf(inner.x * ps, 0.01)
 	_layout_width = outer.x * bg.pixel_size
+	_layout_height = outer.y * bg.pixel_size
 
 
 func set_text(text: String) -> void:
@@ -96,3 +99,7 @@ func set_text(text: String) -> void:
 
 func get_layout_width() -> float:
 	return _layout_width
+
+
+func get_layout_height() -> float:
+	return _layout_height

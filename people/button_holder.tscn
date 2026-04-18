@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://8eagiuthp066"]
+
+[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://people/parader.tscn" id="1_0feov"]
+[ext_resource type="Script" path="res://people/button_holder.gd" id="2_button_holder"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0feov"]
+size = Vector3(60, 30, 10)
+
+[node name="SignHolder" unique_id=1731856409 instance=ExtResource("1_0feov")]
+script = ExtResource("2_button_holder")
+
+[node name="Label3D" parent="Body" parent_id_path=PackedInt32Array(1678367108) index="0" unique_id=1425867495]
+visible = false
+
+[node name="Area3D" type="Area3D" parent="." index="8" unique_id=441558032]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0" unique_id=1028402147]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 57.90861, 0)
+shape = SubResource("BoxShape3D_0feov")

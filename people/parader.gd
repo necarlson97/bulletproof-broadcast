@@ -3,15 +3,17 @@ class_name Parader
 
 const _SHIRT_LOYAL_A := Color("#444A32")
 const _SHIRT_LOYAL_B := Color("#2E3A3F")
-const _SHIRT_DISLOYAL_A := Color("#5A3232")
+const _SHIRT_DISLOYAL_A := Color("#444A32")
 const _SHIRT_DISLOYAL_B := Color("#3F2E2E")
 
 ## Horizontal slack before the parader walks to catch the line (parade local XZ).
-const _COMFORT_DIST_MIN: float = 30.0
-const _COMFORT_DIST_MAX: float = 60.0
+const _COMFORT_DIST_MIN: float = 60.0
+const _COMFORT_DIST_MAX: float = 80.0
 ## Body-only bounce while walking (see spectator bounce; applied to [member Body] only).
 const _WALK_BODY_BOUNCE_HALF_DUR: float = 0.12
-const _WALK_BODY_BOUNCE_HEIGHT: float = 5.0
+const _WALK_BODY_BOUNCE_HEIGHT: float = 2.0
+## Time to tween back onto the formation target once outside the comfort zone.
+const _COMFORT_CORRECT_SEC: float = 0.5
 
 var loyal: bool = true
 ## March Z at which this parader auto-flips (SignFlippable). `INF` = no scheduled flip.
@@ -21,10 +23,13 @@ var _march_flip_done: bool = false
 var _prev_z_for_flip: float = NAN
 
 var _parade_march_follow: bool = false
-var _parade_target_x: float = 0.0
-var _parade_march_target_z: float = 0.0
-var _line_marching_speed: float = 300.0
+## Formation goal in parade-line local space (XZ); [ParadeLine] sets via [method set_parade_target] / [method set_parade_line_z].
+var _target_x: float = 0.0
+var _target_z: float = 0.0
 var _comfort_radius: float = 45.0
+var _comfort_corr_active: bool = false
+var _comfort_corr_elapsed: float = 0.0
+var _comfort_corr_start_pos: Vector3 = Vector3.ZERO
 
 @onready var _body: Sprite3D = $Body
 var _body_bounce_base_y: float = 0.0
@@ -69,43 +74,46 @@ func configure_parader(front: String, back: Variant, loyal_flag: bool, digit: St
 	digit_label.visible = not digit.is_empty()
 
 
-## Called by [ParadeLine] after horizontal layout so march slack is relative to the line column.
-func set_parade_column_x(column_x: float) -> void:
-	_parade_target_x = column_x
+## Full formation target (column X and line Z). Does not move the node — [method _process] uses comfort + tween.
+func set_parade_target(target_x: float, target_z: float) -> void:
+	_target_x = target_x
+	_target_z = target_z
 	_parade_march_follow = true
 
 
-func set_parade_march_speed(line_speed: float) -> void:
-	_line_marching_speed = maxf(line_speed, 0.001)
-
-
-func set_parade_march_target_z(line_z: float) -> void:
-	_parade_march_target_z = line_z
+## Updates only line Z (march path); keeps current target X from the last [method set_parade_target].
+func set_parade_line_z(line_z: float) -> void:
+	_target_z = line_z
 
 
 func clear_parade_march_follow() -> void:
 	_parade_march_follow = false
 	_march_needs_walk_bounce = false
+	_comfort_corr_active = false
 	if is_instance_valid(_body):
 		_body.position.y = _body_bounce_base_y
 
 
-func _walk_speed() -> float:
-	# Faster than the line so lagging paraders can close the gap.
-	return maxf(_line_marching_speed * 1.5, _line_marching_speed + 120.0)
-
-
 func _process(delta: float) -> void:
 	if _parade_march_follow:
-		var ideal: Vector3 = Vector3(_parade_target_x, position.y, _parade_march_target_z)
-		var dist_xz: float = Vector2(position.x - _parade_target_x, position.z - _parade_march_target_z).length()
-		if dist_xz > _comfort_radius:
-			position = position.move_toward(ideal, _walk_speed() * delta)
+		var dist_xz: float = Vector2(position.x - _target_x, position.z - _target_z).length()
+		if dist_xz <= _comfort_radius:
+			_comfort_corr_active = false
+			_march_needs_walk_bounce = false
 		else:
-			position.x = _parade_target_x
-			position.z = _parade_march_target_z
-		var dist_after: float = Vector2(position.x - _parade_target_x, position.z - _parade_march_target_z).length()
-		_march_needs_walk_bounce = dist_after > _comfort_radius
+			if not _comfort_corr_active:
+				_comfort_corr_active = true
+				_comfort_corr_elapsed = 0.0
+				_comfort_corr_start_pos = position
+			_comfort_corr_elapsed += delta
+			var t: float = minf(1.0, _comfort_corr_elapsed / _COMFORT_CORRECT_SEC)
+			var ideal_now: Vector3 = Vector3(_target_x, _comfort_corr_start_pos.y, _target_z)
+			position = _comfort_corr_start_pos.lerp(ideal_now, t)
+			if t >= 1.0:
+				_comfort_corr_active = false
+				position.x = _target_x
+				position.z = _target_z
+			_march_needs_walk_bounce = true
 
 	if _march_flip_done or is_inf(flip_at_z):
 		return

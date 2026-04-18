@@ -1,6 +1,11 @@
 extends Node3D
 class_name Parade
 
+## If false, [method begin_marches] must be called (e.g. after intro dialogue).
+@export var auto_start: bool = true
+
+signal main_parade_complete
+
 @export var parade_line_scene: PackedScene = preload("res://parade_line.tscn")
 @export var line_strings: Array[String] = []
 @export var marching_speed: float = 300.0
@@ -13,6 +18,9 @@ class_name Parade
 @export var line_width: float = 800.0
 ## Scales sign board target width (see ParadeLine.sign_target_width_multiplier).
 @export var sign_target_width_multiplier: float = 2.2
+
+var _march_delays: Array[float] = []
+var _lines_finished: int = 0
 
 
 func _ready() -> void:
@@ -54,6 +62,8 @@ func _compute_crowd_excitement_from_disloyal() -> float:
 
 
 func _spawn_lines() -> void:
+	_march_delays.clear()
+	_lines_finished = 0
 	var speed: float = maxf(marching_speed, 0.001)
 	var stagger: float = line_spawn_spacing / speed
 	for i: int in range(line_strings.size()):
@@ -68,5 +78,27 @@ func _spawn_lines() -> void:
 			check_z,
 			sign_target_width_multiplier
 		)
+		pl.line_march_finished.connect(_on_line_march_finished, CONNECT_ONE_SHOT)
 		add_child(pl)
-		pl.begin_march(stagger * float(i))
+		_march_delays.append(stagger * float(i))
+	if auto_start:
+		begin_marches()
+
+
+func begin_marches() -> void:
+	var idx: int = 0
+	for c: Node in get_children():
+		var pl: ParadeLine = c as ParadeLine
+		if pl == null:
+			continue
+		if idx >= _march_delays.size():
+			push_warning("Parade.begin_marches: delay index out of range")
+			break
+		pl.begin_march(_march_delays[idx])
+		idx += 1
+
+
+func _on_line_march_finished() -> void:
+	_lines_finished += 1
+	if _lines_finished >= line_strings.size():
+		main_parade_complete.emit()

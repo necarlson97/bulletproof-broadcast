@@ -14,6 +14,11 @@
 [ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="8_5vw27"]
 [ext_resource type="PackedScene" uid="uid://wohly26t3pk7" path="res://limelight/limelighter.tscn" id="9_kek77"]
 [ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight/limelight.tscn" id="13_w48qg"]
+[ext_resource type="Script" uid="uid://5ij8vquji131" path="res://devtools_time_scale.gd" id="14_devts"]
+[ext_resource type="PackedScene" uid="uid://gyj4nn4b8m53" path="res://menus/pause_menu.tscn" id="15_pause"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_2cqfq"]
+viewport_path = NodePath("DialogBox/SubViewport")
 
 [sub_resource type="SphereMesh" id="SphereMesh_w48qg"]
 material = ExtResource("6_ycdy4")
@@ -34,25 +39,40 @@ size = Vector3(100, 100, 100)
 [node name="Main" type="Node3D" unique_id=1948751274]
 script = ExtResource("4_main")
 
+[node name="DevToolsTimeScale" type="Node3D" parent="." unique_id=2100000001]
+script = ExtResource("14_devts")
+
+[node name="PauseMenu" parent="." unique_id=2006299287 instance=ExtResource("15_pause")]
+
 [node name="MusicPlayer" type="Node" parent="." unique_id=2033764468]
 script = ExtResource("5_music")
 
 [node name="MusicStream" type="AudioStreamPlayer" parent="MusicPlayer" unique_id=195918970]
+bus = &"Music"
 
 [node name="Ground" parent="." unique_id=231829925 instance=ExtResource("2_0xm2m")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=187998376]
-transform = Transform3D(1, 0, 0, 0, 0.7710025, 0.6368321, 0, -0.6368321, 0.7710025, -48.90104, 207.63184, 143.54326)
+transform = Transform3D(1, 0, 0, 0, 0.94198126, 0.33566532, 0, -0.33566532, 0.94198126, -17.003002, 192.0253, 302.84464)
+fov = 55.0
 
 [node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=1444246649 instance=ExtResource("3_sdark")]
+visible = false
 
 [node name="Officer" parent="Camera3D" unique_id=1660657085 instance=ExtResource("1_1bvp3")]
-transform = Transform3D(0.8459607, 0, -0.5332455, -0.119355544, 0.9746286, -0.18935013, 0.51971626, 0.2238284, 0.82449746, 50.99697, -58.117035, -64.65869)
+transform = Transform3D(0.60398686, -0.7890968, -0.11191989, 0.7501814, 0.6102958, -0.25449482, 0.26912525, 0.06975135, 0.96057653, 79.04231, -18.014656, -69.834045)
 
-[node name="Limelight" parent="Camera3D" unique_id=1381778601 instance=ExtResource("13_w48qg")]
-transform = Transform3D(1, 0, 0, 0, 0.6569542, -0.7539304, 0, 0.7539304, 0.6569542, -36.39315, -32.494797, -80.06174)
+[node name="DialogBox" parent="Camera3D/Officer" index="8" unique_id=960094290]
+transform = Transform3D(0.6661122, 0.74579, -0.009580363, -0.7457129, 0.666181, 0.01072522, 0.014381018, 0, 0.9998966, -22.88366, 2.7037354, 0.14416501)
 
-[node name="MeshInstance3D" parent="Camera3D/Limelight" index="0"]
+[node name="Sprite3D" parent="Camera3D/Officer/DialogBox" index="0" unique_id=960094292]
+texture = SubResource("ViewportTexture_2cqfq")
+
+[node name="Limelight" parent="Camera3D/Officer" unique_id=1381778601 instance=ExtResource("13_w48qg")]
+transform = Transform3D(0.8459605, 0.31341872, 0.43141544, -1.0815077e-07, 0.80903715, -0.587757, -0.53324544, 0.49721932, 0.6844137, -6.453659, 41.57496, -19.620026)
+visible = false
+
+[node name="MeshInstance3D" parent="Camera3D/Officer/Limelight" index="0" unique_id=1370487710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 81.45717, 13.400421, 23.74112)
 mesh = SubResource("SphereMesh_w48qg")
 
@@ -69,10 +89,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1344.8561, 49.253128, 0)
 mesh = SubResource("BoxMesh_1bvp3")
 
 [node name="Audence Spawner" parent="." unique_id=1965368172 instance=ExtResource("5_lquwl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -653.0907, 0.5, -284.03845)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -538.4544, 0.5, -284.03845)
 
 [node name="Audence Spawner2" parent="." unique_id=134344035 instance=ExtResource("5_lquwl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 657.8873, 0.5, -284.03845)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 555.3883, 0.5, -284.03845)
 
 [node name="Fences" type="Node3D" parent="." unique_id=48345838]
 
@@ -445,4 +465,5 @@ texture = ExtResource("8_5vw27")
 
 [node name="Limelighter" parent="." unique_id=345578488 instance=ExtResource("9_kek77")]
 
-[editable path="Camera3D/Limelight"]
+[editable path="Camera3D/Officer"]
+[editable path="Camera3D/Officer/Limelight"]

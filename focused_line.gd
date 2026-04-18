@@ -46,8 +46,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	var target: Parader = pl.get_parader_by_digit(d)
 	if target == null:
 		return
+	var was_loyal: bool = target.loyal
+	if was_loyal:
+		GameStats.loyalists_executed += 1
+	else:
+		GameStats.traitors_executed += 1
 	if _officer != null:
 		_officer.shot_at(target)
+	_notify_narrative_collateral(was_loyal)
 	target.kill()
 	get_viewport().set_input_as_handled()
 
@@ -85,6 +91,13 @@ func _skip_missing_spawn_slots(parade: Node) -> void:
 		if not _any_parade_line_alive(parade):
 			return
 		_focus_spawn_index += 1
+
+
+func _notify_narrative_collateral(was_loyal: bool) -> void:
+	for n: Node in get_tree().get_nodes_in_group("narrative_sequencer"):
+		if n.has_method("notify_parader_shot"):
+			n.notify_parader_shot(was_loyal)
+			return
 
 
 static func _digit_from_keycode(k: int) -> String:

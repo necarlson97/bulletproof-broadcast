@@ -1,0 +1,436 @@
+[gd_scene format=3 uid="uid://j08180fs2ml4"]
+
+[ext_resource type="Script" uid="uid://5ij8vquji131" path="res://devtools_time_scale.gd" id="1_kk4mm"]
+[ext_resource type="PackedScene" uid="uid://gyj4nn4b8m53" path="res://menus/pause_menu.tscn" id="2_rx1ud"]
+[ext_resource type="Script" uid="uid://ci1qddqgmsi0d" path="res://music_player.gd" id="3_wcdpt"]
+[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="4_u3dsk"]
+[ext_resource type="PackedScene" uid="uid://dbc275amwc630" path="res://people/officer.tscn" id="5_ygrj5"]
+[ext_resource type="PackedScene" uid="uid://b8lmvp001" path="res://limelight/limelight_mask_viewport.tscn" id="6_lgqab"]
+[ext_resource type="PackedScene" uid="uid://cklqhp4v1uemv" path="res://scenery/film_camera.tscn" id="7_ysfef"]
+[ext_resource type="PackedScene" uid="uid://60nocx6sekte" path="res://people/audence_spawner.tscn" id="8_kqtkm"]
+[ext_resource type="Texture2D" uid="uid://dtonxkfa3a401" path="res://assets/fence.png" id="9_68bju"]
+[ext_resource type="Texture2D" uid="uid://bdlfs8dexp45g" path="res://assets/grass.png" id="10_047xs"]
+[ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="11_hplot"]
+[ext_resource type="PackedScene" uid="uid://8eagiuthp066" path="res://people/button_holder.tscn" id="13_rx1ud"]
+
+[sub_resource type="Environment" id="Environment_2xa2j"]
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.84705883, 0.8117647, 0.7490196, 1)
+fog_density = 1.0
+fog_depth_curve = 5.2780275
+fog_depth_end = 1514.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_xwybn"]
+size = Vector3(800, 1, 800)
+
+[node name="MainMenu" type="Node3D" unique_id=1741736368]
+
+[node name="DevToolsTimeScale" type="Node3D" parent="." unique_id=515693908]
+script = ExtResource("1_kk4mm")
+
+[node name="PauseMenu" parent="." unique_id=934835797 instance=ExtResource("2_rx1ud")]
+
+[node name="MusicPlayer" type="Node" parent="." unique_id=1421637636]
+script = ExtResource("3_wcdpt")
+
+[node name="MusicStream" type="AudioStreamPlayer" parent="MusicPlayer" unique_id=1761506054]
+
+[node name="Ground" parent="." unique_id=231829925 instance=ExtResource("4_u3dsk")]
+
+[node name="Officer" parent="." unique_id=1660657085 instance=ExtResource("5_ygrj5")]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -72.190796, 8.625519, 16.014076)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1275133988]
+transform = Transform3D(1, 0, 0, 0, 0.9585417, 0.28495243, 0, -0.28495243, 0.9585417, -167.0181, 60.004288, 125.44641)
+fov = 90.0
+
+[node name="LimelightMaskViewport" parent="." unique_id=1520672246 instance=ExtResource("6_lgqab")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1084245481]
+environment = SubResource("Environment_2xa2j")
+
+[node name="FilmCamera" parent="." unique_id=1813504656 instance=ExtResource("7_ysfef")]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1, -221.7731, 48.697918, 70.53522)
+
+[node name="Audence Spawner" parent="." unique_id=1905624601 instance=ExtResource("8_kqtkm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -653.0907, 0.5, -284.03845)
+
+[node name="MeshInstance3D" parent="Audence Spawner" index="0" unique_id=1647866611]
+mesh = SubResource("BoxMesh_xwybn")
+
+[node name="Fences" type="Node3D" parent="." unique_id=2102489880]
+
+[node name="Fence" type="Sprite3D" parent="Fences" unique_id=1221786574]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -307.59473, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence2" type="Sprite3D" parent="Fences" unique_id=1945947957]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -385.95215, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence3" type="Sprite3D" parent="Fences" unique_id=548686048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -466.98972, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence4" type="Sprite3D" parent="Fences" unique_id=679300714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -544.95874, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence5" type="Sprite3D" parent="Fences" unique_id=1196014490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -627.80536, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence6" type="Sprite3D" parent="Fences" unique_id=1678502454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -709.572, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence7" type="Sprite3D" parent="Fences" unique_id=1199932493]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -781.3612, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence8" type="Sprite3D" parent="Fences" unique_id=1524703391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -859.7186, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence9" type="Sprite3D" parent="Fences" unique_id=518226668]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -940.75616, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence10" type="Sprite3D" parent="Fences" unique_id=1758905241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1018.7253, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence11" type="Sprite3D" parent="Fences" unique_id=1126610762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1101.5718, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence12" type="Sprite3D" parent="Fences" unique_id=949269273]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1183.3386, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence13" type="Sprite3D" parent="Fences" unique_id=1844838554]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1173.5566, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence14" type="Sprite3D" parent="Fences" unique_id=1782977249]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1095.1992, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence15" type="Sprite3D" parent="Fences" unique_id=544190166]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1014.16174, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence16" type="Sprite3D" parent="Fences" unique_id=118406825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 936.1926, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence17" type="Sprite3D" parent="Fences" unique_id=834803405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 853.34607, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence18" type="Sprite3D" parent="Fences" unique_id=1322836434]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 771.5794, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence19" type="Sprite3D" parent="Fences" unique_id=1905172890]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 699.7902, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence20" type="Sprite3D" parent="Fences" unique_id=755812635]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 621.4328, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence21" type="Sprite3D" parent="Fences" unique_id=1646193615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 540.39526, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence22" type="Sprite3D" parent="Fences" unique_id=1603093405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 462.42615, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence23" type="Sprite3D" parent="Fences" unique_id=1768558318]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 379.5796, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Fence24" type="Sprite3D" parent="Fences" unique_id=1578948425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 297.81287, 26.612144, -718.2417)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("9_68bju")
+
+[node name="Grass" type="Node3D" parent="." unique_id=1564743002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.27443933, 0)
+
+[node name="Flat" type="Node3D" parent="Grass" unique_id=36664046]
+
+[node name="Sprite3D" type="Sprite3D" parent="Grass/Flat" unique_id=1807871320]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, -372.66492, -0.2, 0)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D4" type="Sprite3D" parent="Grass/Flat" unique_id=270594619]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, -693.95734, -0.2, -4.1581345)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D5" type="Sprite3D" parent="Grass/Flat" unique_id=564075423]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, -354.58527, -0.19996949, -591.34894)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D6" type="Sprite3D" parent="Grass/Flat" unique_id=345826690]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, -694.5815, -0.20003052, -533.54443)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D7" type="Sprite3D" parent="Grass/Flat" unique_id=927099077]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, -1036.0427, -0.2, -535.0023)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D2" type="Sprite3D" parent="Grass/Flat" unique_id=1000526911]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, -372.66492, -0.2, -285.87744)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D3" type="Sprite3D" parent="Grass/Flat" unique_id=1207901690]
+transform = Transform3D(-1.1441599, 0.15786994, -6.9007147e-09, 2.748749e-16, -5.0486648e-08, -1.155, -0.15786994, -1.1441599, 5.001283e-08, -687.6338, -5.4026365, -243.79884)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D8" type="Sprite3D" parent="Grass/Flat" unique_id=1008669403]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 698.5409, -0.2, 0)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D9" type="Sprite3D" parent="Grass/Flat" unique_id=917279997]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 377.24847, -0.2, -4.1581345)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D10" type="Sprite3D" parent="Grass/Flat" unique_id=344319947]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 716.62054, -0.19996949, -591.34894)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D15" type="Sprite3D" parent="Grass/Flat" unique_id=1205422644]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 1055.188, -0.19996949, -591.34894)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D11" type="Sprite3D" parent="Grass/Flat" unique_id=717177802]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 376.62433, -0.20003052, -533.54443)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D12" type="Sprite3D" parent="Grass/Flat" unique_id=44438971]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, 35.163086, -0.2, -535.0023)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D13" type="Sprite3D" parent="Grass/Flat" unique_id=1150883430]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, 698.5409, -0.2, -285.87744)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D14" type="Sprite3D" parent="Grass/Flat" unique_id=877898775]
+transform = Transform3D(-1.1441599, 0.15786994, -6.9007147e-09, 2.748749e-16, -5.0486648e-08, -1.155, -0.15786994, -1.1441599, 5.001283e-08, 383.57202, -5.4026365, -243.79884)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D16" type="Sprite3D" parent="Grass/Flat" unique_id=1485065558]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 716.62054, -7.093585, -1211.0381)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D17" type="Sprite3D" parent="Grass/Flat" unique_id=844990767]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 1055.188, -7.093585, -1211.0381)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D18" type="Sprite3D" parent="Grass/Flat" unique_id=1966439626]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 376.62433, -7.093646, -1153.2336)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D19" type="Sprite3D" parent="Grass/Flat" unique_id=1151769606]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, 698.5409, -0.2, -905.56665)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D21" type="Sprite3D" parent="Grass/Flat" unique_id=1333155437]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, 1049.8616, -0.2, -905.56665)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D20" type="Sprite3D" parent="Grass/Flat" unique_id=931805651]
+transform = Transform3D(-1.1441599, 0.15786994, -6.9007147e-09, 2.748749e-16, -5.0486648e-08, -1.155, -0.15786994, -1.1441599, 5.001283e-08, 383.57202, -5.4026365, -863.48804)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D22" type="Sprite3D" parent="Grass/Flat" unique_id=778463954]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, -743.1904, -7.0936155, -905.56665)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D23" type="Sprite3D" parent="Grass/Flat" unique_id=37447438]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, -391.86975, -7.0936155, -905.56665)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D24" type="Sprite3D" parent="Grass/Flat" unique_id=678927608]
+transform = Transform3D(-1.1441599, 0.15786994, -6.9007147e-09, 2.748749e-16, -5.0486648e-08, -1.155, -0.15786994, -1.1441599, 5.001283e-08, -1058.1593, -12.296252, -863.48804)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D25" type="Sprite3D" parent="Grass/Flat" unique_id=573104487]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 727.19806, -7.093585, -1522.1133)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D26" type="Sprite3D" parent="Grass/Flat" unique_id=704025211]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 1055.188, -7.093585, -1522.1133)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D27" type="Sprite3D" parent="Grass/Flat" unique_id=4026247]
+transform = Transform3D(1.155, 0, 0, 0, -5.048665e-08, -1.155, 0, 1.155, -5.048665e-08, 387.20184, -7.093646, -1464.3088)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D28" type="Sprite3D" parent="Grass/Flat" unique_id=1867350881]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, -743.1904, -7.0936155, -1363.6243)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D29" type="Sprite3D" parent="Grass/Flat" unique_id=1729569802]
+transform = Transform3D(-1.155, 1.7440014e-07, -7.623273e-15, 0, -5.048665e-08, -1.155, -1.7440014e-07, -1.155, 5.048665e-08, -391.86975, -7.0936155, -1363.6243)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Sprite3D30" type="Sprite3D" parent="Grass/Flat" unique_id=2146332297]
+transform = Transform3D(-1.1441599, 0.15786994, -6.9007147e-09, 2.748749e-16, -5.0486648e-08, -1.155, -0.15786994, -1.1441599, 5.001283e-08, -1058.1593, -12.296252, -1321.5457)
+pixel_size = 0.5
+alpha_cut = 1
+texture = ExtResource("10_047xs")
+
+[node name="Tufts" type="Node3D" parent="Grass" unique_id=1619396795]
+
+[node name="Sprite3D" type="Sprite3D" parent="Grass/Tufts" unique_id=1417948067]
+transform = Transform3D(-1.0804154, 0.27134222, -0.30512428, 0.34769967, 1.0638915, -0.28506887, 0.21408476, -0.35851473, -1.076875, -372.66492, 12.786504, 0)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("11_hplot")
+
+[node name="Sprite3D2" type="Sprite3D" parent="Grass/Tufts" unique_id=96666354]
+transform = Transform3D(0.97399175, -0.15741877, 0.6004869, 0.3476997, 1.0638916, -0.2850689, -0.5142665, 0.42116356, 0.9445509, -306.44946, 12.786504, -210.8576)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("11_hplot")
+
+[node name="Sprite3D3" type="Sprite3D" parent="Grass/Tufts" unique_id=1264342073]
+transform = Transform3D(-1.0690434, 0.2540296, -0.35586536, 0.34769973, 1.0638916, -0.28506887, 0.2650963, -0.37098297, -1.0611883, -604.1235, 12.786504, -463.88617)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("11_hplot")
+
+[node name="Sprite3D4" type="Sprite3D" parent="Grass/Tufts" unique_id=1887297302]
+transform = Transform3D(-1.0690434, 0.2540296, -0.35586536, 0.34769973, 1.0638916, -0.28506887, 0.2650963, -0.37098297, -1.0611883, 430.68024, 12.786504, -463.88617)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("11_hplot")
+
+[node name="Sprite3D5" type="Sprite3D" parent="Grass/Tufts" unique_id=240497960]
+transform = Transform3D(0.99987006, -0.4302615, -0.38621205, 0.3476998, 1.0638918, -0.2850689, 0.46194112, 0.13051601, 1.0505242, 296.89105, 12.786504, -209.85304)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("11_hplot")
+
+[node name="Sprite3D6" type="Sprite3D" parent="Grass/Tufts" unique_id=364397891]
+transform = Transform3D(0.99987006, -0.4302615, -0.38621205, 0.3476998, 1.0638918, -0.2850689, 0.46194112, 0.13051601, 1.0505242, 424.2553, 12.786504, -86.7574)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("11_hplot")
+
+[node name="SignHolder" parent="." unique_id=1731856409 instance=ExtResource("13_rx1ud")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -174.46709, 4.0585136, 23.020653)
+button_name = ""
+hit_depth = 12.0
+
+[editable path="Audence Spawner"]

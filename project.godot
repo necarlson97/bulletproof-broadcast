@@ -8,6 +8,10 @@
 
 config_version=5
 
+[autoload]
+
+GameStats="*res://game_stats.gd"
+
 [application]
 
 config/name="Bulletproof Broadcast"

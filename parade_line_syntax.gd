@@ -204,3 +204,12 @@ static func decompose(s: String, steps: int = 0) -> String:
 	var order: Array[int] = transition_indices(specs)
 	var parts: PackedStringArray = _apply_steps(specs, order, steps)
 	return " ".join(parts)
+
+
+## Character length of visible text for [param specs] at [param steps] (same join rules as [method decompose]).
+static func visible_text_length(specs: Array[Dictionary], steps: int = 0) -> int:
+	if specs.is_empty():
+		return 0
+	var order: Array[int] = transition_indices(specs)
+	var parts: PackedStringArray = _apply_steps(specs, order, steps)
+	return " ".join(parts).length()

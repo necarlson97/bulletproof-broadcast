@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://gyj4nn4b8m53"]
+
+[ext_resource type="Script" path="res://menus/pause_menu.gd" id="1_pause"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+layer = 128
+script = ExtResource("1_pause")
+
+[node name="Dimmer" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.5)
+
+[node name="Panel" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(360, 0)
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LabelOverview" type="RichTextLabel" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+text = ""
+
+[node name="LabelParadeLines" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+text = "0 of 0 parade lines cleansed"
+
+[node name="LabelMalcontents" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+text = "0 malcontents broadcast"
+
+[node name="LabelLoyalists" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+text = "0 loyalists executed"
+
+[node name="LabelTraitors" type="Label" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+text = "0 traitors executed"
+
+[node name="BtnResume" type="Button" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+text = "Resume"
+
+[node name="BtnRetry" type="Button" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+text = "Retry"
+
+[node name="BtnMainMenu" type="Button" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+text = "Main Menu"
+
+[node name="RowSfx" type="HBoxContainer" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LabelSfx" type="Label" parent="Panel/MarginContainer/VBox/RowSfx"]
+layout_mode = 2
+text = "SFX"
+
+[node name="HSliderSfx" type="HSlider" parent="Panel/MarginContainer/VBox/RowSfx"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(180, 0)
+
+[node name="RowMusic" type="HBoxContainer" parent="Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LabelMusic" type="Label" parent="Panel/MarginContainer/VBox/RowMusic"]
+layout_mode = 2
+text = "Music"
+
+[node name="HSliderMusic" type="HSlider" parent="Panel/MarginContainer/VBox/RowMusic"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(180, 0)

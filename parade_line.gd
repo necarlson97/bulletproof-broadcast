@@ -1,6 +1,11 @@
 extends Node3D
 class_name ParadeLine
 
+## Emitted once when this line first crosses [member check_z] with at least one disloyal parader still in line.
+signal disloyal_present_at_check_z
+## Emitted when the march tween completes (before the line is freed).
+signal line_march_finished
+
 const _DIGITS: Array[String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 const _PARADER_FLEE_SCRIPT: GDScript = preload("res://people/parader_flee.gd")
 
@@ -63,8 +68,8 @@ func setup(
 	sign_target_width_multiplier = p_sign_target_width_multiplier
 	_specs = ParadeLineSyntax.parse_line(line_string)
 	_had_disloyal_at_spawn = _specs_has_any_disloyal()
-	_build_paraders()
 	_line_path_z = start_z
+	_build_paraders()
 	_set_target_z(start_z)
 
 
@@ -82,15 +87,15 @@ static func _spec_char_count(spec: Dictionary) -> int:
 
 
 func _spacing_per_char() -> float:
-	var visible_len: int = maxi(decompose(0).length(), 1)
+	var visible_len: int = maxi(ParadeLineSyntax.visible_text_length(_specs, 0), 1)
 	return line_width / float(visible_len)
 
 
 func _spawn_paraders() -> void:
 	var count: int = _specs.size()
 	var flipper_idx: int = 0
-	var flip_z_lo: float = minf(lerpf(start_z, check_z, 0.25), lerpf(start_z, check_z, 0.75))
-	var flip_z_hi: float = maxf(lerpf(start_z, check_z, 0.25), lerpf(start_z, check_z, 0.75))
+	var flip_z_lo: float = minf(lerpf(start_z, check_z, 0.5), lerpf(start_z, check_z, 0.75))
+	var flip_z_hi: float = maxf(lerpf(start_z, check_z, 0.5), lerpf(start_z, check_z, 0.75))
 	for idx: int in range(count):
 		var spec: Dictionary = _specs[idx]
 		var back: String = spec["back"]
@@ -159,7 +164,11 @@ func _layout_paraders_x(spacing_per_char: float) -> void:
 		_parader_x_targets.append(half_widths[i] + half_widths[i + 1])
 
 	if count == 1:
-		_parader_nodes[0].position.x = 0.0
+		var pr_one: Parader = _parader_nodes[0] as Parader
+		if pr_one != null:
+			pr_one.set_parade_target(0.0, _line_path_z)
+		else:
+			_parader_nodes[0].position.x = 0.0
 		return
 
 	var gaps: Array[float] = []
@@ -174,7 +183,11 @@ func _layout_paraders_x(spacing_per_char: float) -> void:
 
 	var x: float = -sum_gaps * 0.5
 	for i: int in range(count):
-		_parader_nodes[i].position.x = x
+		var pr_i: Parader = _parader_nodes[i] as Parader
+		if pr_i != null:
+			pr_i.set_parade_target(x, _line_path_z)
+		else:
+			_parader_nodes[i].position.x = x
 		if i < gaps.size():
 			x += gaps[i]
 
@@ -188,11 +201,6 @@ func _build_paraders() -> void:
 	_scale_signs(spacing)
 	_attach_parader_flee_scripts()
 	_layout_paraders_x(spacing)
-	for p_col: Node3D in _parader_nodes:
-		var pr_col: Parader = p_col as Parader
-		if pr_col != null:
-			pr_col.set_parade_column_x(p_col.position.x)
-			pr_col.set_parade_march_speed(marching_speed)
 
 
 func _specs_has_any_disloyal() -> bool:
@@ -212,7 +220,7 @@ func should_release_focus() -> bool:
 	if _passed_march_threshold(z, check_z):
 		return true
 	if _had_disloyal_at_spawn and _no_disloyal_alive() and _passed_march_threshold(
-		z, lerpf(start_z, check_z, 0.5)
+		z, lerpf(start_z, check_z, 0.9)
 	):
 		return true
 	return false
@@ -292,6 +300,15 @@ func get_focus_bounds_global() -> Variant:
 	}
 
 
+## Re-centers survivors on X using current sign sizes; does not rescale signs (only [_scale_signs] in [_build_paraders]).
+func _refit_line_formation_after_casualty() -> void:
+	_prune_freed_paraders()
+	if _parader_nodes.is_empty():
+		return
+	var spacing: float = _spacing_per_char()
+	_layout_paraders_x(spacing)
+
+
 func unregister_parader_from_march(parader: Node3D) -> void:
 	var pr: Parader = parader as Parader
 	if pr != null:
@@ -299,6 +316,9 @@ func unregister_parader_from_march(parader: Node3D) -> void:
 	var at: int = _parader_nodes.find(parader)
 	if at >= 0:
 		_parader_nodes.remove_at(at)
+		if at < _specs.size():
+			_specs.remove_at(at)
+		_refit_line_formation_after_casualty()
 
 
 func _nearest_disloyal_index(flee_idx: int) -> int:
@@ -319,7 +339,7 @@ func _set_target_z(z: float) -> void:
 	for p: Node3D in _parader_nodes:
 		var pr: Parader = p as Parader
 		if pr != null:
-			pr.set_parade_march_target_z(z)
+			pr.set_parade_line_z(z)
 		else:
 			p.position.z = z
 	_update_disloyal_sweating_near_check()
@@ -347,6 +367,7 @@ func _crossed_z_marching(prev_z: float, cur_z: float, threshold: float) -> bool:
 
 func _log_disloyal_at_check() -> void:
 	_prune_freed_paraders()
+	var any_disloyal: bool = false
 	for i: int in _parader_nodes.size():
 		var p: Node3D = _parader_nodes[i]
 		var pr: Parader = p as Parader
@@ -354,7 +375,11 @@ func _log_disloyal_at_check() -> void:
 			continue
 		if pr.loyal:
 			continue
+		any_disloyal = true
 		print("[ParadeLine] disloyal parader still in line at check_z=%s (index %d, node %s)" % [check_z, i, p.name])
+	if any_disloyal:
+		GameStats.malcontents_broadcast += 1
+		disloyal_present_at_check_z.emit()
 
 
 func _march_step(z: float) -> void:
@@ -367,6 +392,7 @@ func _march_step(z: float) -> void:
 
 
 func _on_march_finished() -> void:
+	line_march_finished.emit()
 	queue_free()
 
 

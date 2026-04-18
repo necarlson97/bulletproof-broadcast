@@ -25,6 +25,8 @@ static func create_ragdoll(
 		push_error("Ragdoll.create_ragdoll: root has no parent; cannot spawn ragdoll.")
 		return
 
+	var scene_root: Node = parent.get_tree().current_scene
+
 	var anchor_xf: Array[Transform3D] = []
 	var merged_local: Array[AABB] = []
 	var dup_sources: Array[Node] = []
@@ -44,6 +46,7 @@ static func create_ragdoll(
 		dup_sources.append(anchor)
 
 	if dup_sources.is_empty():
+		_detach_killed_sfx_before_root_freed(root, scene_root)
 		root.queue_free()
 		return
 
@@ -75,12 +78,31 @@ static func create_ragdoll(
 			randf_range(-random_angular_max, random_angular_max),
 		)
 
-		var scene_root: Node = parent.get_tree().current_scene
 		if scene_root != null:
 			_reparent_keep_global(rb, scene_root)
 		_schedule_piece_fade_and_free(rb)
 
+	_detach_killed_sfx_before_root_freed(root, scene_root)
 	root.queue_free()
+
+
+## [param root] is queued for freeing; move [KilledSfx] out first so one-shots keep playing.
+static func _detach_killed_sfx_before_root_freed(root: Node3D, new_parent: Node) -> void:
+	if new_parent == null:
+		return
+	var ap: AudioStreamPlayer3D = root.get_node_or_null("KilledSfx") as AudioStreamPlayer3D
+	if ap == null:
+		return
+	var xf: Transform3D = ap.global_transform
+	root.remove_child(ap)
+	new_parent.add_child(ap)
+	ap.global_transform = xf
+	ap.finished.connect(
+		func () -> void:
+			if is_instance_valid(ap):
+				ap.queue_free()
+	, CONNECT_ONE_SHOT,
+	)
 
 
 static func _reparent_keep_global(node: Node3D, new_parent: Node) -> void:
@@ -127,6 +149,8 @@ static func _copy_sprite3d_state_from_original(orig_root: Node, copy_root: Node)
 		c.modulate = o.modulate
 		c.region_enabled = o.region_enabled
 		c.region_rect = o.region_rect
+		if o.material_override != null:
+			c.material_override = o.material_override.duplicate()
 	var n: int = mini(orig_root.get_child_count(), copy_root.get_child_count())
 	for i in n:
 		_copy_sprite3d_state_from_original(orig_root.get_child(i), copy_root.get_child(i))

@@ -33,7 +33,7 @@ func jump_on_shot() -> void:
 	var delay_sec: float = lerpf(0.0, _SHOT_REACTION_DELAY_MAX_SEC, t)
 	if delay_sec > 0.0:
 		await get_tree().create_timer(delay_sec).timeout
-	await _bounce_once()
+	await _bounce_once(50.0)
 
 
 func _process(_delta: float) -> void:
@@ -77,9 +77,9 @@ func _bounce_loop() -> void:
 		await _bounce_once()
 
 
-func _bounce_once() -> void:
+func _bounce_once(max_height=15.0) -> void:
 	var e: float = clampf(excitement, 0.0, 1.0)
-	var height: float = lerpf(10.0, 50.0, e)
+	var height: float = lerpf(5.0, max_height, e)
 	var up: Tween = create_tween()
 	up.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	up.tween_property(self, "position:y", _bounce_base_y + height, _BOUNCE_HALF_DURATION)

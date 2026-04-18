@@ -4,7 +4,7 @@
 
 [node name="Parade" type="Node3D" unique_id=244925867]
 script = ExtResource("1_parade")
-marching_speed = 70.0
+marching_speed = 50.0
 start_z = -1300.0
 line_spawn_spacing = 500.0
 line_width = 50.0

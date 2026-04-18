@@ -6,6 +6,21 @@
 [ext_resource type="Texture2D" uid="uid://b0vs8xafso325" path="res://assets/pistol.png" id="5_vtp5g"]
 [ext_resource type="Texture2D" uid="uid://wl2gs26ionpd" path="res://assets/mussel flash.png" id="6_8tq1q"]
 [ext_resource type="Script" uid="uid://ds0feevveqrth" path="res://people/officer.gd" id="7_officer"]
+[ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://signs/sign_font.tres" id="7_umrfj"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_g35eu"]
+viewport_path = NodePath("DialogBox/SubViewport")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_umrfj"]
+bg_color = Color(0.23921569, 0.23921569, 0.19215687, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_fv4ir"]
+font = ExtResource("7_umrfj")
+font_size = 20
 
 [node name="Officer" unique_id=1660657085 instance=ExtResource("1_3w7t2")]
 script = ExtResource("7_officer")
@@ -45,10 +60,58 @@ pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("6_8tq1q")
 
-[node name="ShotSfx" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.0, 0)
-bus = &"SFX"
-max_distance = 500.0
-
 [node name="HandR" parent="." index="4" unique_id=1403083975]
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 16.851862, 1.464036)
+
+[node name="ShotSfx" type="AudioStreamPlayer3D" parent="." index="7" unique_id=1473434977]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36, 0)
+max_distance = 500.0
+bus = &"SFX"
+
+[node name="DialogBox" type="Node3D" parent="." index="8" unique_id=960094290]
+
+[node name="Sprite3D" type="Sprite3D" parent="DialogBox" index="0" unique_id=960094292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.201479, 62.224174, 0.61444664)
+pixel_size = 0.1
+alpha_cut = 1
+texture = SubResource("ViewportTexture_g35eu")
+
+[node name="SubViewport" type="SubViewport" parent="DialogBox" index="1" unique_id=1558594265]
+transparent_bg = true
+size = Vector2i(400, 100)
+
+[node name="Control" type="Control" parent="DialogBox/SubViewport" index="0" unique_id=917254064]
+custom_minimum_size = Vector2(400, 100)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel" type="Panel" parent="DialogBox/SubViewport/Control" index="0" unique_id=1364217412]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_umrfj")
+
+[node name="Label" type="Label" parent="DialogBox/SubViewport/Control/Panel" index="0" unique_id=376034426]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "I've heard some… Disloyal subjects have snuck into the parade. That is why I am here."
+label_settings = SubResource("LabelSettings_fv4ir")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="GunRest" type="Node3D" parent="." index="9" unique_id=1766277789]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -195.7934, -209.90347, -180)
