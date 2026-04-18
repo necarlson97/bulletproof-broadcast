@@ -23,11 +23,12 @@ var _retarget_tween: Tween
 
 func _ready() -> void:
 	_orbit_angle = randf() * TAU
-	global_position.y = 0.0
+	#global_position.y = 0.0
 	var mi: MeshInstance3D = $MeshInstance3D
 	mi.material_override = _MASK_FILL_MATERIAL
 	# Layer 10 — must match LimelightRender.MASK_RENDER_LAYER in limelight_render.gd
 	mi.layers = 1 << 9
+	_orbit_center = global_position
 
 
 func _process(delta: float) -> void:
@@ -39,7 +40,7 @@ func _process(delta: float) -> void:
 	_orbit_angle = fmod(_orbit_angle + orbit_speed * delta, TAU)
 	var offset: Vector3 = Vector3(cos(_orbit_angle), 0.0, sin(_orbit_angle)) * orbit_radius
 	var p: Vector3 = _orbit_center + offset
-	p.y = 0.0
+	#p.y = 0.0
 	global_position = p
 
 

@@ -6,6 +6,9 @@
 layer = 128
 script = ExtResource("1_pause")
 
+[node name="VolumePreviewSfx" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
 [node name="Dimmer" type="ColorRect" parent="."]
 visible = false
 anchors_preset = 15

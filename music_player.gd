@@ -13,6 +13,7 @@ var _track_index: int = 0
 
 
 func _ready() -> void:
+	_player.bus = "Music"
 	_player.finished.connect(_on_track_finished)
 	_play_current()
 

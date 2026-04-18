@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bn48w1mvckqru"]
+
+[ext_resource type="PackedScene" uid="uid://gyj4nn4b8m53" path="res://menus/pause_menu.tscn" id="1_kgy3p"]
+
+[node name="PauseMenu" unique_id=455479624 instance=ExtResource("1_kgy3p")]
+
+[node name="Panel" parent="." index="1"]
+visible = true
+
+[node name="LabelParadeLines" parent="Panel/MarginContainer/VBox" index="1"]
+visible = false
+
+[node name="LabelMalcontents" parent="Panel/MarginContainer/VBox" index="2"]
+visible = false
+
+[node name="LabelLoyalists" parent="Panel/MarginContainer/VBox" index="3"]
+visible = false
+
+[node name="LabelTraitors" parent="Panel/MarginContainer/VBox" index="4"]
+visible = false
+
+[node name="BtnRetry" parent="Panel/MarginContainer/VBox" index="6"]
+visible = false
+
+[node name="BtnMainMenu" parent="Panel/MarginContainer/VBox" index="7"]
+visible = false

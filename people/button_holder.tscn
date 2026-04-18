@@ -1,13 +1,15 @@
 [gd_scene format=3 uid="uid://8eagiuthp066"]
 
 [ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://people/parader.tscn" id="1_0feov"]
-[ext_resource type="Script" path="res://people/button_holder.gd" id="2_button_holder"]
+[ext_resource type="Script" uid="uid://br3tbty1h04a2" path="res://people/button_holder.gd" id="2_button_holder"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0feov"]
 size = Vector3(60, 30, 10)
 
-[node name="SignHolder" unique_id=1731856409 instance=ExtResource("1_0feov")]
+[node name="ButtonHolder" unique_id=1731856409 instance=ExtResource("1_0feov")]
 script = ExtResource("2_button_holder")
+button_name = ""
+hit_depth = 12.0
 
 [node name="Label3D" parent="Body" parent_id_path=PackedInt32Array(1678367108) index="0" unique_id=1425867495]
 visible = false

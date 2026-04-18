@@ -9,7 +9,7 @@ const DEFAULT_RANDOM_LINEAR_MAX: float = 1.5
 const DEFAULT_RANDOM_ANGULAR_MAX: float = 2.0
 
 ## Seconds each piece stays fully visible before fading (independent of parade line lifetime).
-const LIFETIME_BEFORE_FADE_SEC: float = 32.0
+const LIFETIME_BEFORE_FADE_SEC: float = 300.0
 ## Fade duration: scale + sprite alpha tweened to zero, then the body is freed.
 const FADE_OUT_SEC: float = 6.0
 

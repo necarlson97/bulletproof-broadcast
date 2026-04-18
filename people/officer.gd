@@ -29,7 +29,7 @@ const _SPEAK_SFX_CLIPS: Array[AudioStream] = [
 @onready var _shot_sfx: AudioStreamPlayer3D = $ShotSfx
 
 @onready var _dialog_box: Node3D = $DialogBox
-@onready var _speech_label: Label = $DialogBox/SubViewport/Control/Panel/Label
+@onready var _speech_label: RichTextLabel = $DialogBox/SubViewport/Control/Panel/Label
 @onready var _speak_sfx: AudioStreamPlayer3D = $KilledSfx
 
 var _muzzle_timer: Timer
@@ -65,6 +65,7 @@ func _ready() -> void:
 	add_child(_gun_rest_return_timer)
 	_dialog_box.visible = false
 	_speech_label.text = ""
+	_speech_label.visible_characters = -1
 	set_process(false)
 	set_physics_process(false)
 	set_gun_rest($GunRest)
@@ -127,9 +128,10 @@ func _process(delta: float) -> void:
 		return
 	if not _line_typing_done:
 		_line_elapsed += delta
+		var total_chars: int = _speech_label.get_total_character_count()
 		var target_shown: int = mini(
 			floori(_line_elapsed * _SPEAK_CHARS_PER_SEC),
-			_current_line.length()
+			total_chars
 		)
 		if target_shown > _chars_shown:
 			for i in range(_chars_shown, target_shown):
@@ -137,8 +139,8 @@ func _process(delta: float) -> void:
 				if ch != " " and ch != "\t":
 					_play_speak_blip()
 			_chars_shown = target_shown
-			_speech_label.text = _current_line.substr(0, _chars_shown)
-		if _chars_shown >= _current_line.length():
+			_speech_label.visible_characters = _chars_shown
+		if _chars_shown >= total_chars:
 			_line_typing_done = true
 			_line_pause_left = _LINE_PAUSE_AFTER_TYPING_SEC
 		return
@@ -189,6 +191,7 @@ func _abort_speech_silent() -> void:
 	_is_dialog_active = false
 	_on_speech_finished = Callable()
 	_dialog_box.visible = false
+	_speech_label.visible_characters = -1
 	set_process(false)
 
 
@@ -202,15 +205,16 @@ func _start_next_line() -> void:
 	_line_elapsed = 0.0
 	_line_typing_done = false
 	_line_pause_left = 0.0
-	_speech_label.text = ""
+	_speech_label.text = _current_line
+	_speech_label.visible_characters = 0
 
 
 func _advance_speech() -> void:
 	if not _is_dialog_active:
 		return
 	if not _line_typing_done:
-		_chars_shown = _current_line.length()
-		_speech_label.text = _current_line
+		_chars_shown = _speech_label.get_total_character_count()
+		_speech_label.visible_characters = -1
 		_line_typing_done = true
 		_line_pause_left = _LINE_PAUSE_AFTER_TYPING_SEC
 		return

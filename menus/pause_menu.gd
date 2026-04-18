@@ -9,6 +9,14 @@ const _OVERVIEW_COLOR_SAFE := "2E3A3F"
 const _OVERVIEW_COLOR_DANGER := "D8C36A"
 const _OVERVIEW_COLOR_DEAD := "A13A32"
 
+const _OOF_PREVIEW_CLIPS: Array[AudioStream] = [
+	preload("res://assets/sfx/oof-1.wav"),
+	preload("res://assets/sfx/oof-2.wav"),
+	preload("res://assets/sfx/oof-3.wav"),
+	preload("res://assets/sfx/oof-4.wav"),
+	preload("res://assets/sfx/oof-5.wav"),
+]
+
 @onready var _dimmer: ColorRect = $Dimmer
 @onready var _panel: PanelContainer = $Panel
 @onready var _label_overview: RichTextLabel = $Panel/MarginContainer/VBox/LabelOverview
@@ -21,6 +29,7 @@ const _OVERVIEW_COLOR_DEAD := "A13A32"
 @onready var _btn_main_menu: Button = $Panel/MarginContainer/VBox/BtnMainMenu
 @onready var _slider_sfx: HSlider = $Panel/MarginContainer/VBox/RowSfx/HSliderSfx
 @onready var _slider_music: HSlider = $Panel/MarginContainer/VBox/RowMusic/HSliderMusic
+@onready var _volume_preview: AudioStreamPlayer = $VolumePreviewSfx
 
 ## Autoload singleton (see project.godot).
 @onready var _stats: Node = get_node("/root/GameStats")
@@ -49,12 +58,14 @@ func _ready() -> void:
 	_slider_music.value = _linear_from_bus_index(_music_bus)
 	_slider_sfx.value_changed.connect(_on_sfx_slider_changed)
 	_slider_music.value_changed.connect(_on_music_slider_changed)
+	_slider_sfx.drag_ended.connect(_on_volume_slider_drag_ended)
+	_slider_music.drag_ended.connect(_on_volume_slider_drag_ended)
 	_btn_resume.pressed.connect(_on_resume_pressed)
 	_btn_retry.pressed.connect(_on_retry_pressed)
 	_btn_main_menu.pressed.connect(_on_main_menu_pressed)
 
 
-func toggle_pause() -> void:
+func toggle_pause(_button_id: String = "") -> void:
 	if _paused:
 		_close_pause()
 	else:
@@ -184,7 +195,7 @@ func _set_bus_linear(bus_idx: int, linear: float) -> void:
 		AudioServer.set_bus_volume_db(bus_idx, -80.0)
 	else:
 		AudioServer.set_bus_mute(bus_idx, false)
-		AudioServer.set_bus_volume_db(bus_idx, linear_to_db(linear))
+		AudioServer.set_bus_volume_linear(bus_idx, linear)
 
 
 func _on_sfx_slider_changed(value: float) -> void:
@@ -193,6 +204,18 @@ func _on_sfx_slider_changed(value: float) -> void:
 
 func _on_music_slider_changed(value: float) -> void:
 	_set_bus_linear(_music_bus, value)
+
+
+func _on_volume_slider_drag_ended(_value_changed: bool) -> void:
+	_play_oof_volume_preview()
+
+
+func _play_oof_volume_preview() -> void:
+	if _volume_preview == null or _OOF_PREVIEW_CLIPS.is_empty():
+		return
+	_volume_preview.stream = _OOF_PREVIEW_CLIPS.pick_random()
+	_volume_preview.pitch_scale = randf_range(0.92, 1.08)
+	_volume_preview.play()
 
 
 func _on_resume_pressed() -> void:

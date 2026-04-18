@@ -4,6 +4,7 @@ class_name NarrativeSequencer
 ## Intro: \\f becomes an extra dialogue line (same as newline for [Officer.speak]).
 const _INTRO_SPEECH := (
 	"Get ready, the parade of loyalists (and traitors) comes.\f"
+	+ "(click/space to sped up my speech).\n"
 	+ "Remember, some sign flips are just synonyms, and thus innocuous -\n"
 	+ "but watch for rebels trying to change the meaning."
 )
@@ -151,4 +152,7 @@ func _speak_async(text: String) -> void:
 	var finished: Array[bool] = [false]
 	_officer.speak(text, func(): finished[0] = true)
 	while not finished[0]:
+		# Retry / scene change removes this node from the tree while we await; get_tree() is then invalid.
+		if not is_inside_tree():
+			return
 		await get_tree().process_frame

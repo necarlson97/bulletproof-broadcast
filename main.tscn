@@ -55,6 +55,8 @@ bus = &"Music"
 [node name="Camera3D" type="Camera3D" parent="." unique_id=187998376]
 transform = Transform3D(1, 0, 0, 0, 0.94198126, 0.33566532, 0, -0.33566532, 0.94198126, -17.003002, 192.0253, 302.84464)
 fov = 55.0
+near = 10.0
+far = 1500.0
 
 [node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=1444246649 instance=ExtResource("3_sdark")]
 visible = false
@@ -429,36 +431,42 @@ texture = ExtResource("7_272bh")
 
 [node name="Sprite3D" type="Sprite3D" parent="Grass/Tufts" unique_id=957269207]
 transform = Transform3D(-1.0804154, 0.27134222, -0.30512428, 0.34769967, 1.0638915, -0.28506887, 0.21408476, -0.35851473, -1.076875, -372.66492, 12.786504, 0)
+modulate = Color(0.8474744, 0.84747446, 0.84747446, 1)
 pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("8_5vw27")
 
 [node name="Sprite3D2" type="Sprite3D" parent="Grass/Tufts" unique_id=2096355719]
 transform = Transform3D(0.97399175, -0.15741877, 0.6004869, 0.3476997, 1.0638916, -0.2850689, -0.5142665, 0.42116356, 0.9445509, -306.44946, 12.786504, -210.8576)
+modulate = Color(0.8474744, 0.84747446, 0.84747446, 1)
 pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("8_5vw27")
 
 [node name="Sprite3D3" type="Sprite3D" parent="Grass/Tufts" unique_id=1624322995]
 transform = Transform3D(-1.0690434, 0.2540296, -0.35586536, 0.34769973, 1.0638916, -0.28506887, 0.2650963, -0.37098297, -1.0611883, -604.1235, 12.786504, -463.88617)
+modulate = Color(0.8474744, 0.84747446, 0.84747446, 1)
 pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("8_5vw27")
 
 [node name="Sprite3D4" type="Sprite3D" parent="Grass/Tufts" unique_id=231250512]
 transform = Transform3D(-1.0690434, 0.2540296, -0.35586536, 0.34769973, 1.0638916, -0.28506887, 0.2650963, -0.37098297, -1.0611883, 430.68024, 12.786504, -463.88617)
+modulate = Color(0.8474744, 0.84747446, 0.84747446, 1)
 pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("8_5vw27")
 
 [node name="Sprite3D5" type="Sprite3D" parent="Grass/Tufts" unique_id=2082669946]
 transform = Transform3D(0.99987006, -0.4302615, -0.38621205, 0.3476998, 1.0638918, -0.2850689, 0.46194112, 0.13051601, 1.0505242, 296.89105, 12.786504, -209.85304)
+modulate = Color(0.8474744, 0.84747446, 0.84747446, 1)
 pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("8_5vw27")
 
 [node name="Sprite3D6" type="Sprite3D" parent="Grass/Tufts" unique_id=581332413]
 transform = Transform3D(0.99987006, -0.4302615, -0.38621205, 0.3476998, 1.0638918, -0.2850689, 0.46194112, 0.13051601, 1.0505242, 424.2553, 12.786504, -86.7574)
+modulate = Color(0.8474744, 0.84747446, 0.84747446, 1)
 pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("8_5vw27")
