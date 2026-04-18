@@ -13,8 +13,8 @@ var start_z: float = -1400.0
 var end_z: float = 300.0
 ## Along the march path: disloyal paraders still present are logged when the line crosses this Z.
 var check_z: float = 100.0
-## Total horizontal budget. spacing_per_char = line_width / sum of per-spec char counts
-## (not raw line_string length, so punctuation/spaces do not shrink signs).
+## Total horizontal budget. spacing_per_char = line_width / decompose(0).length()
+## (visible text at step 0, including spaces between pieces).
 ## Each parader's SignScale is set so sign width ≈ spacing_per_char * char count * sign_target_width_multiplier.
 ## Default > 1: gap = board halves + elastic (same size order); boards alone look small next to the air gap.
 var line_width: float = 600.0
@@ -29,6 +29,15 @@ var _specs: Array[Dictionary] = []
 var _march_tween: Tween
 var _prev_march_z: float = 0.0
 var _check_logged: bool = false
+
+
+func _prune_freed_paraders() -> void:
+	var i: int = 0
+	while i < _parader_nodes.size():
+		if is_instance_valid(_parader_nodes[i]):
+			i += 1
+		else:
+			_parader_nodes.remove_at(i)
 
 
 func setup(
@@ -47,73 +56,14 @@ func setup(
 	line_width = p_line_width
 	check_z = p_check_z
 	sign_target_width_multiplier = p_sign_target_width_multiplier
-	_specs = parse_parade_line(line_string)
+	_specs = ParadeLineSyntax.parse_line(line_string)
 	_build_paraders()
 	_set_target_z(start_z)
 
 
-static func parse_parade_line(s: String) -> Array[Dictionary]:
-	var result: Array[Dictionary] = []
-	var i: int = 0
-	var n: int = s.length()
-	while i < n:
-		while i < n and s[i] in " \t\n\r":
-			i += 1
-		if i >= n:
-			break
-		if s[i] == "(":
-			i += 1
-			var start_paren: int = i
-			while i < n and s[i] != ")":
-				i += 1
-			var inner: String = s.substr(start_paren, i - start_paren).strip_edges()
-			if i < n:
-				i += 1
-			var comma: int = inner.find(",")
-			var front: String = inner
-			var back: String = ""
-			if comma >= 0:
-				front = inner.substr(0, comma).strip_edges()
-				back = inner.substr(comma + 1).strip_edges()
-			result.append({"loyal": true, "front": front, "back": back})
-		elif s[i] == "[":
-			i += 1
-			var start_br: int = i
-			while i < n and s[i] != "]":
-				i += 1
-			var inner_b: String = s.substr(start_br, i - start_br).strip_edges()
-			if i < n:
-				i += 1
-			var comma_b: int = inner_b.find(",")
-			var front_b: String = inner_b
-			var back_b: String = ""
-			if comma_b >= 0:
-				front_b = inner_b.substr(0, comma_b).strip_edges()
-				back_b = inner_b.substr(comma_b + 1).strip_edges()
-			result.append({"loyal": false, "front": front_b, "back": back_b})
-		elif s[i] == "<":
-			i += 1
-			var start_lt: int = i
-			while i < n and s[i] != ">":
-				i += 1
-			var inner_lt: String = s.substr(start_lt, i - start_lt).strip_edges()
-			if i < n:
-				i += 1
-			var comma_lt: int = inner_lt.find(",")
-			var front_lt: String = inner_lt
-			var back_lt: String = ""
-			if comma_lt >= 0:
-				front_lt = inner_lt.substr(0, comma_lt).strip_edges()
-				back_lt = inner_lt.substr(comma_lt + 1).strip_edges()
-			result.append({"loyal": true, "front": front_lt, "back": back_lt, "fleeing": true})
-		else:
-			var start_w: int = i
-			while i < n and not s[i] in " \t\n\r([)]<>":
-				i += 1
-			var word: String = s.substr(start_w, i - start_w).strip_edges()
-			if not word.is_empty():
-				result.append({"loyal": true, "front": word, "back": ""})
-	return result
+## Text after `steps` transition events (see [ParadeLineSyntax]). -1 = full exhaustion.
+func decompose(steps: int = 0) -> String:
+	return ParadeLineSyntax.decompose(line_string, steps)
 
 
 static func _spec_char_count(spec: Dictionary) -> int:
@@ -124,19 +74,16 @@ static func _spec_char_count(spec: Dictionary) -> int:
 	return maxi(f.length(), b.length())
 
 
-static func _total_spec_char_count(specs: Array[Dictionary]) -> int:
-	var n: int = 0
-	for spec: Dictionary in specs:
-		n += _spec_char_count(spec)
-	return n
+func _spacing_per_char() -> float:
+	var visible_len: int = maxi(decompose(0).length(), 1)
+	return line_width / float(visible_len)
 
 
-func _build_paraders() -> void:
+func _spawn_paraders() -> void:
 	var count: int = _specs.size()
-	if count == 0:
-		return
-
 	var flipper_idx: int = 0
+	var flip_z_lo: float = minf(lerpf(start_z, check_z, 0.25), lerpf(start_z, check_z, 0.75))
+	var flip_z_hi: float = maxf(lerpf(start_z, check_z, 0.25), lerpf(start_z, check_z, 0.75))
 	for idx: int in range(count):
 		var spec: Dictionary = _specs[idx]
 		var back: String = spec["back"]
@@ -155,11 +102,14 @@ func _build_paraders() -> void:
 		var back_variant: Variant = null
 		if not back.is_empty():
 			back_variant = back
-		p.call("configure_parader", spec["front"], back_variant, spec["loyal"], digit)
+		var flip_at_z: float = INF
+		if flip:
+			flip_at_z = randf_range(flip_z_lo, flip_z_hi)
+		p.call("configure_parader", spec["front"], back_variant, spec["loyal"], digit, flip_at_z)
 
-	var total_chars: int = _total_spec_char_count(_specs)
-	var spacing_per_char: float = line_width / float(maxi(total_chars, 1))
-	# Board width at scale 1 is get_layout_width(); scale so it matches the line's char budget.
+
+func _scale_signs(spacing_per_char: float) -> void:
+	var count: int = _specs.size()
 	for idx: int in range(count):
 		var spec_sc: Dictionary = _specs[idx]
 		var cc: int = _spec_char_count(spec_sc)
@@ -172,6 +122,9 @@ func _build_paraders() -> void:
 			var s: float = target_w / base_w
 			sign_scale.scale = Vector3(s, s, s)
 
+
+func _attach_parader_flee_scripts() -> void:
+	var count: int = _specs.size()
 	for idx: int in range(count):
 		var spec_f: Dictionary = _specs[idx]
 		if not spec_f.get("fleeing", false):
@@ -184,6 +137,9 @@ func _build_paraders() -> void:
 		_parader_nodes[idx].add_child(flee)
 		flee.call("setup", self, _parader_nodes[idx] as Parader, _parader_nodes[watched_idx] as Parader)
 
+
+func _layout_paraders_x(spacing_per_char: float) -> void:
+	var count: int = _specs.size()
 	var half_widths: Array[float] = []
 	var char_counts: Array[int] = []
 	for idx: int in range(count):
@@ -193,8 +149,7 @@ func _build_paraders() -> void:
 
 	_parader_x_targets.clear()
 	for i: int in range(count - 1):
-		var pair: float = half_widths[i] + half_widths[i + 1]
-		_parader_x_targets.append(pair)
+		_parader_x_targets.append(half_widths[i] + half_widths[i + 1])
 
 	if count == 1:
 		_parader_nodes[0].position.x = 0.0
@@ -202,10 +157,9 @@ func _build_paraders() -> void:
 
 	var gaps: Array[float] = []
 	for i: int in range(count - 1):
-		var gap: float = (
+		gaps.append(
 			_parader_x_targets[i] + spacing_per_char * float(char_counts[i] + char_counts[i + 1])
 		)
-		gaps.append(gap)
 
 	var sum_gaps: float = 0.0
 	for g: float in gaps:
@@ -218,9 +172,21 @@ func _build_paraders() -> void:
 			x += gaps[i]
 
 
+func _build_paraders() -> void:
+	if _specs.is_empty():
+		return
+
+	_spawn_paraders()
+	var spacing: float = _spacing_per_char()
+	_scale_signs(spacing)
+	_attach_parader_flee_scripts()
+	_layout_paraders_x(spacing)
+
+
 func get_parader_by_digit(digit: String) -> Parader:
 	if digit.is_empty():
 		return null
+	_prune_freed_paraders()
 	for p: Node3D in _parader_nodes:
 		var pr: Parader = p as Parader
 		if pr == null:
@@ -233,12 +199,14 @@ func get_parader_by_digit(digit: String) -> Parader:
 
 ## Front-to-back sort key: largest Z is the line closest to the march end (positive Z).
 func get_line_march_z() -> float:
+	_prune_freed_paraders()
 	if _parader_nodes.is_empty():
 		return global_position.z
 	return _parader_nodes[0].global_position.z
 
 
 func get_focus_bounds_global() -> Variant:
+	_prune_freed_paraders()
 	if _parader_nodes.is_empty():
 		return null
 	var min_x: float = INF
@@ -284,6 +252,7 @@ func _nearest_disloyal_index(flee_idx: int) -> int:
 
 
 func _set_target_z(z: float) -> void:
+	_prune_freed_paraders()
 	for p: Node3D in _parader_nodes:
 		p.position.z = z
 
@@ -299,6 +268,7 @@ func _crossed_z_marching(prev_z: float, cur_z: float, threshold: float) -> bool:
 
 
 func _log_disloyal_at_check() -> void:
+	_prune_freed_paraders()
 	for i: int in _parader_nodes.size():
 		var p: Node3D = _parader_nodes[i]
 		var pr: Parader = p as Parader

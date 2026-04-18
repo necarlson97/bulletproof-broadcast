@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b8paradlnst01"]
+
+[ext_resource type="PackedScene" uid="uid://c0mcbuqqfbjrg" path="res://parade_line.tscn" id="1_parade_line"]
+[ext_resource type="Script" uid="uid://dfd6xl4gmsm4u" path="res://parade_line_smoke_test.gd" id="2_smoke"]
+[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://ground.tscn" id="3_ground"]
+
+[node name="ParadeLineSmokeTest" type="Node3D"]
+script = ExtResource("2_smoke")
+
+[node name="ParadeLine" parent="." instance=ExtResource("1_parade_line")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.8790252, 0.47677526, 0, -0.47677526, 0.8790252, 0.4, 127.188095, 207.70746)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0.2, 0.6, 0.8)
+
+[node name="Ground" parent="." instance=ExtResource("3_ground")]

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0vs8xafso325"
-path.s3tc="res://.godot/imported/pistol.png-25ad999fb244d6e6522163977fe47a51.s3tc.ctex"
+uid="uid://c5jna01vqjdf0"
+path.s3tc="res://.godot/imported/grass blade.png-50579937c34a5cb16b18d953b9766018.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/pistol.png"
-dest_files=["res://.godot/imported/pistol.png-25ad999fb244d6e6522163977fe47a51.s3tc.ctex"]
+source_file="res://assets/grass blade.png"
+dest_files=["res://.godot/imported/grass blade.png-50579937c34a5cb16b18d953b9766018.s3tc.ctex"]
 
 [params]
 

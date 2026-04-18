@@ -7,8 +7,9 @@ const _FOCUSED_LINE_SCENE: PackedScene = preload("res://focused_line.tscn")
 func _ready() -> void:
 	var parade: Node = _PARADE_SCENE.instantiate()
 	var lines: Array[String] = [
+		"Order (persists,remains) [maintained,broken] <by> [the state,chaos].",
 		"Our [Great,Awful] (King,Leader) is [protecting,ruining] your life.",
-		"(Remember,Recall) the [truth,lie] <of> [order,chaos].",
+		"The (state,system) sees <all> [citizens,traitors].",
 	]
 	parade.line_strings = lines
 	add_child(parade)

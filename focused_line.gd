@@ -2,6 +2,7 @@ extends Node3D
 class_name FocusedLine
 
 @onready var _highlight: MeshInstance3D = $HighlightCube
+@onready var _officer: Officer = get_parent().get_node("Camera3D/Officer") as Officer
 
 func _ready() -> void:
 	if _highlight != null:
@@ -39,6 +40,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	var target: Parader = pl.get_parader_by_digit(d)
 	if target == null:
 		return
+	if _officer != null:
+		_officer.shot_at(target)
 	target.kill()
 	get_viewport().set_input_as_handled()
 

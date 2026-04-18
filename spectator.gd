@@ -1,7 +1,7 @@
 extends "res://person.gd"
 
 ## Idle crowd reaction level; drives bounce rate, bounce height, hand waggle, and hand height.
-@export_range(0.0, 1.0) var excitement: float = 0.5
+@export_range(0.0, 1.0) var excitement: float = 0.2
 
 const _BOUNCE_HALF_DURATION: float = 0.2
 
@@ -40,17 +40,11 @@ func _random_offset_in_disk(radius: float) -> Vector2:
 func _wiggle_loop() -> void:
 	while is_inside_tree():
 		var e: float = clampf(excitement, 0.0, 1.0)
-		var r: float = lerpf(0.0, 20.0, e)
-		var pause_min: float = lerpf(1.2, 0.12, e)
-		var pause_max: float = lerpf(1.8, 0.22, e)
-		await get_tree().create_timer(randf_range(pause_min, pause_max)).timeout
-		if not is_inside_tree():
-			return
-		e = clampf(excitement, 0.0, 1.0)
-		r = lerpf(0.0, 20.0, e)
+		var r: float = lerpf(0.0, 6.0, e)
+
 		var target_l: Vector2 = _random_offset_in_disk(r)
 		var target_r: Vector2 = _random_offset_in_disk(r)
-		var dur: float = lerpf(0.45, 0.12, e)
+		var dur: float = lerpf(0.2, 0.1, e)
 		var tw: Tween = create_tween()
 		tw.set_parallel(true)
 		tw.tween_property(self, "_wiggle_off_l", target_l, dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)

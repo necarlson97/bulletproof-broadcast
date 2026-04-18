@@ -3,9 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://person.tscn" id="1_3w7t2"]
 [ext_resource type="Texture2D" uid="uid://daluy1banvb3v" path="res://assets/officer hat.png" id="2_b17gm"]
 [ext_resource type="Texture2D" uid="uid://dm4p3x2o5fgwo" path="res://assets/glasses.png" id="2_vffdj"]
-[ext_resource type="Script" uid="uid://cen8j7vsmpme5" path="res://eyes.gd" id="3_b17gm"]
+[ext_resource type="Texture2D" uid="uid://b0vs8xafso325" path="res://assets/pistol.png" id="5_vtp5g"]
+[ext_resource type="Texture2D" uid="uid://wl2gs26ionpd" path="res://assets/mussel flash.png" id="6_8tq1q"]
+[ext_resource type="Script" uid="uid://ds0feevveqrth" path="res://officer.gd" id="7_officer"]
 
 [node name="Officer" unique_id=1660657085 instance=ExtResource("1_3w7t2")]
+script = ExtResource("7_officer")
 
 [node name="PersonColor" parent="." index="0" unique_id=1700000001]
 shirt_start = Color(0.2627451, 0.26666668, 0.19215687, 1)
@@ -16,20 +19,31 @@ transform = Transform3D(0.745, 0, 0, 0, 0.745, 0, 0, 0, 0.745, 0.85955834, 5.650
 pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("2_b17gm")
-script = ExtResource("3_b17gm")
 
 [node name="Glasses" type="Sprite3D" parent="Face/Eyes" parent_id_path=PackedInt32Array(161895202) index="0" unique_id=1178879928]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.2100439)
 pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("2_vffdj")
-script = ExtResource("3_b17gm")
 
 [node name="Body" parent="." index="2" unique_id=1678367108]
 modulate = Color(0.3019608, 0.3137255, 0.20784314, 1)
 
 [node name="HandL" parent="." index="3" unique_id=1368089338]
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 31.695404, 1.4910412)
+
+[node name="Gun" type="Sprite3D" parent="HandL" index="0" unique_id=2019999971]
+transform = Transform3D(0.9999998, 0, 0, 0, 0.9999998, 0, 0, 0, 0.9999998, -2.5241604, 0.21461868, -0.25529408)
+offset = Vector2(-75.275, 42.85)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("5_vtp5g")
+
+[node name="MuzzelFlash" type="Sprite3D" parent="HandL/Gun" index="0" unique_id=540988831]
+transform = Transform3D(0.99999964, 0, 0, 0, 0.99999964, 0, 0, 0, 0.99999964, -54.797653, 16.588177, 0)
+pixel_size = 0.2
+alpha_cut = 1
+texture = ExtResource("6_8tq1q")
 
 [node name="HandR" parent="." index="4" unique_id=1403083975]
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 16.851862, 1.464036)
