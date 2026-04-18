@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://c5vhmcnqvrdx"]
 
-[ext_resource type="Script" uid="uid://jmuvvub4hh4x" path="res://sign_flippable.gd" id="2_flip"]
+[ext_resource type="Script" uid="uid://jmuvvub4hh4x" path="res://signs/sign_flippable.gd" id="2_flip"]
 [ext_resource type="Texture2D" uid="uid://da7exih25pgxh" path="res://assets/sign.png" id="2_sum01"]
-[ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://sign_font.tres" id="3_font"]
+[ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://signs/sign_font.tres" id="3_font"]
 
 [node name="Sign" type="Node3D" unique_id=333778281]
 script = ExtResource("2_flip")

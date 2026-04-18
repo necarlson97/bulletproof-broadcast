@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cklqhp4v1uemv"]
 
 [ext_resource type="Texture2D" uid="uid://decbvkn3ovime" path="res://assets/camera.png" id="1_rwsx5"]
-[ext_resource type="Script" uid="uid://bewd0kwdi6wfn" path="res://film_camera.gd" id="1_yrjma"]
+[ext_resource type="Script" uid="uid://bewd0kwdi6wfn" path="res://scenery/film_camera.gd" id="1_yrjma"]
 [ext_resource type="Texture2D" uid="uid://dycxi6dq3mvyf" path="res://assets/camera wheel.png" id="2_yrjma"]
 
 [node name="FilmCamera" type="Node3D" unique_id=1813504656]

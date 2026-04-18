@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://60nocx6sekte"]
 
-[ext_resource type="Script" uid="uid://xvn33najkg3n" path="res://audence_spawner.gd" id="1_spawner"]
+[ext_resource type="Script" uid="uid://xvn33najkg3n" path="res://people/audence_spawner.gd" id="1_spawner"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_xx8d8"]
 size = Vector3(800, 1, 800)

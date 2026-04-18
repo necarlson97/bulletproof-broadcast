@@ -1,6 +1,12 @@
 # Godot CLI (this machine / Steam)
 
-**Editor executable (tools build):**
+> **Agents / automation:** This file is the **single source of truth** for where Godot lives on this machine. Do not search PATH or guess paths — use the executable below. A Cursor rule (`.cursor/rules/godot-cli-path.mdc`) also points here so new threads load this context.
+
+---
+
+## Editor executable (tools build)
+
+**Path:**
 
 `F:\Program Files (x86)\SteamLibrary\steamapps\common\Godot Engine\godot.windows.opt.tools.64.exe`
 

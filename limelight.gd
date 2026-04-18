@@ -1,6 +1,8 @@
 extends Node3D
 class_name Limelight
 
+const _MASK_MATERIAL: Material = preload("res://materials/limelight_mask_material.tres")
+
 ## Ground plane (Y=0) orbit around an assigned target. Retarget uses a tweened blend toward
 ## the new goal, then continuous lerp while the target moves.
 
@@ -20,6 +22,9 @@ var _retarget_tween: Tween
 func _ready() -> void:
 	_orbit_angle = randf() * TAU
 	global_position.y = 0.0
+	var mi: MeshInstance3D = $MeshInstance3D
+	mi.material_override = _MASK_MATERIAL
+	mi.layers = LimelightRender.mask_layer_mask()
 
 
 func _process(delta: float) -> void:

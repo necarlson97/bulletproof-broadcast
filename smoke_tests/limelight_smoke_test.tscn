@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bwkfhspqm4m6u"]
+
+[ext_resource type="Script" uid="uid://bw1icm47p30o2" path="res://smoke_tests/limelight_smoke_test.gd" id="1_smoke"]
+
+[node name="LimelightSmokeTest" type="Node3D" unique_id=2078595177]
+script = ExtResource("1_smoke")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=183869854]
+transform = Transform3D(1, 0, 0, 0, 0.9298471, 0.36794606, 0, -0.36794606, 0.9298471, 0, 0.95006216, 0.99133)

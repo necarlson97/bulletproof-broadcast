@@ -1,9 +1,16 @@
-[gd_scene format=3 uid="uid://bwkfhspqm4m6u"]
+[gd_scene format=3 uid="uid://qa67huya78xy"]
 
-[ext_resource type="Script" uid="uid://bw1icm47p30o2" path="res://limelight_smoke_test.gd" id="1_smoke"]
+[ext_resource type="Script" uid="uid://bw1icm47p30o2" path="res://smoke_tests/limelight_smoke_test.gd" id="1_ms43w"]
+[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="2_ms43w"]
+[ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight.tscn" id="2_svi4e"]
 
 [node name="LimelightSmokeTest" type="Node3D" unique_id=2078595177]
-script = ExtResource("1_smoke")
+script = ExtResource("1_ms43w")
+
+[node name="Limelight" parent="." unique_id=167322420 instance=ExtResource("2_svi4e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -375.6751)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=183869854]
-transform = Transform3D(1, 0, 0, 0, 0.9298471, 0.36794606, 0, -0.36794606, 0.9298471, 0, 0.95006216, 0.99133)
+transform = Transform3D(1, 0, 0, 0, 0.7300549, 0.6833885, 0, -0.6833885, 0.7300549, 0, 189.25562, 113.91711)
+
+[node name="Ground" parent="." unique_id=231829925 instance=ExtResource("2_ms43w")]

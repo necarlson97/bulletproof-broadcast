@@ -1,0 +1,16 @@
+---
+description: Where to find the Godot editor executable for this project (do not guess or search PATH)
+alwaysApply: true
+---
+
+# Godot executable — read this first
+
+**Do not** try to locate Godot by searching the disk, `where godot`, or inventing paths.
+
+For this repo, the canonical location and CLI examples are in:
+
+**`.cursor/godot-cli.md`**
+
+Open or read that file before running Godot from the terminal, validating the project, or suggesting install paths. It documents the machine-specific Steam/tools build path and PowerShell quoting (paths with spaces).
+
+Project root (for `--path`): `f:\godot\bulletproof-broadcast` (must contain `project.godot`).

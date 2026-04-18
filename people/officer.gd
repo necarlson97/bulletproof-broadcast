@@ -30,6 +30,7 @@ func shot_at(target: Node3D) -> void:
 	_muzzle_timer.stop()
 	_muzzle_timer.wait_time = _MUZZLE_FLASH_SEC
 	_muzzle_timer.start()
+	get_tree().call_group("spectator", "jump_on_shot")
 
 
 func _hide_muzzle_flash() -> void:

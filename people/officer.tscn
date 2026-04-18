@@ -1,11 +1,11 @@
-[gd_scene format=3 uid="uid://btrmn4lawuoki"]
+[gd_scene format=3 uid="uid://dbc275amwc630"]
 
-[ext_resource type="PackedScene" uid="uid://cyuex3a2us7lv" path="res://person.tscn" id="1_3w7t2"]
+[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://people/person.tscn" id="1_3w7t2"]
 [ext_resource type="Texture2D" uid="uid://daluy1banvb3v" path="res://assets/officer hat.png" id="2_b17gm"]
 [ext_resource type="Texture2D" uid="uid://dm4p3x2o5fgwo" path="res://assets/glasses.png" id="2_vffdj"]
 [ext_resource type="Texture2D" uid="uid://b0vs8xafso325" path="res://assets/pistol.png" id="5_vtp5g"]
 [ext_resource type="Texture2D" uid="uid://wl2gs26ionpd" path="res://assets/mussel flash.png" id="6_8tq1q"]
-[ext_resource type="Script" path="res://officer.gd" id="7_officer"]
+[ext_resource type="Script" uid="uid://ds0feevveqrth" path="res://people/officer.gd" id="7_officer"]
 
 [node name="Officer" unique_id=1660657085 instance=ExtResource("1_3w7t2")]
 script = ExtResource("7_officer")

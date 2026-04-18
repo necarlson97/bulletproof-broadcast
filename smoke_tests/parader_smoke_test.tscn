@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://hp6i4ukccpo6"]
 
-[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://parader.tscn" id="1_parader"]
-[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://person.tscn" id="2_pxd34"]
-[ext_resource type="Script" uid="uid://bq5hc5cmhgsqd" path="res://parader_smoke_test.gd" id="2_smoke"]
-[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://ground.tscn" id="4_hb21g"]
-[ext_resource type="PackedScene" path="res://spectator.tscn" id="5_7kffl"]
+[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://people/parader.tscn" id="1_parader"]
+[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://people/person.tscn" id="2_pxd34"]
+[ext_resource type="Script" uid="uid://bq5hc5cmhgsqd" path="res://smoke_tests/parader_smoke_test.gd" id="2_smoke"]
+[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="4_hb21g"]
+[ext_resource type="PackedScene" path="res://people/spectator.tscn" id="5_7kffl"]
 
 [node name="ParaderSmokeTest" type="Node3D" unique_id=25755095]
 script = ExtResource("2_smoke")

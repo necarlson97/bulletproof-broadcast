@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://c1sx1m4cq0efi"]
 
-[ext_resource type="PackedScene" uid="uid://c7301corw4856" path="res://sign.tscn" id="1_sign"]
-[ext_resource type="PackedScene" uid="uid://c5vhmcnqvrdx" path="res://sign_flippable.tscn" id="2_flippable"]
-[ext_resource type="Script" uid="uid://c4vj4qy12jnno" path="res://sign_smoke_test.gd" id="3_smoke"]
+[ext_resource type="PackedScene" uid="uid://c7301corw4856" path="res://signs/sign.tscn" id="1_sign"]
+[ext_resource type="PackedScene" uid="uid://c5vhmcnqvrdx" path="res://signs/sign_flippable.tscn" id="2_flippable"]
+[ext_resource type="Script" uid="uid://c4vj4qy12jnno" path="res://smoke_tests/sign_smoke_test.gd" id="3_smoke"]
 
 [node name="SignSmokeTest" type="Node3D" unique_id=1766109084]
 script = ExtResource("3_smoke")

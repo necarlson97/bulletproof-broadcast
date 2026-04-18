@@ -1,7 +1,0 @@
-[gd_scene format=3 uid="uid://bfcar1ttmixto"]
-
-[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://person.tscn" id="1_person"]
-[ext_resource type="Script" uid="uid://b9k7m2spectator1" path="res://spectator.gd" id="2_spectator"]
-
-[node name="Spectator" instance=ExtResource("1_person")]
-script = ExtResource("2_spectator")

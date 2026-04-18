@@ -3,7 +3,7 @@ extends Node3D
 ## Distance between spectator grid points on X/Z (local to this spawner).
 @export var spacing: float = 100.0
 
-const _SPECTATOR_SCENE: PackedScene = preload("res://spectator.tscn")
+const _SPECTATOR_SCENE: PackedScene = preload("res://people/spectator.tscn")
 
 @onready var _bounds_mesh: MeshInstance3D = $MeshInstance3D
 

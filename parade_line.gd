@@ -2,9 +2,9 @@ extends Node3D
 class_name ParadeLine
 
 const _DIGITS: Array[String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-const _PARADER_FLEE_SCRIPT: GDScript = preload("res://parader_flee.gd")
+const _PARADER_FLEE_SCRIPT: GDScript = preload("res://people/parader_flee.gd")
 
-@export var parader_scene: PackedScene = preload("res://parader.tscn")
+@export var parader_scene: PackedScene = preload("res://people/parader.tscn")
 
 var line_string: String = ""
 var marching_speed: float = 300.0

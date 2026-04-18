@@ -1,9 +1,13 @@
-extends "res://person.gd"
+extends "res://people/person.gd"
 
 ## Idle crowd reaction level; drives bounce rate, bounce height, hand waggle, and hand height.
 @export_range(0.0, 1.0) var excitement: float = 0.2
 
 const _BOUNCE_HALF_DURATION: float = 0.2
+
+## Shot reaction: delay before bounce scales from 0s at the origin to this many seconds at `_SHOT_REACTION_DIST_MAX`.
+const _SHOT_REACTION_DELAY_MAX_SEC: float = 0.2
+const _SHOT_REACTION_DIST_MAX: float = 1000.0
 
 const _HAND_L_BASE_X: float = -14.4
 const _HAND_R_BASE_X: float = 14.7
@@ -17,9 +21,19 @@ var _wiggle_off_r: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
+	add_to_group("spectator")
 	_bounce_base_y = position.y
 	_bounce_loop()
 	_wiggle_loop()
+
+
+func jump_on_shot() -> void:
+	var dist: float = global_position.distance_to(Vector3.ZERO)
+	var t: float = clampf(dist / _SHOT_REACTION_DIST_MAX, 0.0, 1.0)
+	var delay_sec: float = lerpf(0.0, _SHOT_REACTION_DELAY_MAX_SEC, t)
+	if delay_sec > 0.0:
+		await get_tree().create_timer(delay_sec).timeout
+	await _bounce_once()
 
 
 func _process(_delta: float) -> void:

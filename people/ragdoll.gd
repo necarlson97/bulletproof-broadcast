@@ -4,9 +4,14 @@ extends Object
 ## Builds cardboard-style ragdoll pieces from [param root]: one [RigidBody3D] per direct child,
 ## with all [Sprite3D] under that child grouped into a single box collider. The original [param root] is freed.
 
-const DEFAULT_MIN_THICKNESS: float = 0.01
+const DEFAULT_MIN_THICKNESS: float = 1.0
 const DEFAULT_RANDOM_LINEAR_MAX: float = 1.5
 const DEFAULT_RANDOM_ANGULAR_MAX: float = 2.0
+
+## Seconds each piece stays fully visible before fading (independent of parade line lifetime).
+const LIFETIME_BEFORE_FADE_SEC: float = 32.0
+## Fade duration: scale + sprite alpha tweened to zero, then the body is freed.
+const FADE_OUT_SEC: float = 6.0
 
 
 static func create_ragdoll(
@@ -70,7 +75,47 @@ static func create_ragdoll(
 			randf_range(-random_angular_max, random_angular_max),
 		)
 
+		var scene_root: Node = parent.get_tree().current_scene
+		if scene_root != null:
+			_reparent_keep_global(rb, scene_root)
+		_schedule_piece_fade_and_free(rb)
+
 	root.queue_free()
+
+
+static func _reparent_keep_global(node: Node3D, new_parent: Node) -> void:
+	var xf: Transform3D = node.global_transform
+	var op: Node = node.get_parent()
+	if op != null:
+		op.remove_child(node)
+	new_parent.add_child(node)
+	node.global_transform = xf
+
+
+static func _schedule_piece_fade_and_free(rb: RigidBody3D) -> void:
+	var tree: SceneTree = rb.get_tree()
+	if tree == null:
+		return
+	tree.create_timer(LIFETIME_BEFORE_FADE_SEC).timeout.connect(
+		func () -> void:
+			_fade_out_and_free_piece(rb)
+	)
+
+
+static func _fade_out_and_free_piece(rb: RigidBody3D) -> void:
+	if not is_instance_valid(rb) or not rb.is_inside_tree():
+		return
+	rb.freeze = true
+	var tween: Tween = rb.create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_IN)
+	tween.tween_property(rb, "scale", Vector3.ZERO, FADE_OUT_SEC)
+	for s: Sprite3D in _find_sprite3ds_under(rb):
+		var end: Color = s.modulate
+		end.a = 0.0
+		tween.tween_property(s, "modulate", end, FADE_OUT_SEC)
+	tween.finished.connect(func (): rb.queue_free(), CONNECT_ONE_SHOT)
 
 
 ## Ensures each duplicated [Sprite3D] matches the live original (texture, etc.) before [method Node._ready] runs.

@@ -1,4 +1,4 @@
-extends "res://person.gd"
+extends "res://people/person.gd"
 class_name Parader
 
 const _SHIRT_LOYAL_A := Color("#444A32")

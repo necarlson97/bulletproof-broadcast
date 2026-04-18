@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b8paradlnst01"]
 
 [ext_resource type="PackedScene" uid="uid://c0mcbuqqfbjrg" path="res://parade_line.tscn" id="1_parade_line"]
-[ext_resource type="Script" uid="uid://dfd6xl4gmsm4u" path="res://parade_line_smoke_test.gd" id="2_smoke"]
-[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://ground.tscn" id="3_ground"]
+[ext_resource type="Script" uid="uid://dfd6xl4gmsm4u" path="res://smoke_tests/parade_line_smoke_test.gd" id="2_smoke"]
+[ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="3_ground"]
 
 [node name="ParadeLineSmokeTest" type="Node3D"]
 script = ExtResource("2_smoke")
