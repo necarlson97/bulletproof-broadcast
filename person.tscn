@@ -6,31 +6,31 @@
 [ext_resource type="Script" uid="uid://cen8j7vsmpme5" path="res://eyes.gd" id="4_eyes"]
 [ext_resource type="Script" uid="uid://cn3l7ceje88vs" path="res://person.gd" id="5_person"]
 
-[node name="Node2D" type="Node2D" unique_id=572210208]
+[node name="Person" type="Node3D" unique_id=1660657085]
 script = ExtResource("5_person")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1616073181]
-position = Vector2(118, 105)
-
-[node name="Face" type="Sprite2D" parent="." unique_id=661898043]
-position = Vector2(-1, -428)
+[node name="Face" type="Sprite3D" parent="." unique_id=92908819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 42.8, 0)
+pixel_size = 0.1
 texture = ExtResource("1_3qlke")
 
-[node name="Eyes" type="Sprite2D" parent="Face" unique_id=1518372755]
-position = Vector2(2, 6)
+[node name="Eyes" type="Sprite3D" parent="Face" unique_id=161895202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.6, 0.5)
+pixel_size = 0.1
 texture = ExtResource("2_g6f2d")
 script = ExtResource("4_eyes")
 
-[node name="Body" type="Sprite2D" parent="." unique_id=1419079573]
-position = Vector2(0, -202)
+[node name="Body" type="Sprite3D" parent="." unique_id=1678367108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.2, 0)
+pixel_size = 0.1
 texture = ExtResource("3_aoiax")
 
-[node name="HandL" type="Sprite2D" parent="." unique_id=656602484]
-position = Vector2(-143.99997, -362.00003)
-scale = Vector2(0.525, 0.525)
+[node name="HandL" type="Sprite3D" parent="." unique_id=1368089338]
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 36.2, 0)
+pixel_size = 0.1
 texture = ExtResource("1_3qlke")
 
-[node name="HandR" type="Sprite2D" parent="." unique_id=1297782204]
-position = Vector2(147.00003, -362.00003)
-scale = Vector2(0.525, 0.525)
+[node name="HandR" type="Sprite3D" parent="." unique_id=1403083975]
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 36.2, 0)
+pixel_size = 0.1
 texture = ExtResource("1_3qlke")

@@ -1,4 +1,8 @@
-extends "res://sign.gd"
+extends Sign
+class_name SignFlippable
+
+@onready var _flip_pivot: Node3D = $FlipPivot
+@onready var _label_back: Label3D = $FlipPivot/LabelBack
 
 var _good_text: String = ""
 var _bad_text: String = ""
@@ -8,19 +12,40 @@ var _showing_bad: bool = false
 var _flipping: bool = false
 var _flip_tween: Tween
 
-## Horizontal flip multiplier for layout (±1 at rest). Animated through 0 during flip.
-var _sign_bg_flip_x: float = 1.0
-## Last layout scale from set_text() before applying _sign_bg_flip_x.
-var _base_sign_scale: Vector2 = Vector2.ONE
 
-var _flip_anim_start_m: float = 1.0
-var _flip_anim_end_m: float = -1.0
+func _ready() -> void:
+	super._ready()
+	_label_back.visible = _has_bad
 
 
 func set_text(text: String) -> void:
-	super.set_text(text)
-	_base_sign_scale = _sign_bg.scale
-	_apply_sign_bg_flip()
+	_good_text = text
+	if not _has_bad:
+		super.set_text(text)
+		if _label_back != null:
+			_label_back.visible = false
+	else:
+		_apply_both_faces()
+
+
+func _apply_both_faces() -> void:
+	var inner_g: Vector2 = _measure_inner_for_string(_good_text)
+	var inner_b: Vector2 = _measure_inner_for_string(_bad_text)
+	var inner: Vector2 = Vector2(maxf(inner_g.x, inner_b.x), maxf(inner_g.y, inner_b.y))
+	if inner.x <= 0.0 or inner.y <= 0.0:
+		inner = Vector2(1.0, 1.0)
+	var n_tex: int = maxi(maxi(_good_text.length(), _bad_text.length()), 1)
+
+	_label.text = _good_text
+	_label_back.text = _bad_text
+	_label.font_size = _fixed_font_size
+	_label_back.font_size = _fixed_font_size
+
+	_apply_sign_geometry(inner, n_tex)
+	var w: float = maxf(inner.x * _label.pixel_size, 0.01)
+	_label.width = w
+	_label_back.width = w
+	_label_back.visible = _has_bad and not _bad_text.is_empty()
 
 
 func set_contents(good_text: String, bad_text: Variant = null) -> void:
@@ -38,9 +63,8 @@ func set_contents(good_text: String, bad_text: Variant = null) -> void:
 		_bad_text = str(bad_text)
 
 	_showing_bad = false
-	scale = Vector2(1.0, 1.0)
-	_sign_bg_flip_x = 1.0
-	_panel.scale = Vector2(1.0, 1.0)
+	scale = Vector3(1.0, 1.0, 1.0)
+	_flip_pivot.rotation.y = 0.0
 	set_text(_good_text)
 
 
@@ -50,64 +74,34 @@ func flip(flip_time: float = 1.0) -> bool:
 	if _flipping:
 		return false
 
+	var target_y: float = PI if not _showing_bad else 0.0
+
 	if flip_time <= 0.0:
+		_flip_pivot.rotation.y = target_y
 		_showing_bad = not _showing_bad
-		_sign_bg_flip_x = -1.0 if _showing_bad else 1.0
-		set_text(_bad_text if _showing_bad else _good_text)
-		_panel.scale = Vector2(1.0, 1.0)
 		return true
 
 	if _flip_tween != null:
 		_flip_tween.kill()
 
 	_flipping = true
-	var half: float = flip_time * 0.5
-	_flip_anim_start_m = _sign_bg_flip_x
-	if absf(_flip_anim_start_m) < 0.0001:
-		_flip_anim_start_m = 1.0
-	_flip_anim_end_m = -_flip_anim_start_m
-
+	var from_y: float = _flip_pivot.rotation.y
 	_flip_tween = create_tween()
-	_flip_tween.tween_method(_flip_first_half_progress, 0.0, 1.0, half).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	_flip_tween.tween_callback(_on_flip_midpoint)
-	_flip_tween.tween_method(_flip_second_half_progress, 0.0, 1.0, half).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_flip_tween.tween_callback(_finish_flip)
+	(
+		_flip_tween.tween_method(
+			func(v: float) -> void:
+				_flip_pivot.rotation.y = v,
+			from_y,
+			target_y,
+			flip_time
+		)
+		. set_trans(Tween.TRANS_SINE)
+		. set_ease(Tween.EASE_IN_OUT)
+	)
+	_flip_tween.tween_callback(
+		func() -> void:
+			_showing_bad = not _showing_bad
+			_flipping = false
+			_flip_tween = null
+	)
 	return true
-
-
-func _apply_sign_bg_flip() -> void:
-	_sign_bg.scale = Vector2(_base_sign_scale.x * _sign_bg_flip_x, _base_sign_scale.y)
-
-
-func _set_sign_flip_m(m: float) -> void:
-	_sign_bg_flip_x = m
-	_sign_bg.scale = Vector2(_base_sign_scale.x * m, _base_sign_scale.y)
-
-
-func _flip_first_half_progress(t: float) -> void:
-	var m: float = lerpf(_flip_anim_start_m, 0.0, t)
-	var px: float = lerpf(1.0, 0.0, t)
-	_set_sign_flip_m(m)
-	_panel.scale.x = px
-	_panel.scale.y = 1.0
-
-
-func _flip_second_half_progress(t: float) -> void:
-	var m: float = lerpf(0.0, _flip_anim_end_m, t)
-	var px: float = lerpf(0.0, 1.0, t)
-	_set_sign_flip_m(m)
-	_panel.scale.x = px
-	_panel.scale.y = 1.0
-
-
-func _on_flip_midpoint() -> void:
-	_showing_bad = not _showing_bad
-	set_text(_bad_text if _showing_bad else _good_text)
-
-
-func _finish_flip() -> void:
-	_sign_bg_flip_x = _flip_anim_end_m
-	_set_sign_flip_m(_flip_anim_end_m)
-	_panel.scale = Vector2(1.0, 1.0)
-	_flipping = false
-	_flip_tween = null

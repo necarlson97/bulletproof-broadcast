@@ -1,3 +1,43 @@
 [gd_scene format=3 uid="uid://dt8vrn37yuj7c"]
 
-[node name="Node2D" type="Node2D" unique_id=1064333918]
+[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://parader.tscn" id="1_ig7tw"]
+[ext_resource type="Texture2D" uid="uid://byfpo10aee5w4" path="res://assets/road segment.png" id="2_0xm2m"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
+size = Vector3(10000, 0.1, 10000)
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.84705883, 0.8117647, 0.7490196, 1)
+fog_density = 1.0
+fog_depth_curve = 5.2780275
+fog_depth_end = 1514.3
+
+[node name="Main" type="Node3D" unique_id=1948751274]
+
+[node name="Parader" parent="." unique_id=969364045 instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4928594, 0, -1.1320214)
+
+[node name="Ground" type="Node3D" parent="." unique_id=1065721756]
+
+[node name="Sprite3D" type="Sprite3D" parent="Ground" unique_id=1708735894]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -270.17853)
+pixel_size = 0.8
+texture = ExtResource("2_0xm2m")
+
+[node name="Sprite3D2" type="Sprite3D" parent="Ground" unique_id=999132568]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -1055.4287)
+pixel_size = 0.8
+texture = ExtResource("2_0xm2m")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground" unique_id=1967114742]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D" unique_id=2145449738]
+shape = SubResource("BoxShape3D_0xm2m")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=187998376]
+transform = Transform3D(1, 0, 0, 0, 0.8843611, 0.46680343, 0, -0.46680343, 0.8843611, -18.712257, 164.9758, 178.72253)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=176286629]
+environment = SubResource("Environment_0xm2m")

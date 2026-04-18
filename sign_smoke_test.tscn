@@ -1,16 +1,20 @@
 [gd_scene format=3 uid="uid://c1sx1m4cq0efi"]
 
 [ext_resource type="PackedScene" uid="uid://c7301corw4856" path="res://sign.tscn" id="1_sign"]
-[ext_resource type="PackedScene" path="res://sign_flippable.tscn" id="2_flippable"]
+[ext_resource type="PackedScene" uid="uid://c5vhmcnqvrdx" path="res://sign_flippable.tscn" id="2_flippable"]
 [ext_resource type="Script" uid="uid://c4vj4qy12jnno" path="res://sign_smoke_test.gd" id="3_smoke"]
 
-[node name="SignSmokeTest" type="Node2D" unique_id=515828893]
+[node name="SignSmokeTest" type="Node3D" unique_id=1766109084]
 script = ExtResource("3_smoke")
 
-[node name="Sign" parent="." unique_id=284464231 instance=ExtResource("1_sign")]
+[node name="Sign" parent="." unique_id=1791712497 instance=ExtResource("1_sign")]
 
-[node name="SignFlippable" parent="." unique_id=525312541 instance=ExtResource("2_flippable")]
-position = Vector2(0, 455)
+[node name="SignFlippable" parent="." unique_id=1872301401 instance=ExtResource("2_flippable")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -45.5, 0)
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=233180274]
-zoom = Vector2(0.1, 0.1)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=848597225]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -12.388199, 225.35664)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=409673344]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0.2, 0.6, 0.8)

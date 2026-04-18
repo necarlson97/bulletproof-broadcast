@@ -1,6 +1,6 @@
-extends Node2D
+extends Node3D
 
-@onready var _parader = $Parader
+@onready var _parader: Person = $Parader
 
 
 func _unhandled_input(event: InputEvent) -> void:

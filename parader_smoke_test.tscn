@@ -3,11 +3,14 @@
 [ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://parader.tscn" id="1_parader"]
 [ext_resource type="Script" uid="uid://bq5hc5cmhgsqd" path="res://parader_smoke_test.gd" id="2_smoke"]
 
-[node name="ParaderSmokeTest" type="Node2D" unique_id=1215736354]
+[node name="ParaderSmokeTest" type="Node3D" unique_id=25755095]
 script = ExtResource("2_smoke")
 
-[node name="Parader" parent="." unique_id=210167838 instance=ExtResource("1_parader")]
+[node name="Parader" parent="." unique_id=160539971 instance=ExtResource("1_parader")]
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1510869889]
-position = Vector2(4, -403)
-zoom = Vector2(0.475, 0.475)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=548546959]
+transform = Transform3D(1, 0, 0, 0, 0.8790252, 0.47677526, 0, -0.47677526, 0.8790252, 0.4, 127.188095, 207.70746)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=54558410]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0.2, 0.6, 0.8)

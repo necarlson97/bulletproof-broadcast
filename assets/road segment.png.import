@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c20tc8wrs6g7g"
-path.s3tc="res://.godot/imported/face.png-c2e83791cf355677f5e6427409bb0b34.s3tc.ctex"
+uid="uid://byfpo10aee5w4"
+path.s3tc="res://.godot/imported/road segment.png-178db14fab3266250d5486ec378093aa.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/face.png"
-dest_files=["res://.godot/imported/face.png-c2e83791cf355677f5e6427409bb0b34.s3tc.ctex"]
+source_file="res://assets/road segment.png"
+dest_files=["res://.godot/imported/road segment.png-178db14fab3266250d5486ec378093aa.s3tc.ctex"]
 
 [params]
 

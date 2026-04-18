@@ -1,47 +1,36 @@
 [gd_scene format=3 uid="uid://c5vhmcnqvrdx"]
 
-[ext_resource type="Texture2D" uid="uid://c26pypehven3c" path="res://assets/sign short.png" id="1_mbcot"]
 [ext_resource type="Script" uid="uid://jmuvvub4hh4x" path="res://sign_flippable.gd" id="2_flip"]
+[ext_resource type="Texture2D" uid="uid://da7exih25pgxh" path="res://assets/sign.png" id="2_sum01"]
+[ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://sign_font.tres" id="3_font"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mbcot"]
-
-[sub_resource type="SystemFont" id="SystemFont_w2mlg"]
-font_names = PackedStringArray("Atkinson Hyperlegible Mono")
-
-[sub_resource type="LabelSettings" id="LabelSettings_w2mlg"]
-font = SubResource("SystemFont_w2mlg")
-font_size = 300
-font_color = Color(0.3529412, 0.3137255, 0.27058825, 1)
-
-[node name="Sign" type="Node2D"]
+[node name="Sign" type="Node3D" unique_id=333778281]
 script = ExtResource("2_flip")
 
-[node name="SignBG" type="Sprite2D" parent="."]
-texture = ExtResource("1_mbcot")
+[node name="FlipPivot" type="Node3D" parent="." unique_id=154497673]
 
-[node name="Panel" type="Panel" parent="."]
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
-theme_override_styles/panel = SubResource("StyleBoxEmpty_mbcot")
+[node name="SignBG" type="Sprite3D" parent="FlipPivot" unique_id=2026317005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6340103)
+pixel_size = 0.1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("2_sum01")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 40
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 40
+[node name="Label3D" type="Label3D" parent="FlipPivot" unique_id=1126879153]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.66893876)
+pixel_size = 0.1
+double_sided = false
+texture_filter = 0
+modulate = Color(0.3529412, 0.3137255, 0.27058825, 1)
+text = "FRONT"
+font = ExtResource("3_font")
+font_size = 300
 
-[node name="Label" type="Label" parent="Panel/MarginContainer"]
-custom_minimum_size = Vector2(300, 300)
-layout_mode = 2
-text = "EXAMPLE"
-label_settings = SubResource("LabelSettings_w2mlg")
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="LabelBack" type="Label3D" parent="FlipPivot" unique_id=1306551619]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -1.9322597)
+pixel_size = 0.1
+texture_filter = 0
+modulate = Color(0.3529412, 0.3137255, 0.27058825, 1)
+text = "BACK"
+font = ExtResource("3_font")
+font_size = 300

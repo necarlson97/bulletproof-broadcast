@@ -1,7 +1,7 @@
-extends Node2D
+extends Node3D
 
-@onready var _sign: Node2D = $Sign
-@onready var _sign_flippable = $SignFlippable
+@onready var _sign: Sign = $Sign
+@onready var _sign_flippable: SignFlippable = $SignFlippable
 
 const _FULL_TEXT := "this is a test one two three"
 

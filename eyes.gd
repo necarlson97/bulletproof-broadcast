@@ -1,10 +1,10 @@
-extends Sprite2D
+extends Sprite3D
 
 const _TEXTURE_OPEN: Texture2D = preload("res://assets/eyes.png")
 const _TEXTURE_BLINK: Texture2D = preload("res://assets/eyes blink.png")
 const _TEXTURE_DEAD: Texture2D = preload("res://assets/eyes dead.png")
 
-@export var look_offset: float = 40.0
+@export var look_offset: float = 4.0
 
 var _dead: bool = false
 var _neutral_x: float = 0.0

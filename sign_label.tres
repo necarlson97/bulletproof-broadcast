@@ -1,0 +1,8 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://bb1ayalm27i10"]
+
+[ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://sign_font.tres" id="1_hvb4u"]
+
+[resource]
+font = ExtResource("1_hvb4u")
+font_size = 300
+font_color = Color(0.3529412, 0.3137255, 0.27058825, 1)

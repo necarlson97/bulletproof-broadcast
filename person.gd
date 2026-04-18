@@ -1,5 +1,5 @@
 class_name Person
-extends Node2D
+extends Node3D
 
 @onready var _eyes = $Face/Eyes
 
