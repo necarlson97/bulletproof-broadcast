@@ -259,7 +259,7 @@ func _set_target_z(z: float) -> void:
 
 
 func _update_disloyal_sweating_near_check() -> void:
-	const NEAR_CHECK: float = 50.0
+	const NEAR_CHECK: float = 200.0
 	for p: Node3D in _parader_nodes:
 		var pr: Parader = p as Parader
 		if pr == null or pr.loyal:

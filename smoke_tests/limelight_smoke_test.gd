@@ -1,6 +1,6 @@
 extends Node3D
 
-const _LIMELIGHTER_SCENE: PackedScene = preload("res://limelighter.tscn")
+const _LIMELIGHTER_SCENE: PackedScene = preload("res://limelight/limelighter.tscn")
 
 var _limelighter: Limelighter
 

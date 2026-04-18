@@ -11,16 +11,19 @@ size = Vector3(10000, 0.1, 10000)
 [node name="Road1" type="Sprite3D" parent="." unique_id=457857454]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -270.17853)
 pixel_size = 0.8
+alpha_cut = 1
 texture = ExtResource("1_t7tip")
 
 [node name="RoadEnd" type="Sprite3D" parent="." unique_id=725154259]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.7866592, 89.36032)
 pixel_size = 0.8
+alpha_cut = 1
 texture = ExtResource("2_tv015")
 
 [node name="Rooad2" type="Sprite3D" parent="." unique_id=1072260584]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, -1055.4287)
 pixel_size = 0.8
+alpha_cut = 1
 texture = ExtResource("1_t7tip")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1156929795]

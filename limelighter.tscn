@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://wohly26t3pk7"]
-
-[ext_resource type="Script" path="res://limelighter.gd" id="1_limelighter"]
-[ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight.tscn" id="2_limelight"]
-
-[node name="Limelighter" type="Node3D"]
-script = ExtResource("1_limelighter")
-limelight_scene = ExtResource("2_limelight")

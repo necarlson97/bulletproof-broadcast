@@ -1,15 +1,15 @@
-[gd_scene format=3 uid="uid://c8lmshdwtest"]
+[gd_scene load_steps=6 format=3 uid="uid://c8lmshdwtest"]
 
 [ext_resource type="Script" path="res://smoke_tests/limelight_shadow_render_smoke_test.gd" id="1_smoke"]
-[ext_resource type="PackedScene" path="res://limelight_mask_viewport.tscn" id="2_vp"]
-[ext_resource type="PackedScene" path="res://limelight_shadow_overlay.tscn" id="3_ov"]
-[ext_resource type="PackedScene" path="res://limelight.tscn" id="4_ll"]
+[ext_resource type="PackedScene" uid="uid://b8lmvp001" path="res://limelight/limelight_mask_viewport.tscn" id="2_vp"]
+[ext_resource type="PackedScene" uid="uid://b8lscndrk01" path="res://limelight/limelight_screen_darken_overlay.tscn" id="3_ov"]
+[ext_resource type="PackedScene" path="res://limelight/limelighter.tscn" id="4_llr"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
 background_color = Color(0.45, 0.55, 0.75, 1)
 
-[node name="LimelightShadowRenderSmokeTest" type="Node3D"]
+[node name="LimelightMaskViewportSmokeTest" type="Node3D"]
 script = ExtResource("1_smoke")
 
 [node name="LimelightMaskViewport" parent="." instance=ExtResource("2_vp")]
@@ -17,10 +17,9 @@ script = ExtResource("1_smoke")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 12)
 
-[node name="LimelightShadowOverlay" parent="Camera3D" instance=ExtResource("3_ov")]
+[node name="LimelightScreenDarkenOverlay" parent="Camera3D" instance=ExtResource("3_ov")]
 
-[node name="Limelight" parent="." instance=ExtResource("4_ll")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+[node name="Limelighter" parent="." instance=ExtResource("4_llr")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_1")

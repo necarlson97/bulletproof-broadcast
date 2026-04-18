@@ -3,11 +3,15 @@
 [ext_resource type="PackedScene" uid="uid://dbc275amwc630" path="res://people/officer.tscn" id="1_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://cklqhp4v1uemv" path="res://scenery/film_camera.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" path="res://limelight/limelight_mask_viewport.tscn" id="3_mskvp"]
+[ext_resource type="PackedScene" path="res://limelight/limelight_screen_darken_overlay.tscn" id="3_sdark"]
 [ext_resource type="Script" uid="uid://7y20j016r667" path="res://main.gd" id="4_main"]
 [ext_resource type="PackedScene" uid="uid://60nocx6sekte" path="res://people/audence_spawner.tscn" id="5_lquwl"]
-[ext_resource type="Texture2D" uid="uid://e6xl16m8fkf5" path="res://assets/fence.png" id="6_7mycd"]
+[ext_resource type="Texture2D" uid="uid://dtonxkfa3a401" path="res://assets/fence.png" id="6_7mycd"]
 [ext_resource type="Texture2D" uid="uid://bdlfs8dexp45g" path="res://assets/grass.png" id="7_272bh"]
 [ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="8_5vw27"]
+[ext_resource type="PackedScene" uid="uid://wohly26t3pk7" path="res://limelight/limelighter.tscn" id="9_kek77"]
+[ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight/limelight.tscn" id="13_w48qg"]
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
 fog_enabled = true
@@ -26,10 +30,17 @@ script = ExtResource("4_main")
 [node name="Ground" parent="." unique_id=231829925 instance=ExtResource("2_0xm2m")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=187998376]
-transform = Transform3D(1, 0, 0, 0, 0.6569543, 0.75393045, 0, -0.75393045, 0.6569543, -18.712257, 308.59814, 143.54326)
+transform = Transform3D(1, 0, 0, 0, 0.7710025, 0.6368321, 0, -0.6368321, 0.7710025, -48.90104, 207.63184, 143.54326)
+
+[node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=1444246649 instance=ExtResource("3_sdark")]
 
 [node name="Officer" parent="Camera3D" unique_id=1660657085 instance=ExtResource("1_1bvp3")]
 transform = Transform3D(0.8459607, 0, -0.5332455, -0.119355544, 0.9746286, -0.18935013, 0.51971626, 0.2238284, 0.82449746, 50.99697, -58.117035, -64.65869)
+
+[node name="Limelight" parent="Camera3D" unique_id=1381778601 instance=ExtResource("13_w48qg")]
+transform = Transform3D(1, 0, 0, 0, 0.6569543, -0.75393045, 0, 0.75393045, 0.6569543, 5.3190384, 23.489868, -297.083)
+
+[node name="LimelightMaskViewport" parent="." unique_id=1740944466 instance=ExtResource("3_mskvp")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=176286629]
 environment = SubResource("Environment_0xm2m")
@@ -194,6 +205,7 @@ alpha_cut = 1
 texture = ExtResource("6_7mycd")
 
 [node name="Grass" type="Node3D" parent="." unique_id=678923708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.27443933, 0)
 
 [node name="Flat" type="Node3D" parent="Grass" unique_id=1530323413]
 
@@ -414,3 +426,5 @@ transform = Transform3D(0.99987006, -0.4302615, -0.38621205, 0.3476998, 1.063891
 pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("8_5vw27")
+
+[node name="Limelighter" parent="." unique_id=345578488 instance=ExtResource("9_kek77")]

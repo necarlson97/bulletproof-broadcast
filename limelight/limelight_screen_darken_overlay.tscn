@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://b8lscndrk01"]
+
+[ext_resource type="Script" uid="uid://ccnlat1hrlh1o" path="res://limelight/limelight_screen_darken_overlay.gd" id="1_ov"]
+[ext_resource type="Material" path="res://limelight/materials/limelight_screen_darken_material.tres" id="2_mat"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_fs"]
+flip_faces = true
+size = Vector2(2, 2)
+
+[node name="LimelightScreenDarkenOverlay" type="MeshInstance3D" unique_id=34686236]
+material_override = ExtResource("2_mat")
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_fs")
+script = ExtResource("1_ov")
+darkness = 0.9

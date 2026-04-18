@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://b8lmvp001"]
+
+[ext_resource type="Script" uid="uid://btxeinf1ss0j3" path="res://limelight/limelight_mask_viewport.gd" id="1_vp"]
+
+[node name="LimelightMaskViewport" type="SubViewport"]
+handle_input_locally = false
+script = ExtResource("1_vp")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+cull_mask = 0
+current = true

@@ -17,7 +17,7 @@ texture_filter = 0
 texture = ExtResource("2_sum01")
 
 [node name="Label3D" type="Label3D" parent="FlipPivot" unique_id=1126879153]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.66893876)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 pixel_size = 0.1
 double_sided = false
 texture_filter = 0
@@ -27,7 +27,7 @@ font = ExtResource("3_font")
 font_size = 300
 
 [node name="LabelBack" type="Label3D" parent="FlipPivot" unique_id=1306551619]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -1.9322597)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -2)
 pixel_size = 0.1
 texture_filter = 0
 modulate = Color(0.3529412, 0.3137255, 0.27058825, 1)

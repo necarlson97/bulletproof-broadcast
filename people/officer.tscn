@@ -45,5 +45,10 @@ pixel_size = 0.2
 alpha_cut = 1
 texture = ExtResource("6_8tq1q")
 
+[node name="ShotSfx" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.0, 0)
+bus = &"SFX"
+max_distance = 500.0
+
 [node name="HandR" parent="." index="4" unique_id=1403083975]
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 16.851862, 1.464036)

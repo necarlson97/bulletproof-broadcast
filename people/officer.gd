@@ -3,8 +3,13 @@ class_name Officer
 
 const _MUZZLE_FLASH_SEC := 0.1
 
+const _SHOT_CLIPS: Array[AudioStream] = [
+	preload("res://assets/sfx/shot.wav"),
+]
+
 @onready var _gun: Node3D = $HandL
 @onready var _muzzle_flash: Node3D = $HandL/Gun/MuzzelFlash
+@onready var _shot_sfx: AudioStreamPlayer3D = $ShotSfx
 
 var _muzzle_timer: Timer
 
@@ -30,6 +35,7 @@ func shot_at(target: Node3D) -> void:
 	_muzzle_timer.stop()
 	_muzzle_timer.wait_time = _MUZZLE_FLASH_SEC
 	_muzzle_timer.start()
+	_play_sfx_grab_bag(_shot_sfx, _SHOT_CLIPS)
 	get_tree().call_group("spectator", "jump_on_shot")
 
 
