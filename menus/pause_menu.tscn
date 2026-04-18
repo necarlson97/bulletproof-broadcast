@@ -1,96 +1,92 @@
 [gd_scene format=3 uid="uid://gyj4nn4b8m53"]
 
-[ext_resource type="Script" path="res://menus/pause_menu.gd" id="1_pause"]
+[ext_resource type="Script" uid="uid://blnti35fxekww" path="res://menus/pause_menu.gd" id="1_pause"]
 
-[node name="PauseMenu" type="CanvasLayer"]
+[node name="PauseMenu" type="CanvasLayer" unique_id=1038639021]
 layer = 128
 script = ExtResource("1_pause")
 
-[node name="VolumePreviewSfx" type="AudioStreamPlayer" parent="."]
+[node name="VolumePreviewSfx" type="AudioStreamPlayer" parent="." unique_id=76351466]
 bus = &"SFX"
 
-[node name="Dimmer" type="ColorRect" parent="."]
-visible = false
+[node name="Dimmer" type="ColorRect" parent="." unique_id=29805548]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 color = Color(0, 0, 0, 0.5)
 
-[node name="Panel" type="PanelContainer" parent="."]
-visible = false
+[node name="Panel" type="PanelContainer" parent="." unique_id=271578695]
 custom_minimum_size = Vector2(360, 0)
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=679926565]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 16
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=936868697]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="LabelOverview" type="RichTextLabel" parent="Panel/MarginContainer/VBox"]
+[node name="LabelOverview" type="RichTextLabel" parent="Panel/MarginContainer/VBox" unique_id=1689915077]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
-text = ""
 
-[node name="LabelParadeLines" type="Label" parent="Panel/MarginContainer/VBox"]
+[node name="LabelParadeLines" type="Label" parent="Panel/MarginContainer/VBox" unique_id=1330895722]
 layout_mode = 2
 text = "0 of 0 parade lines cleansed"
 
-[node name="LabelMalcontents" type="Label" parent="Panel/MarginContainer/VBox"]
+[node name="LabelMalcontents" type="Label" parent="Panel/MarginContainer/VBox" unique_id=1014261738]
 layout_mode = 2
 text = "0 malcontents broadcast"
 
-[node name="LabelLoyalists" type="Label" parent="Panel/MarginContainer/VBox"]
+[node name="LabelLoyalists" type="Label" parent="Panel/MarginContainer/VBox" unique_id=1179243218]
 layout_mode = 2
 text = "0 loyalists executed"
 
-[node name="LabelTraitors" type="Label" parent="Panel/MarginContainer/VBox"]
+[node name="LabelTraitors" type="Label" parent="Panel/MarginContainer/VBox" unique_id=753962369]
 layout_mode = 2
 text = "0 traitors executed"
 
-[node name="BtnResume" type="Button" parent="Panel/MarginContainer/VBox"]
+[node name="BtnResume" type="Button" parent="Panel/MarginContainer/VBox" unique_id=1242247056]
 layout_mode = 2
 text = "Resume"
 
-[node name="BtnRetry" type="Button" parent="Panel/MarginContainer/VBox"]
+[node name="BtnRetry" type="Button" parent="Panel/MarginContainer/VBox" unique_id=642603424]
 layout_mode = 2
 text = "Retry"
 
-[node name="BtnMainMenu" type="Button" parent="Panel/MarginContainer/VBox"]
+[node name="BtnMainMenu" type="Button" parent="Panel/MarginContainer/VBox" unique_id=2085494373]
 layout_mode = 2
 text = "Main Menu"
 
-[node name="RowSfx" type="HBoxContainer" parent="Panel/MarginContainer/VBox"]
+[node name="RowSfx" type="HBoxContainer" parent="Panel/MarginContainer/VBox" unique_id=2041685839]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LabelSfx" type="Label" parent="Panel/MarginContainer/VBox/RowSfx"]
+[node name="LabelSfx" type="Label" parent="Panel/MarginContainer/VBox/RowSfx" unique_id=1731407831]
 layout_mode = 2
 text = "SFX"
 
-[node name="HSliderSfx" type="HSlider" parent="Panel/MarginContainer/VBox/RowSfx"]
+[node name="HSliderSfx" type="HSlider" parent="Panel/MarginContainer/VBox/RowSfx" unique_id=1598997144]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(180, 0)
 
-[node name="RowMusic" type="HBoxContainer" parent="Panel/MarginContainer/VBox"]
+[node name="RowMusic" type="HBoxContainer" parent="Panel/MarginContainer/VBox" unique_id=1861595514]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LabelMusic" type="Label" parent="Panel/MarginContainer/VBox/RowMusic"]
+[node name="LabelMusic" type="Label" parent="Panel/MarginContainer/VBox/RowMusic" unique_id=488522402]
 layout_mode = 2
 text = "Music"
 
-[node name="HSliderMusic" type="HSlider" parent="Panel/MarginContainer/VBox/RowMusic"]
+[node name="HSliderMusic" type="HSlider" parent="Panel/MarginContainer/VBox/RowMusic" unique_id=230277587]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(180, 0)

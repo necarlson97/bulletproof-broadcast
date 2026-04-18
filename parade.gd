@@ -12,12 +12,20 @@ signal main_parade_complete
 @export var start_z: float = -1400.0
 @export var end_z: float = 300.0
 @export var check_z: float = 100.0
-## Distance along Z between consecutive line spawns; spawn interval = line_spawn_spacing / marching_speed.
+## Along the march path: lines use [member approach_speed] until this Z, then [member marching_speed]. Clamped between [member start_z] and [member end_z].
+@export var fence_line_z: float = -700.0
+## March speed from [member start_z] up to [member fence_line_z]. If not greater than [member marching_speed], the entire route uses marching speed only.
+@export var approach_speed: float = 900.0
+## World-Z gap between consecutive lines when each starts; stagger follows the same fast-then-slow timing as each line's march.
 @export var line_spawn_spacing: float = 1000.0
 ## Horizontal budget for each parade line; spacing_per_char = line_width / sum of spec char counts.
-@export var line_width: float = 800.0
+@export var line_width: float = 50.0
 ## Scales sign board target width (see ParadeLine.sign_target_width_multiplier).
-@export var sign_target_width_multiplier: float = 2.2
+@export var sign_target_width_multiplier: float = 10.0
+## When set, spawned [ParadeLine]s use this instead of each line's default [member ParadeLine.parader_scene].
+@export var parader_scene_override: PackedScene
+## Overrides parsed loyalty: every parader is disloyal (e.g. protest wave).
+@export var force_all_paraders_disloyal: bool = false
 
 var _march_delays: Array[float] = []
 var _lines_finished: int = 0
@@ -61,14 +69,35 @@ func _compute_crowd_excitement_from_disloyal() -> float:
 	return clampf(inverse_lerp(start_z, check_z, best_z), 0.0, 1.0)
 
 
+func _march_time_for_world_distance(distance: float) -> float:
+	if distance <= 0.0:
+		return 0.0
+	var lo: float = minf(start_z, end_z)
+	var hi: float = maxf(start_z, end_z)
+	var fz: float = clampf(fence_line_z, lo, hi)
+	var v_slow: float = maxf(marching_speed, 0.001)
+	var v_fast: float = v_slow
+	if approach_speed > v_slow * 1.001:
+		v_fast = maxf(approach_speed, 0.001)
+	var d_fast_leg: float = absf(fz - start_z)
+	if is_equal_approx(v_fast, v_slow):
+		return distance / v_slow
+	if distance <= d_fast_leg + 1e-6:
+		return distance / v_fast
+	return d_fast_leg / v_fast + (distance - d_fast_leg) / v_slow
+
+
 func _spawn_lines() -> void:
 	_march_delays.clear()
 	_lines_finished = 0
-	var speed: float = maxf(marching_speed, 0.001)
-	var stagger: float = line_spawn_spacing / speed
+	var stagger: float = _march_time_for_world_distance(line_spawn_spacing)
 	for i: int in range(line_strings.size()):
 		var pl: ParadeLine = parade_line_scene.instantiate() as ParadeLine
 		pl.spawn_index = i
+		if parader_scene_override != null:
+			pl.parader_scene = parader_scene_override
+		pl.fence_line_z = fence_line_z
+		pl.approach_speed = approach_speed
 		pl.setup(
 			line_strings[i],
 			marching_speed,
@@ -76,13 +105,29 @@ func _spawn_lines() -> void:
 			end_z,
 			line_width,
 			check_z,
-			sign_target_width_multiplier
+			sign_target_width_multiplier,
+			force_all_paraders_disloyal
 		)
 		pl.line_march_finished.connect(_on_line_march_finished, CONNECT_ONE_SHOT)
 		add_child(pl)
 		_march_delays.append(stagger * float(i))
 	if auto_start:
 		begin_marches()
+
+
+## Clears existing [ParadeLine] children and spawns a new segment (same export march/spacing settings).
+func load_segment(
+	p_lines: Array[String],
+	p_force_all_disloyal: bool = false,
+	p_parader_override: PackedScene = null
+) -> void:
+	for c: Node in get_children():
+		c.queue_free()
+	line_strings = p_lines
+	force_all_paraders_disloyal = p_force_all_disloyal
+	parader_scene_override = p_parader_override
+	await get_tree().process_frame
+	_spawn_lines()
 
 
 func begin_marches() -> void:
@@ -96,6 +141,14 @@ func begin_marches() -> void:
 			break
 		pl.begin_march(_march_delays[idx])
 		idx += 1
+
+
+## Frees all [ParadeLine] children without counting them toward [signal main_parade_complete].
+func abort_all_parade_lines() -> void:
+	for c: Node in get_children():
+		var pl: ParadeLine = c as ParadeLine
+		if pl != null:
+			pl.abort_march_without_completion()
 
 
 func _on_line_march_finished() -> void:

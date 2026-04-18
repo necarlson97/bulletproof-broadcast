@@ -1,5 +1,6 @@
 extends Object
 ## Tokenization and "decompose" stepping for parade line strings.
+## {text} joins the enclosed (including spaces) into a single sign; braces are not shown.
 ## A bare token with no letters or digits (e.g. "," or "!") is appended to the previous spec's front.
 ## Transition order: leading loyal () / <a,b> flips; fleeing <word> before the first [...]; then for each
 ## disloyal bracket, first flip, flips/omits of tokens strictly between this bracket and the next,
@@ -18,7 +19,15 @@ static func parse_line(s: String) -> Array[Dictionary]:
 		if pos >= n:
 			break
 		var c: String = s[pos]
-		if c == "(" or c == "[" or c == "<":
+		if c == "{":
+			var brace_close: int = s.find("}", pos + 1)
+			if brace_close < 0:
+				brace_close = n
+			var grouped: String = s.substr(pos + 1, brace_close - pos - 1).strip_edges()
+			pos = brace_close + 1 if brace_close < n else n
+			if not grouped.is_empty():
+				result.append({"loyal": true, "front": grouped, "back": ""})
+		elif c == "(" or c == "[" or c == "<":
 			var close_ch: String = ")" if c == "(" else ("]" if c == "[" else ">")
 			var close_i: int = s.find(close_ch, pos + 1)
 			if close_i < 0:
@@ -41,7 +50,7 @@ static func parse_line(s: String) -> Array[Dictionary]:
 		else:
 			var start: int = pos
 			pos += 1
-			while pos < n and not s[pos] in _WS and not s[pos] in "()[]<>":
+			while pos < n and not s[pos] in _WS and not s[pos] in "()[]<>{}":
 				pos += 1
 			var word: String = s.substr(start, pos - start).strip_edges()
 			if word.is_empty():

@@ -9,12 +9,14 @@ const _OVERVIEW_COLOR_SAFE := "2E3A3F"
 const _OVERVIEW_COLOR_DANGER := "D8C36A"
 const _OVERVIEW_COLOR_DEAD := "A13A32"
 
-const _OOF_PREVIEW_CLIPS: Array[AudioStream] = [
-	preload("res://assets/sfx/oof-1.wav"),
-	preload("res://assets/sfx/oof-2.wav"),
-	preload("res://assets/sfx/oof-3.wav"),
-	preload("res://assets/sfx/oof-4.wav"),
-	preload("res://assets/sfx/oof-5.wav"),
+const _SPEAK_SFX_PREVIEW_CLIPS: Array[AudioStream] = [
+	preload("res://assets/sfx/heh-1.wav"),
+	preload("res://assets/sfx/heh-2.wav"),
+	preload("res://assets/sfx/heh-3.wav"),
+	preload("res://assets/sfx/heh-4.wav"),
+	preload("res://assets/sfx/heh-5.wav"),
+	preload("res://assets/sfx/heh-6.wav"),
+	preload("res://assets/sfx/heh-7.wav"),
 ]
 
 @onready var _dimmer: ColorRect = $Dimmer
@@ -207,13 +209,13 @@ func _on_music_slider_changed(value: float) -> void:
 
 
 func _on_volume_slider_drag_ended(_value_changed: bool) -> void:
-	_play_oof_volume_preview()
+	_play_speech_sfx_volume_preview()
 
 
-func _play_oof_volume_preview() -> void:
-	if _volume_preview == null or _OOF_PREVIEW_CLIPS.is_empty():
+func _play_speech_sfx_volume_preview() -> void:
+	if _volume_preview == null or _SPEAK_SFX_PREVIEW_CLIPS.is_empty():
 		return
-	_volume_preview.stream = _OOF_PREVIEW_CLIPS.pick_random()
+	_volume_preview.stream = _SPEAK_SFX_PREVIEW_CLIPS.pick_random()
 	_volume_preview.pitch_scale = randf_range(0.92, 1.08)
 	_volume_preview.play()
 
@@ -240,3 +242,7 @@ func _on_main_menu_pressed() -> void:
 	_dimmer.visible = false
 	_panel.visible = false
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+
+
+func _on_settings_holder_pressed(button_id: String) -> void:
+	open_pause_menu()

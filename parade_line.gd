@@ -20,13 +20,17 @@ var start_z: float = -1400.0
 var end_z: float = 300.0
 ## Along the march path: disloyal paraders still present are logged when the line crosses this Z.
 var check_z: float = 100.0
+## Clamped between [member start_z] and [member end_z]; first leg uses [member approach_speed], second [member marching_speed].
+var fence_line_z: float = -700.0
+## If not greater than [member marching_speed], the whole march uses [member marching_speed] only.
+var approach_speed: float = 0.0
 ## Total horizontal budget. spacing_per_char = line_width / decompose(0).length()
 ## (visible text at step 0, including spaces between pieces).
 ## Each parader's SignScale is set so sign width ≈ spacing_per_char * char count * sign_target_width_multiplier.
 ## Default > 1: gap = board halves + elastic (same size order); boards alone look small next to the air gap.
 var line_width: float = 600.0
 ## Multiplies sign board target width only (parader spacing still uses resulting half-widths + elastic).
-var sign_target_width_multiplier: float = 2.2
+var sign_target_width_multiplier: float = 4
 
 ## For each adjacent pair (i, i+1): half_width(sign i) + half_width(sign i+1) in parader space.
 var _parader_x_targets: Array[float] = []
@@ -57,7 +61,8 @@ func setup(
 	p_end_z: float,
 	p_line_width: float = 800.0,
 	p_check_z: float = 100.0,
-	p_sign_target_width_multiplier: float = 2.2
+	p_sign_target_width_multiplier: float = 2.2,
+	p_force_all_disloyal: bool = false
 ) -> void:
 	line_string = p_line
 	marching_speed = p_speed
@@ -67,6 +72,9 @@ func setup(
 	check_z = p_check_z
 	sign_target_width_multiplier = p_sign_target_width_multiplier
 	_specs = ParadeLineSyntax.parse_line(line_string)
+	if p_force_all_disloyal:
+		for s: Dictionary in _specs:
+			s["loyal"] = false
 	_had_disloyal_at_spawn = _specs_has_any_disloyal()
 	_line_path_z = start_z
 	_build_paraders()
@@ -396,6 +404,14 @@ func _on_march_finished() -> void:
 	queue_free()
 
 
+## Stops the march and frees the line without emitting [signal line_march_finished] (e.g. segment ended early).
+func abort_march_without_completion() -> void:
+	if _march_tween != null:
+		_march_tween.kill()
+		_march_tween = null
+	queue_free()
+
+
 func begin_march(delay_sec: float) -> void:
 	if _march_tween != null:
 		_march_tween.kill()
@@ -405,9 +421,25 @@ func begin_march(delay_sec: float) -> void:
 	_line_path_z = start_z
 	if delay_sec > 0.0:
 		await get_tree().create_timer(delay_sec).timeout
-	var dist: float = absf(end_z - start_z)
-	var speed: float = maxf(marching_speed, 0.001)
-	var duration: float = dist / speed
+	var v_slow: float = maxf(marching_speed, 0.001)
+	var v_fast: float = v_slow
+	if approach_speed > v_slow * 1.001:
+		v_fast = maxf(approach_speed, 0.001)
+	var lo: float = minf(start_z, end_z)
+	var hi: float = maxf(start_z, end_z)
+	var fz: float = clampf(fence_line_z, lo, hi)
+	var d1: float = absf(fz - start_z)
+	var d2: float = absf(end_z - fz)
 	_march_tween = create_tween()
-	_march_tween.tween_method(_march_step, start_z, end_z, duration).set_trans(Tween.TRANS_LINEAR)
+	if is_equal_approx(v_fast, v_slow) or d1 < 1e-6:
+		var dur_all: float = absf(end_z - start_z) / v_slow
+		_march_tween.tween_method(_march_step, start_z, end_z, dur_all).set_trans(Tween.TRANS_LINEAR)
+	elif d2 < 1e-6:
+		var dur_one: float = d1 / v_fast
+		_march_tween.tween_method(_march_step, start_z, end_z, dur_one).set_trans(Tween.TRANS_LINEAR)
+	else:
+		var t1: float = d1 / v_fast
+		var t2: float = d2 / v_slow
+		_march_tween.tween_method(_march_step, start_z, fz, t1).set_trans(Tween.TRANS_LINEAR)
+		_march_tween.tween_method(_march_step, fz, end_z, t2).set_trans(Tween.TRANS_LINEAR)
 	_march_tween.finished.connect(_on_march_finished, CONNECT_ONE_SHOT)

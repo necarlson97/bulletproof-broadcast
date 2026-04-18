@@ -2,6 +2,8 @@ class_name Person
 extends Node3D
 
 const _SFX_PITCH_JITTER := 0.1
+## Delay before the hit reaction SFX so it reads after the gunshot.
+const _KILLED_SFX_DELAY_SEC := 0.4
 
 const _KILLED_CLIPS: Array[AudioStream] = [
 	preload("res://assets/sfx/oof-1.wav"),
@@ -22,7 +24,15 @@ func set_sweating_active(active: bool) -> void:
 
 
 func kill() -> void:
-	_play_sfx_grab_bag(_killed_sfx, _KILLED_CLIPS)
+	var ap: AudioStreamPlayer3D = _killed_sfx
+	var tree := get_tree()
+	if tree != null and ap != null:
+		var play_killed: Callable = func () -> void:
+			if is_instance_valid(ap):
+				Person._play_sfx_grab_bag(ap, Person._KILLED_CLIPS)
+		tree.create_timer(_KILLED_SFX_DELAY_SEC).timeout.connect(play_killed, CONNECT_ONE_SHOT)
+	else:
+		_play_sfx_grab_bag(_killed_sfx, _KILLED_CLIPS)
 	_eyes.kill()
 	var pl: Node = get_parent()
 	# Duck-type ParadeLine so person.gd does not reference class_name ParadeLine at parse time.
@@ -32,7 +42,7 @@ func kill() -> void:
 	Ragdoll.create_ragdoll(self)
 
 
-func _play_sfx_grab_bag(player: AudioStreamPlayer3D, clips: Array[AudioStream]) -> void:
+static func _play_sfx_grab_bag(player: AudioStreamPlayer3D, clips: Array[AudioStream]) -> void:
 	if player == null or clips.is_empty():
 		return
 	player.stop()

@@ -31,6 +31,8 @@ var _comfort_corr_active: bool = false
 var _comfort_corr_elapsed: float = 0.0
 var _comfort_corr_start_pos: Vector3 = Vector3.ZERO
 
+@export var start_text: String = ""
+
 @onready var _body: Sprite3D = $Body
 var _body_bounce_base_y: float = 0.0
 var _march_needs_walk_bounce: bool = false
@@ -40,7 +42,9 @@ func _ready() -> void:
 	add_to_group("parader")
 	_body_bounce_base_y = _body.position.y
 	_walk_bounce_driver()
-
+	if start_text != "":
+		var sign: Sign = $SignScale/Sign
+		sign.set_text(start_text)
 
 func _enter_tree() -> void:
 	_apply_shirt_colors()

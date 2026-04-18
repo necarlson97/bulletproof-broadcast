@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bou7b8lafx0ol"]
+
+[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://people/parader.tscn" id="1_vrcau"]
+[ext_resource type="Texture2D" uid="uid://cmf1iy48t4k0a" path="res://assets/crown.png" id="2_1s2pd"]
+[ext_resource type="Script" uid="uid://bubdrbb7kdwa1" path="res://people/king_parader.gd" id="3_king"]
+
+[node name="King" unique_id=1731856409 instance=ExtResource("1_vrcau")]
+script = ExtResource("3_king")
+
+[node name="PersonColor" parent="." index="0" unique_id=1700000001]
+shirt_start = Color(0.63475204, 0.14775693, 0.46212935, 1)
+shirt_end = Color(0.81255376, 0.24474475, 0.48425245, 1)
+
+[node name="SignScale" parent="." index="1" unique_id=1687241682]
+visible = false
+
+[node name="Crown" type="Sprite3D" parent="Face" parent_id_path=PackedInt32Array(92908819) index="0" unique_id=1816432744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.007641, 0.07592583)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("2_1s2pd")
+
+[node name="Label3D" parent="Body" parent_id_path=PackedInt32Array(1678367108) index="0" unique_id=1425867495]
+modulate = Color(0.95266634, 0.5313679, 0.676189, 1)
+
+[node name="HandL" parent="." index="4" unique_id=1368089338]
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 20.0186, 1.4910412)

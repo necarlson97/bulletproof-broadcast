@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://j08180fs2ml4"]
 
 [ext_resource type="Script" uid="uid://5ij8vquji131" path="res://devtools_time_scale.gd" id="1_kk4mm"]
-[ext_resource type="PackedScene" uid="uid://gyj4nn4b8m53" path="res://menus/pause_menu.tscn" id="2_rx1ud"]
-[ext_resource type="Script" uid="uid://ci1qddqgmsi0d" path="res://music_player.gd" id="3_wcdpt"]
+[ext_resource type="PackedScene" uid="uid://bn48w1mvckqru" path="res://people/main_menu_pause.tscn" id="2_wcdpt"]
 [ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="4_u3dsk"]
 [ext_resource type="PackedScene" uid="uid://dbc275amwc630" path="res://people/officer.tscn" id="5_ygrj5"]
 [ext_resource type="PackedScene" uid="uid://b8lmvp001" path="res://limelight/limelight_mask_viewport.tscn" id="6_lgqab"]
@@ -14,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="11_hplot"]
 [ext_resource type="PackedScene" uid="uid://8eagiuthp066" path="res://people/button_holder.tscn" id="13_rx1ud"]
 [ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight/limelight.tscn" id="14_u3dsk"]
+[ext_resource type="Script" path="res://menus/main_menu.gd" id="16_main_menu"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wcdpt"]
 viewport_path = NodePath("DialogBox/SubViewport")
@@ -38,17 +38,12 @@ radius = 50.0
 height = 100.0
 
 [node name="MainMenu" type="Node3D" unique_id=1741736368]
+script = ExtResource("16_main_menu")
 
 [node name="DevToolsTimeScale" type="Node3D" parent="." unique_id=515693908]
 script = ExtResource("1_kk4mm")
 
-[node name="PauseMenu" parent="." unique_id=934835797 instance=ExtResource("2_rx1ud")]
-
-[node name="MusicPlayer" type="Node" parent="." unique_id=1421637636]
-script = ExtResource("3_wcdpt")
-
-[node name="MusicStream" type="AudioStreamPlayer" parent="MusicPlayer" unique_id=1761506054]
-bus = &"Music"
+[node name="MainMenuPause" parent="." unique_id=455479624 instance=ExtResource("2_wcdpt")]
 
 [node name="Ground" parent="." unique_id=231829925 instance=ExtResource("4_u3dsk")]
 
@@ -528,7 +523,7 @@ orbit_radius = 15.0
 [node name="MeshInstance3D" parent="Limelight2" index="0" unique_id=1370487710]
 mesh = SubResource("SphereMesh_u3dsk")
 
-[connection signal="pressed" from="SettingsHolder" to="PauseMenu" method="_on_settings_holder_pressed"]
+[connection signal="pressed" from="SettingsHolder" to="MainMenuPause" method="_on_settings_holder_pressed"]
 
 [editable path="Officer"]
 [editable path="Audence Spawner"]

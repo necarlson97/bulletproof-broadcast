@@ -6,6 +6,8 @@ const _MUZZLE_FLASH_SEC := 0.1
 const _GUN_REST_RETURN_DELAY_SEC := 1.0
 ## How fast the hand eases toward the rest aim (higher = snappier).
 const _GUN_REST_AIM_SLERP := 6.0
+const _SMOKE_SCALE_START := 1.3
+const _SMOKE_SCALE_END := 0.35
 
 const _SHOT_CLIPS: Array[AudioStream] = [
 	preload("res://assets/sfx/shot.wav"),
@@ -14,18 +16,21 @@ const _SHOT_CLIPS: Array[AudioStream] = [
 ## Typing speed for speech (visible characters per second).
 const _SPEAK_CHARS_PER_SEC := 38.0
 ## After a line is fully shown, wait this long before auto-advancing (skip with click / space).
-const _LINE_PAUSE_AFTER_TYPING_SEC := 3.0
+const _LINE_PAUSE_AFTER_TYPING_SEC := 2.0
 
 const _SPEAK_SFX_CLIPS: Array[AudioStream] = [
-	preload("res://assets/sfx/oof-1.wav"),
-	preload("res://assets/sfx/oof-2.wav"),
-	preload("res://assets/sfx/oof-3.wav"),
-	preload("res://assets/sfx/oof-4.wav"),
-	preload("res://assets/sfx/oof-5.wav"),
+	preload("res://assets/sfx/heh-1.wav"),
+	preload("res://assets/sfx/heh-2.wav"),
+	preload("res://assets/sfx/heh-3.wav"),
+	preload("res://assets/sfx/heh-4.wav"),
+	preload("res://assets/sfx/heh-5.wav"),
+	preload("res://assets/sfx/heh-6.wav"),
+	preload("res://assets/sfx/heh-7.wav"),
 ]
 
 @onready var _gun: Node3D = $HandL
 @onready var _muzzle_flash: Node3D = $HandL/Gun/MuzzelFlash
+@onready var _smoking: GPUParticles3D = $HandL/Gun/Smoking
 @onready var _shot_sfx: AudioStreamPlayer3D = $ShotSfx
 
 @onready var _dialog_box: Node3D = $DialogBox
@@ -48,6 +53,8 @@ var _gun_rest_node: Node3D
 var _aim_scratch: Node3D
 var _gun_rest_return_timer: Timer
 var _shot_aim_hold_active: bool = false
+var _smoke_process_material: ParticleProcessMaterial
+var _smoke_size_tween: Tween
 
 func _ready() -> void:
 	_muzzle_flash.visible = false
@@ -63,6 +70,9 @@ func _ready() -> void:
 	_gun_rest_return_timer.wait_time = _GUN_REST_RETURN_DELAY_SEC
 	_gun_rest_return_timer.timeout.connect(_on_shot_aim_hold_finished)
 	add_child(_gun_rest_return_timer)
+	if _smoking.process_material is ParticleProcessMaterial:
+		_smoke_process_material = (_smoking.process_material as ParticleProcessMaterial).duplicate()
+		_smoking.process_material = _smoke_process_material
 	_dialog_box.visible = false
 	_speech_label.text = ""
 	_speech_label.visible_characters = -1
@@ -137,7 +147,8 @@ func _process(delta: float) -> void:
 			for i in range(_chars_shown, target_shown):
 				var ch: String = _current_line[i]
 				if ch != " " and ch != "\t":
-					_play_speak_blip()
+					if i % 3 == 0:
+						_play_speak_blip()
 			_chars_shown = target_shown
 			_speech_label.visible_characters = _chars_shown
 		if _chars_shown >= total_chars:
@@ -246,6 +257,7 @@ func shot_at(target: Node3D) -> void:
 	_muzzle_timer.stop()
 	_muzzle_timer.wait_time = _MUZZLE_FLASH_SEC
 	_muzzle_timer.start()
+	_play_smoking_one_shot()
 	_play_sfx_grab_bag(_shot_sfx, _SHOT_CLIPS)
 	get_tree().call_group("spectator", "jump_on_shot")
 
@@ -253,3 +265,28 @@ func shot_at(target: Node3D) -> void:
 func _hide_muzzle_flash() -> void:
 	if is_instance_valid(_muzzle_flash):
 		_muzzle_flash.visible = false
+
+
+func _play_smoking_one_shot() -> void:
+	if not is_instance_valid(_smoking):
+		return
+	if _smoke_process_material != null:
+		if _smoke_size_tween != null and is_instance_valid(_smoke_size_tween):
+			_smoke_size_tween.kill()
+		_smoke_process_material.scale_min = _SMOKE_SCALE_START
+		_smoke_process_material.scale_max = _SMOKE_SCALE_START
+		_smoke_size_tween = create_tween()
+		_smoke_size_tween.tween_property(
+			_smoke_process_material,
+			"scale_min",
+			_SMOKE_SCALE_END,
+			_smoking.lifetime
+		)
+		_smoke_size_tween.parallel().tween_property(
+			_smoke_process_material,
+			"scale_max",
+			_SMOKE_SCALE_END,
+			_smoking.lifetime
+		)
+	_smoking.restart()
+	_smoking.emitting = true
