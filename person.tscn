@@ -3,8 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://c20tc8wrs6g7g" path="res://assets/face.png" id="1_3qlke"]
 [ext_resource type="Texture2D" uid="uid://ob1puyx1mh81" path="res://assets/eyes.png" id="2_g6f2d"]
 [ext_resource type="Texture2D" uid="uid://dyow8hnrq8x6o" path="res://assets/body.png" id="3_aoiax"]
+[ext_resource type="Script" uid="uid://cen8j7vsmpme5" path="res://eyes.gd" id="4_eyes"]
+[ext_resource type="Script" uid="uid://cn3l7ceje88vs" path="res://person.gd" id="5_person"]
 
 [node name="Node2D" type="Node2D" unique_id=572210208]
+script = ExtResource("5_person")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1616073181]
 position = Vector2(118, 105)
@@ -16,6 +19,7 @@ texture = ExtResource("1_3qlke")
 [node name="Eyes" type="Sprite2D" parent="Face" unique_id=1518372755]
 position = Vector2(2, 6)
 texture = ExtResource("2_g6f2d")
+script = ExtResource("4_eyes")
 
 [node name="Body" type="Sprite2D" parent="." unique_id=1419079573]
 position = Vector2(0, -202)

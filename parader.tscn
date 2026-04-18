@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ciphyem15ww82"]
+
+[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://person.tscn" id="1_whu07"]
+[ext_resource type="PackedScene" uid="uid://c7301corw4856" path="res://sign.tscn" id="2_u3c6x"]
+[ext_resource type="Script" path="res://parader.gd" id="3_parader"]
+
+[node name="Parader" unique_id=572210208 instance=ExtResource("1_whu07")]
+script = ExtResource("3_parader")
+
+[node name="Sign" parent="." index="1" unique_id=1250666648 instance=ExtResource("2_u3c6x")]
+position = Vector2(20, -598)

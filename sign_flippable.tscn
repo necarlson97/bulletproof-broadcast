@@ -1,47 +1,44 @@
-[gd_scene format=3 uid="uid://c7301corw4856"]
+[gd_scene format=3 uid="uid://c5vhmcnqvrdx"]
 
 [ext_resource type="Texture2D" uid="uid://c26pypehven3c" path="res://assets/sign short.png" id="1_mbcot"]
-[ext_resource type="Script" uid="uid://5jgdh6p1qvk1" path="res://sign.gd" id="2_sign"]
+[ext_resource type="Script" uid="uid://jmuvvub4hh4x" path="res://sign_flippable.gd" id="2_flip"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mbcot"]
 
 [sub_resource type="SystemFont" id="SystemFont_w2mlg"]
 font_names = PackedStringArray("Atkinson Hyperlegible Mono")
-subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_w2mlg"]
 font = SubResource("SystemFont_w2mlg")
 font_size = 300
 font_color = Color(0.3529412, 0.3137255, 0.27058825, 1)
 
-[node name="Sign" type="Node2D" unique_id=1250666648]
-script = ExtResource("2_sign")
+[node name="Sign" type="Node2D"]
+script = ExtResource("2_flip")
 
-[node name="SignBG" type="Sprite2D" parent="." unique_id=708057029]
+[node name="SignBG" type="Sprite2D" parent="."]
 texture = ExtResource("1_mbcot")
 
-[node name="Panel" type="Panel" parent="." unique_id=1846285564]
+[node name="Panel" type="Panel" parent="."]
 offset_left = -300.0
 offset_top = -200.0
 offset_right = 300.0
 offset_bottom = 200.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_styles/panel = SubResource("StyleBoxEmpty_mbcot")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1921489014]
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 
-[node name="Label" type="Label" parent="Panel/MarginContainer" unique_id=592010410]
+[node name="Label" type="Label" parent="Panel/MarginContainer"]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 text = "EXAMPLE"

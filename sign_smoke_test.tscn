@@ -1,12 +1,16 @@
 [gd_scene format=3 uid="uid://c1sx1m4cq0efi"]
 
 [ext_resource type="PackedScene" uid="uid://c7301corw4856" path="res://sign.tscn" id="1_sign"]
-[ext_resource type="Script" uid="uid://c4vj4qy12jnno" path="res://sign_smoke_test.gd" id="2_smoke"]
+[ext_resource type="PackedScene" path="res://sign_flippable.tscn" id="2_flippable"]
+[ext_resource type="Script" uid="uid://c4vj4qy12jnno" path="res://sign_smoke_test.gd" id="3_smoke"]
 
-[node name="SignSmokeTest" type="Node2D" unique_id=1899049715]
-script = ExtResource("2_smoke")
+[node name="SignSmokeTest" type="Node2D" unique_id=515828893]
+script = ExtResource("3_smoke")
 
-[node name="Sign" parent="." unique_id=431608090 instance=ExtResource("1_sign")]
+[node name="Sign" parent="." unique_id=284464231 instance=ExtResource("1_sign")]
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=2046212488]
-zoom = Vector2(0.49, 0.49)
+[node name="SignFlippable" parent="." unique_id=525312541 instance=ExtResource("2_flippable")]
+position = Vector2(0, 455)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=233180274]
+zoom = Vector2(0.1, 0.1)

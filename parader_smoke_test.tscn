@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://hp6i4ukccpo6"]
+
+[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://parader.tscn" id="1_parader"]
+[ext_resource type="Script" uid="uid://bq5hc5cmhgsqd" path="res://parader_smoke_test.gd" id="2_smoke"]
+
+[node name="ParaderSmokeTest" type="Node2D" unique_id=1215736354]
+script = ExtResource("2_smoke")
+
+[node name="Parader" parent="." unique_id=210167838 instance=ExtResource("1_parader")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1510869889]
+position = Vector2(4, -403)
+zoom = Vector2(0.475, 0.475)
