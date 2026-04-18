@@ -42,8 +42,8 @@ var _gun_point: Node3D
 var _parade: Parade
 var _focused_line: FocusedLine
 
-## Queue from [member Main.build_parade_schedule]: keys [code]lines[/code], optional [code]force_disloyal[/code], [code]parader_scene[/code].
-var parade_schedule: Array[Dictionary] = []
+## Queue of parade segment templates from main (first entry is the live [Parade] in the scene).
+var parade_schedule: Array[Parade] = []
 
 var _parades_completed: int = 0
 ## Matches [member parade_schedule] index while that segment's lines are active.
@@ -54,6 +54,8 @@ var _game_failed: bool = false
 var _resolving_parade_segment: bool = false
 var _collateral_rot_traitor: int = 0
 var _collateral_rot_loyalist: int = 0
+## Set when '>' skips the intro so [method _run_intro_and_game] does not start the parade twice.
+var _intro_completed_by_skip: bool = false
 
 
 func _ready() -> void:
@@ -69,11 +71,56 @@ func _ready() -> void:
 	_focused_line = get_parent().get_node_or_null("FocusedLine") as FocusedLine
 	_parade.main_parade_complete.connect(_on_main_parade_complete)
 	_connect_disloyal_signals_on_parade_lines(_parade)
-	for seg: Dictionary in parade_schedule:
-		if bool(seg.get("complete_when_last_line_releases_focus", false)):
+	for seg: Parade in parade_schedule:
+		if seg.complete_when_last_line_releases_focus:
 			set_process(true)
 			break
 	_run_intro_and_game.call_deferred()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _game_failed:
+		return
+	if not event.is_pressed() or event.is_echo():
+		return
+	if event is InputEventKey:
+		var ek: InputEventKey = event as InputEventKey
+		if not _is_skip_sequence_key(ek):
+			return
+		_skip_to_next_sequence()
+		get_viewport().set_input_as_handled()
+
+
+func _is_skip_sequence_key(ek: InputEventKey) -> bool:
+	if ek.unicode == ord(">"):
+		return true
+	# US keyboard: Shift + period
+	return ek.keycode == KEY_PERIOD and ek.shift_pressed
+
+
+func _skip_to_next_sequence() -> void:
+	if not is_instance_valid(_officer):
+		return
+	if not _intro_done:
+		_intro_completed_by_skip = true
+		_officer.end_speech_immediately()
+		_intro_done = true
+		if is_instance_valid(_parade):
+			_active_schedule_index = 0
+			_parade.begin_marches()
+		return
+	if _parade_marching_for_skip():
+		if is_instance_valid(_parade):
+			_parade.abort_all_parade_lines()
+		_schedule_parade_advance()
+		return
+	_officer.end_speech_immediately()
+
+
+func _parade_marching_for_skip() -> bool:
+	if not is_instance_valid(_parade) or _resolving_parade_segment:
+		return false
+	return _parade.get_child_count() > 0
 
 
 func _process(_delta: float) -> void:
@@ -93,7 +140,7 @@ func _process(_delta: float) -> void:
 func _segment_wants_early_last_line_complete(schedule_idx: int) -> bool:
 	if parade_schedule.is_empty() or schedule_idx < 0 or schedule_idx >= parade_schedule.size():
 		return false
-	return bool(parade_schedule[schedule_idx].get("complete_when_last_line_releases_focus", false))
+	return parade_schedule[schedule_idx].complete_when_last_line_releases_focus
 
 
 func _get_last_parade_line_by_spawn_index(parade: Parade) -> ParadeLine:
@@ -123,58 +170,63 @@ func _run_intro_and_game() -> void:
 	await _speak_async(_normalize_speech(_INTRO_SPEECH))
 	if not is_inside_tree() or not is_instance_valid(_officer):
 		return
+	if _intro_completed_by_skip:
+		_intro_completed_by_skip = false
+		return
 	_intro_done = true
 	if _parade != null:
+		_active_schedule_index = 0
 		_parade.begin_marches()
 
 
 func _on_main_parade_complete() -> void:
 	if _game_failed:
 		return
+	_schedule_parade_advance()
+
+
+func _schedule_parade_advance() -> void:
+	if _resolving_parade_segment:
+		return
+	_resolving_parade_segment = true
 	_advance_after_parade_segment.call_deferred()
 
 
 func _advance_after_parade_segment() -> void:
 	if _game_failed or not is_instance_valid(_parade):
+		_resolving_parade_segment = false
 		return
 	_parades_completed += 1
 	match _parades_completed:
 		1:
 			await _speak_async(_normalize_speech(_PROTEST_REACTION_SPEECH))
-			if _game_failed or not is_instance_valid(_parade):
-				return
-			await _load_schedule_segment(1)
+			if not _game_failed and is_instance_valid(_parade):
+				await _load_schedule_segment(1)
 		2:
 			await _speak_async(_normalize_speech(_POST_PROTEST_SPEECH))
-			if _game_failed or not is_instance_valid(_parade):
-				return
-			await _load_schedule_segment(2)
+			if not _game_failed and is_instance_valid(_parade):
+				await _load_schedule_segment(2)
 		3:
 			await _speak_async(_normalize_speech(_PRE_RETENUE_SPEECH))
-			if _game_failed or not is_instance_valid(_parade):
-				return
-			await _load_schedule_segment(3)
+			if not _game_failed and is_instance_valid(_parade):
+				await _load_schedule_segment(3)
 		4:
-			await _load_schedule_segment(4)
+			if not _game_failed and is_instance_valid(_parade):
+				await _load_schedule_segment(4)
 		5:
 			_run_victory_sequence.call_deferred()
 		_:
 			push_warning("NarrativeSequencer: unexpected parade segment index %d" % _parades_completed)
+	_resolving_parade_segment = false
 
 
 func _load_schedule_segment(schedule_idx: int) -> void:
 	if parade_schedule.is_empty() or schedule_idx < 0 or schedule_idx >= parade_schedule.size():
 		push_error("NarrativeSequencer: bad parade_schedule index %d" % schedule_idx)
 		return
-	var seg: Dictionary = parade_schedule[schedule_idx]
-	var lines: Array = seg.get("lines", [])
-	var lines_typed: Array[String] = []
-	for s: Variant in lines:
-		lines_typed.append(str(s))
-	var force_d: bool = bool(seg.get("force_disloyal", false))
-	var ps: Variant = seg.get("parader_scene", null)
-	var parader_override: PackedScene = null if ps == null else ps as PackedScene
-	await _parade.load_segment(lines_typed, force_d, parader_override)
+	_active_schedule_index = schedule_idx
+	var template: Parade = parade_schedule[schedule_idx]
+	await _parade.load_from_template(template)
 	if _game_failed or not is_instance_valid(_parade):
 		return
 	if is_instance_valid(_focused_line):

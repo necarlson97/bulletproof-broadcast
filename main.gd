@@ -21,7 +21,7 @@ func _ready() -> void:
 		"<In this> [country,cage], {we are} (free,happy)!",
 		"{The rebels} are (trying,working) {to destroy} <our> [freedom,chains]!",
 		"<Only when> we [comply,resist], can <we> create!",
-		"Rebellion {can only} [destroy,liberate]!",
+		"Rebellion is insolent, <it can> <only> [destroy,liberate]!",
 		"Let them eat [cake,the rich]!"
 	]
 	var lines_medium: Array[String] = [	
@@ -53,7 +53,7 @@ func _ready() -> void:
 		"{THE KING}"
 	]
 
-	var parade_schedule: Array[Dictionary] = _build_parade_schedule(
+	var parade_schedule: Array[Parade] = _build_parade_schedule(
 		lines_easy,
 		lines_medium,
 		lines_hard,
@@ -62,16 +62,19 @@ func _ready() -> void:
 		lines_king
 	)
 
-	var first_parade: Parade = _PARADE_SCENE.instantiate() as Parade
-	first_parade.auto_start = false
-	_apply_parade_segment_to_node(first_parade, parade_schedule[0])
-
 	var narrative: NarrativeSequencer = NarrativeSequencer.new()
 	narrative.parade_schedule = parade_schedule
 
-	add_child(first_parade)
+	add_child(parade_schedule[0])
 	add_child(_FOCUSED_LINE_SCENE.instantiate())
 	add_child(narrative)
+
+
+func _build_parade(lines: Array[String]) -> Parade:
+	var p: Parade = _PARADE_SCENE.instantiate() as Parade
+	p.auto_start = false
+	p.line_strings = lines
+	return p
 
 
 func _build_parade_schedule(
@@ -81,26 +84,14 @@ func _build_parade_schedule(
 	lines_protest: Array[String],
 	lines_retenue: Array[String],
 	lines_king: Array[String]
-) -> Array[Dictionary]:
-	return [
-		{"lines": lines_easy + lines_medium},
-		{
-			"lines": lines_protest,
-			"force_disloyal": true,
-			"complete_when_last_line_releases_focus": true,
-		},
-		{"lines": lines_hard},
-		{"lines": lines_retenue},
-		{"lines": lines_king, "parader_scene": _KING_PARADER},
-	]
-
-
-func _apply_parade_segment_to_node(parade: Parade, seg: Dictionary) -> void:
-	var lines: Array = seg.get("lines", [])
-	var lines_typed: Array[String] = []
-	for s: Variant in lines:
-		lines_typed.append(str(s))
-	parade.line_strings = lines_typed
-	parade.force_all_paraders_disloyal = bool(seg.get("force_disloyal", false))
-	var ps: Variant = seg.get("parader_scene", null)
-	parade.parader_scene_override = null if ps == null else ps as PackedScene
+) -> Array[Parade]:
+	var first_parade: Parade = _build_parade(lines_easy + lines_medium)
+	var second_parade: Parade = _build_parade(lines_protest)
+	second_parade.force_all_paraders_disloyal = true
+	second_parade.complete_when_last_line_releases_focus = true
+	second_parade.marching_speed = 100.0
+	var third_parade: Parade = _build_parade(lines_hard)
+	var fourth_parade: Parade = _build_parade(lines_retenue)
+	var fifth_parade: Parade = _build_parade(lines_king)
+	fifth_parade.parader_scene_override = _KING_PARADER
+	return [first_parade, second_parade, third_parade, fourth_parade, fifth_parade]

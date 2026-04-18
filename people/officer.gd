@@ -206,6 +206,16 @@ func _abort_speech_silent() -> void:
 	set_process(false)
 
 
+## Ends typing/dialog immediately and invokes the [param on_finished] callback from [method speak], if any.
+func end_speech_immediately() -> void:
+	if not _is_dialog_active:
+		return
+	var cb: Callable = _on_speech_finished
+	_abort_speech_silent()
+	if cb.is_valid():
+		cb.call()
+
+
 func _start_next_line() -> void:
 	if _line_index >= _dialogue_lines.size():
 		_finish_speech()

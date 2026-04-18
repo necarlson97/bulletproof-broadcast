@@ -26,6 +26,8 @@ signal main_parade_complete
 @export var parader_scene_override: PackedScene
 ## Overrides parsed loyalty: every parader is disloyal (e.g. protest wave).
 @export var force_all_paraders_disloyal: bool = false
+## If true, [NarrativeSequencer] can end the segment when the last line would release camera focus (see [method ParadeLine.should_release_focus]).
+@export var complete_when_last_line_releases_focus: bool = false
 
 var _march_delays: Array[float] = []
 var _lines_finished: int = 0
@@ -115,17 +117,32 @@ func _spawn_lines() -> void:
 		begin_marches()
 
 
-## Clears existing [ParadeLine] children and spawns a new segment (same export march/spacing settings).
-func load_segment(
-	p_lines: Array[String],
-	p_force_all_disloyal: bool = false,
-	p_parader_override: PackedScene = null
-) -> void:
+## Copies segment fields from another [Parade] (e.g. an off-tree template). Does not spawn lines.
+func apply_segment_config_from(source: Parade) -> void:
+	if source == null:
+		return
+	line_strings = source.line_strings.duplicate()
+	marching_speed = source.marching_speed
+	approach_speed = source.approach_speed
+	fence_line_z = source.fence_line_z
+	start_z = source.start_z
+	end_z = source.end_z
+	check_z = source.check_z
+	line_spawn_spacing = source.line_spawn_spacing
+	line_width = source.line_width
+	sign_target_width_multiplier = source.sign_target_width_multiplier
+	force_all_paraders_disloyal = source.force_all_paraders_disloyal
+	parader_scene_override = source.parader_scene_override
+	complete_when_last_line_releases_focus = source.complete_when_last_line_releases_focus
+	if source.parade_line_scene != null:
+		parade_line_scene = source.parade_line_scene
+
+
+## Clears existing [ParadeLine] children and applies [param template], then spawns lines.
+func load_from_template(template: Parade) -> void:
 	for c: Node in get_children():
 		c.queue_free()
-	line_strings = p_lines
-	force_all_paraders_disloyal = p_force_all_disloyal
-	parader_scene_override = p_parader_override
+	apply_segment_config_from(template)
 	await get_tree().process_frame
 	_spawn_lines()
 
