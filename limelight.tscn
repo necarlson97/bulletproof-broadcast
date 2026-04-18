@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://gndi7m5kbh1y"]
+
+[ext_resource type="Script" path="res://limelight.gd" id="1_limelight"]
+
+[node name="Limelight" type="Node3D"]
+script = ExtResource("1_limelight")

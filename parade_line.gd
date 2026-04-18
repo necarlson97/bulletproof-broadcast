@@ -255,6 +255,17 @@ func _set_target_z(z: float) -> void:
 	_prune_freed_paraders()
 	for p: Node3D in _parader_nodes:
 		p.position.z = z
+	_update_disloyal_sweating_near_check()
+
+
+func _update_disloyal_sweating_near_check() -> void:
+	const NEAR_CHECK: float = 50.0
+	for p: Node3D in _parader_nodes:
+		var pr: Parader = p as Parader
+		if pr == null or pr.loyal:
+			continue
+		var near: bool = absf(p.position.z - check_z) <= NEAR_CHECK
+		pr.set_sweating_active(near)
 
 
 func _crossed_z_marching(prev_z: float, cur_z: float, threshold: float) -> bool:

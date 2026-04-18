@@ -4,6 +4,12 @@ extends Node3D
 @onready var _eyes = $Face/Eyes
 
 
+func set_sweating_active(active: bool) -> void:
+	var sweat: GPUParticles3D = get_node_or_null("Sweating") as GPUParticles3D
+	if sweat != null:
+		sweat.emitting = active
+
+
 func kill() -> void:
 	_eyes.kill()
 	var pl: Node = get_parent()

@@ -5,7 +5,33 @@
 [ext_resource type="Texture2D" uid="uid://dyow8hnrq8x6o" path="res://assets/body.png" id="3_aoiax"]
 [ext_resource type="Script" uid="uid://cen8j7vsmpme5" path="res://eyes.gd" id="4_eyes"]
 [ext_resource type="Script" uid="uid://cn3l7ceje88vs" path="res://person.gd" id="5_person"]
-[ext_resource type="Script" path="res://person_color.gd" id="6_personcolor"]
+[ext_resource type="Script" uid="uid://240gnk1fksh6" path="res://person_color.gd" id="6_personcolor"]
+[ext_resource type="Texture2D" uid="uid://dryyo116sd08a" path="res://assets/droplet.png" id="7_2v3k6"]
+
+[sub_resource type="Curve" id="Curve_2v3k6"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.114864886, 1), 0.0, 0.0, 0, 0, Vector2(0.39864868, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_hoeld"]
+curve = SubResource("Curve_2v3k6")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hoeld"]
+emission_shape = 3
+emission_box_extents = Vector3(6.265, 2.705, 0.01)
+scale_curve = SubResource("CurveTexture_hoeld")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xktsn"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("7_2v3k6")
+stencil_flags = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5w3b2"]
+material = SubResource("StandardMaterial3D_xktsn")
+size = Vector2(4, 4)
+orientation = 2
 
 [node name="Person" type="Node3D" unique_id=1660657085]
 script = ExtResource("5_person")
@@ -43,3 +69,11 @@ transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 36.2, 1.464
 pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("1_3qlke")
+
+[node name="Sweating" type="GPUParticles3D" parent="." unique_id=612296555]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 47.424057, 1.8482857)
+emitting = false
+amount = 2
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_hoeld")
+draw_pass_1 = SubResource("PlaneMesh_5w3b2")

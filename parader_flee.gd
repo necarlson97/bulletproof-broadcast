@@ -26,6 +26,7 @@ func _on_watched_exiting() -> void:
 	if _parade_line == null or not is_instance_valid(_fleer):
 		return
 	_parade_line.unregister_parader_from_march(_fleer)
+	_fleer.set_sweating_active(true)
 	var x: float
 	if randf() < 0.5:
 		x = randf_range(_FLEE_X_LEFT_MIN, _FLEE_X_LEFT_MAX)
@@ -36,3 +37,9 @@ func _on_watched_exiting() -> void:
 	tw.tween_property(_fleer, "position", target, flee_duration_sec).set_trans(Tween.TRANS_QUAD).set_ease(
 		Tween.EASE_IN
 	)
+	tw.finished.connect(_on_flee_tween_finished, CONNECT_ONE_SHOT)
+
+
+func _on_flee_tween_finished() -> void:
+	if is_instance_valid(_fleer):
+		_fleer.set_sweating_active(false)
