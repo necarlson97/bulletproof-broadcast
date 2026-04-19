@@ -21,6 +21,7 @@ var _pending_button_id: String = ""
 
 func _ready() -> void:
 	var cam: Camera3D = $Camera3D
+	LimelightRender.hide_mask_layer_from_camera(cam)
 	var mask_vp: Node = $Camera3D/LimelightMaskViewport
 	mask_vp.set("hide_mask_layer_on", [cam])
 

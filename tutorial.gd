@@ -5,6 +5,7 @@ const _TUTORIAL_SEQUENCER := preload("res://tutorial_narrative_sequencer.gd")
 
 func _ready() -> void:
 	var cam: Camera3D = get_node("Camera3D") as Camera3D
+	LimelightRender.hide_mask_layer_from_camera(cam)
 	var mask_vp: Node = get_node("LimelightMaskViewport")
 	mask_vp.set("follow_camera", cam)
 	mask_vp.set("hide_mask_layer_on", [cam])

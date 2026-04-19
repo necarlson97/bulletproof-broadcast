@@ -246,6 +246,13 @@ func _on_resume_pressed() -> void:
 	await _close_pause()
 
 
+func _current_scene_file() -> String:
+	var root: Node = get_tree().current_scene
+	if root != null and not root.scene_file_path.is_empty():
+		return root.scene_file_path
+	return MAIN_SCENE
+
+
 func _on_retry_pressed() -> void:
 	_kill_panel_tween()
 	Engine.time_scale = 1.0
@@ -253,7 +260,7 @@ func _on_retry_pressed() -> void:
 	_dimmer.visible = false
 	_panel.visible = false
 	GameStats.reset()
-	get_tree().change_scene_to_file(MAIN_SCENE)
+	get_tree().change_scene_to_file(_current_scene_file())
 
 
 func _on_main_menu_pressed() -> void:

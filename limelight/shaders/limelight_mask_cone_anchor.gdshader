@@ -1,6 +1,7 @@
 shader_type spatial;
 // Mask fill + cone apex pinned to a world position (base follows node transform).
-render_mode unshaded, fog_disabled, depth_draw_opaque, cull_back;
+// cull_disabled: mask when camera is inside the cone (inner faces draw).
+render_mode unshaded, fog_disabled, depth_draw_opaque, cull_disabled;
 
 uniform vec3 tip_world;
 uniform vec3 tip_local;
@@ -16,6 +17,9 @@ void vertex() {
 }
 
 void fragment() {
-	ALBEDO = vec3(1.0);
-	ALPHA = -VERTEX.z;
+	// Single-channel encode: R1G0 (warm) was losing G in some HDR/viewport paths. RGB = linear 0..1 depth.
+	float d = max(-VERTEX.z, 0.0);
+	const float ENC_FAR_M = 1500.0;
+	float e = clamp(d / ENC_FAR_M, 0.0, 1.0);
+	ALBEDO = vec3(e);
 }

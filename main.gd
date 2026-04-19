@@ -8,6 +8,7 @@ const _KING_PARADER: PackedScene = preload("res://people/king.tscn")
 func _ready() -> void:
 	GameStats.reset()
 	var cam: Camera3D = get_node("Camera3D") as Camera3D
+	LimelightRender.hide_mask_layer_from_camera(cam)
 	var mask_vp: Node = get_node("LimelightMaskViewport")
 	mask_vp.set("follow_camera", cam)
 	mask_vp.set("hide_mask_layer_on", [cam])
@@ -18,7 +19,7 @@ func _ready() -> void:
 	var lines_easy: Array[String] = [
 		# Easyish
 		"[Praise,kill] the king!",
-		"{Order is} [maintained by,useless. Fuck] {the king.}",
+		"{Order is} [maintained by,useless. End] {the monarchy.}",
 		"<In this> [country,cage], {we are} (free,happy)!",
 		"{The rebels} are (trying,working) {to destroy} <our> [freedom,chains]!",
 		"<Only when> we [comply,resist], can <we> (create,flourish)!",

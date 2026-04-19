@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://7y20j016r667" path="res://main.gd" id="4_main"]
 [ext_resource type="PackedScene" uid="uid://60nocx6sekte" path="res://people/audence_spawner.tscn" id="5_lquwl"]
 [ext_resource type="Texture2D" uid="uid://dtonxkfa3a401" path="res://assets/fence.png" id="6_7mycd"]
-[ext_resource type="Material" uid="uid://1tl2k5fa5whh" path="res://limelight/materials/limelight_screen_darken_material.tres" id="6_ycdy4"]
 [ext_resource type="Texture2D" uid="uid://bdlfs8dexp45g" path="res://assets/grass.png" id="7_272bh"]
 [ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="8_5vw27"]
 [ext_resource type="PackedScene" uid="uid://wohly26t3pk7" path="res://limelight/limelighter.tscn" id="9_kek77"]
@@ -20,7 +19,6 @@
 viewport_path = NodePath("DialogBox/SubViewport")
 
 [sub_resource type="SphereMesh" id="SphereMesh_w48qg"]
-material = ExtResource("6_ycdy4")
 radius = 60.0
 height = 120.0
 

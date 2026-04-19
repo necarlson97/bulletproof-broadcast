@@ -15,7 +15,7 @@ alpha_cut = 1
 texture = ExtResource("1_t7tip")
 
 [node name="RoadEnd" type="Sprite3D" parent="." unique_id=725154259]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.18762875, 89.36032)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.18762684, 89.36032)
 pixel_size = 0.8
 alpha_cut = 1
 texture = ExtResource("2_tv015")

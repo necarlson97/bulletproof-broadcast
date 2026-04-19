@@ -1,7 +1,8 @@
 extends RefCounted
 class_name LimelightRender
 
-## Render layer (1..20) for geometry that writes the limelight mask (white = hole in darkness).
+## Render layer (1..20) for geometry that writes the limelight mask (RGB = normalized view depth; see mask shaders).
+## The mask SubViewport does not draw the rest of the scene — screen-space depth is combined in [LimelightScreenDarkenOverlay].
 ## Gameplay cameras should exclude this layer so mask meshes are not visible in the main pass.
 const MASK_RENDER_LAYER: int = 10
 

@@ -18,11 +18,16 @@ func _ready() -> void:
 		w.size_changed.connect(_sync_world_and_size)
 	_cam.cull_mask = _MASK_LAYER
 	_cam.current = true
-	for c in hide_mask_layer_on:
-		if c != null:
-			c.cull_mask = c.cull_mask & ~_MASK_LAYER
+	# Parents assign hide_mask_layer_on in their _ready after this node's _ready; apply when stack unwinds.
+	call_deferred("_apply_layer_hide_from_cameras")
 	if follow_camera == null:
 		push_warning("LimelightMaskViewport: assign follow_camera (the main gameplay camera).")
+
+
+func _apply_layer_hide_from_cameras() -> void:
+	for c in hide_mask_layer_on:
+		if c != null and is_instance_valid(c):
+			c.cull_mask = c.cull_mask & ~_MASK_LAYER
 
 
 func _sync_world_and_size() -> void:

@@ -52,7 +52,7 @@ script = ExtResource("1_kk4mm")
 [node name="Ground" parent="." unique_id=231829925 instance=ExtResource("4_u3dsk")]
 
 [node name="Officer" parent="." unique_id=1660657085 instance=ExtResource("5_ygrj5")]
-transform = Transform3D(0.9973655, 0, -0.07254193, 0, 1, 0, 0.07254193, 0, 0.9973655, -21.439026, 3.1028252, 36.328064)
+transform = Transform3D(0.9973655, 0, -0.07254193, 0, 1, 0, 0.07254193, 0, 0.9973655, -36.688934, 3.1028252, 54.836807)
 
 [node name="MuzzelFlash" parent="Officer/HandL/Gun" parent_id_path=PackedInt32Array(1660657085, 2019999971) index="1" unique_id=540988831]
 visible = false
@@ -64,7 +64,7 @@ visible = false
 texture = SubResource("ViewportTexture_ysfef")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1275133988]
-transform = Transform3D(1, 0, 0, 0, 0.9585417, 0.28495243, 0, -0.28495243, 0.9585417, -167.0181, 60.004288, 125.44641)
+transform = Transform3D(1, 0, 0, 0, 0.9585417, 0.28495243, 0, -0.28495243, 0.9585417, -167.0181, 66.84895, 125.44641)
 fov = 95.0
 
 [node name="LimelightMaskViewport" parent="Camera3D" unique_id=338784484 node_paths=PackedStringArray("follow_camera") instance=ExtResource("6_lgqab")]
@@ -543,7 +543,7 @@ script = ExtResource("16_ygrj5")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -734.933)
 
 [node name="ManualFocus" type="Node3D" parent="Limelighter" unique_id=480256127]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -143.62149, 0, 798.77344)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -143.62149, 0, 786.4101)
 
 [node name="SettingsHolderSpawner" type="Node3D" parent="." unique_id=1831957279]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -857.53674, 0, 0)
