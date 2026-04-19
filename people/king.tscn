@@ -46,29 +46,38 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 127.51102, 1.8482857)
 [node name="KilledSfx" parent="." index="7" unique_id=261830412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 122.88696, 0)
 
-[node name="tank" parent="." index="8" unique_id=1772188567 instance=ExtResource("4_88p23")]
+[node name="tank" parent="." index="8" unique_id=2135245126 instance=ExtResource("4_88p23")]
 transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
 script = ExtResource("6_tank")
 
-[node name="turret" parent="tank" index="0" unique_id=976227796]
+[node name="turret" parent="tank" index="0" unique_id=1591537581]
 surface_material_override/0 = ExtResource("5_ea3wh")
 
-[node name="wheel_001" parent="tank" index="1" unique_id=1891689900]
+[node name="wheel_001" parent="tank" index="1" unique_id=1938284510]
 material_override = ExtResource("5_ea3wh")
 
-[node name="body" parent="tank" index="2" unique_id=115456501]
+[node name="body" parent="tank" index="2" unique_id=1195555031]
 material_override = ExtResource("5_ea3wh")
 
-[node name="wheel_002" parent="tank" index="3" unique_id=878464087]
+[node name="wheel_002" parent="tank" index="3" unique_id=2110495677]
 material_override = ExtResource("5_ea3wh")
 
-[node name="wheel" parent="tank" index="4" unique_id=1460307518]
+[node name="wheel" parent="tank" index="4" unique_id=347482939]
 material_override = ExtResource("5_ea3wh")
 
-[node name="barrel" parent="tank" index="5" unique_id=466812325]
+[node name="barrel" parent="tank" index="5" unique_id=500917174]
 material_override = ExtResource("5_ea3wh")
 
-[node name="mudflap" parent="tank" index="6" unique_id=367900677]
+[node name="mudflap" parent="tank" index="6" unique_id=2056859102]
 material_override = ExtResource("5_ea3wh")
+
+[node name="Testing" type="Node3D" parent="." index="9" unique_id=776599262]
+visible = false
+
+[node name="Camera3D" type="Camera3D" parent="Testing" index="0" unique_id=1236701171]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.832275, 145.0021, 282.9976)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Testing" index="1" unique_id=907391125]
+transform = Transform3D(1, 0, 0, 0, -0.23151037, 0.97283244, 0, -0.97283244, -0.23151037, 0, 200.8115, 0)
 
 [editable path="tank"]

@@ -4,8 +4,6 @@ class_name Parade
 ## If false, [method begin_marches] must be called (e.g. after intro dialogue).
 @export var auto_start: bool = true
 
-signal main_parade_complete
-
 @export var parade_line_scene: PackedScene = preload("res://parade_line.tscn")
 @export var line_strings: Array[String] = []
 @export var marching_speed: float = 300.0
@@ -26,11 +24,8 @@ signal main_parade_complete
 @export var parader_scene_override: PackedScene
 ## Overrides parsed loyalty: every parader is disloyal (e.g. protest wave).
 @export var force_all_paraders_disloyal: bool = false
-## If true, [NarrativeSequencer] can end the segment when the last line would release camera focus (see [method ParadeLine.should_release_focus]).
-@export var complete_when_last_line_releases_focus: bool = false
 
 var _march_delays: Array[float] = []
-var _lines_finished: int = 0
 
 
 func _ready() -> void:
@@ -91,7 +86,6 @@ func _march_time_for_world_distance(distance: float) -> float:
 
 func _spawn_lines() -> void:
 	_march_delays.clear()
-	_lines_finished = 0
 	var stagger: float = _march_time_for_world_distance(line_spawn_spacing)
 	for i: int in range(line_strings.size()):
 		var pl: ParadeLine = parade_line_scene.instantiate() as ParadeLine
@@ -110,7 +104,6 @@ func _spawn_lines() -> void:
 			sign_target_width_multiplier,
 			force_all_paraders_disloyal
 		)
-		pl.line_march_finished.connect(_on_line_march_finished, CONNECT_ONE_SHOT)
 		add_child(pl)
 		_march_delays.append(stagger * float(i))
 	if auto_start:
@@ -133,7 +126,6 @@ func apply_segment_config_from(source: Parade) -> void:
 	sign_target_width_multiplier = source.sign_target_width_multiplier
 	force_all_paraders_disloyal = source.force_all_paraders_disloyal
 	parader_scene_override = source.parader_scene_override
-	complete_when_last_line_releases_focus = source.complete_when_last_line_releases_focus
 	if source.parade_line_scene != null:
 		parade_line_scene = source.parade_line_scene
 
@@ -160,15 +152,9 @@ func begin_marches() -> void:
 		idx += 1
 
 
-## Frees all [ParadeLine] children without counting them toward [signal main_parade_complete].
+## Frees all [ParadeLine] children without emitting line completion (e.g. segment ended early).
 func abort_all_parade_lines() -> void:
 	for c: Node in get_children():
 		var pl: ParadeLine = c as ParadeLine
 		if pl != null:
 			pl.abort_march_without_completion()
-
-
-func _on_line_march_finished() -> void:
-	_lines_finished += 1
-	if _lines_finished >= line_strings.size():
-		main_parade_complete.emit()

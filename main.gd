@@ -88,10 +88,14 @@ func _build_parade_schedule(
 	var first_parade: Parade = _build_parade(lines_easy + lines_medium)
 	var second_parade: Parade = _build_parade(lines_protest)
 	second_parade.force_all_paraders_disloyal = true
-	second_parade.complete_when_last_line_releases_focus = true
-	second_parade.marching_speed = 100.0
+	second_parade.marching_speed = 200.0
+	second_parade.approach_speed = 300.0
+	second_parade.line_spawn_spacing = 400.0
 	var third_parade: Parade = _build_parade(lines_hard)
 	var fourth_parade: Parade = _build_parade(lines_retenue)
+	fourth_parade.marching_speed = 150.0
 	var fifth_parade: Parade = _build_parade(lines_king)
+	fifth_parade.marching_speed = 175.0
 	fifth_parade.parader_scene_override = _KING_PARADER
+	fifth_parade.end_z += 400
 	return [first_parade, second_parade, third_parade, fourth_parade, fifth_parade]

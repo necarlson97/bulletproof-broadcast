@@ -10,11 +10,12 @@ extends Node3D
 @export var wheels_enabled: bool = true
 @export var wheel_spin_speed: float = 4.0
 ## Axle axis in each wheel's local space (often Vector3.RIGHT for side wheels).
-@export var wheel_spin_axis: Vector3 = Vector3.RIGHT
+@export var wheel_spin_axis: Vector3 = Vector3.UP
 
 @export var aim_enabled: bool = true
 ## Added to computed yaw if the mesh forward axis does not match +Z on XZ.
 @export var turret_yaw_offset: float = 0.0
+## Extra twist around barrel local X after aiming (radians); mesh uses +Y as bore axis at rest.
 @export var barrel_pitch_offset: float = 0.0
 
 @onready var _body: Node3D = $body
@@ -63,15 +64,30 @@ func _apply_aim() -> void:
 	to_cam_xz = to_cam_xz.normalized()
 	var yaw := atan2(to_cam_xz.x, to_cam_xz.z) + turret_yaw_offset
 	_turret.rotation.y = yaw
-	# Barrel is a sibling of turret: keep same yaw so elevation stays meaningful, then pitch on X.
-	_barrel.rotation.y = yaw
-	var to_barrel := (cam_pos - _barrel.global_position)
+	# Rest pose: barrel points along local +Y (vertical). Aim by aligning +Y toward camera, then optional X tweak.
+	var to_barrel := cam_pos - _barrel.global_position
 	if to_barrel.length_squared() < 1e-8:
 		return
-	to_barrel = to_barrel.normalized()
-	var horizontal := sqrt(to_barrel.x * to_barrel.x + to_barrel.z * to_barrel.z)
-	var pitch := atan2(-to_barrel.y, horizontal) + barrel_pitch_offset
-	_barrel.rotation.x = pitch
+	var dir_world := to_barrel.normalized()
+	var basis_world := _basis_with_y_aligned_to(dir_world)
+	basis_world = basis_world * Basis.from_euler(Vector3(barrel_pitch_offset, 0.0, 0.0))
+	var parent := _barrel.get_parent_node_3d() as Node3D
+	if parent == null:
+		return
+	var basis_local := parent.global_transform.basis.inverse() * basis_world
+	var scl := _barrel.basis.get_scale()
+	_barrel.basis = basis_local.orthonormalized().scaled_local(scl)
+
+
+## Rest pose: local +Y is the bore axis. Builds a rotation-only basis whose +Y matches [dir] (world space).
+func _basis_with_y_aligned_to(dir: Vector3, up_ref: Vector3 = Vector3.UP) -> Basis:
+	var y_axis := dir.normalized()
+	var x_axis := up_ref.cross(y_axis)
+	if x_axis.length_squared() < 1e-10:
+		x_axis = Vector3.RIGHT.cross(y_axis)
+	x_axis = x_axis.normalized()
+	var z_axis := x_axis.cross(y_axis).normalized()
+	return Basis(x_axis, y_axis, z_axis)
 
 
 func _on_rumble_tick() -> void:

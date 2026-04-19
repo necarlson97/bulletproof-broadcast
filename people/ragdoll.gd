@@ -1,8 +1,9 @@
 class_name Ragdoll
 extends Object
 
-## Builds cardboard-style ragdoll pieces from [param root]: one [RigidBody3D] per direct child,
-## with all [Sprite3D] under that child grouped into a single box collider. The original [param root] is freed.
+## Builds cardboard-style ragdoll pieces from [param root]: one [RigidBody3D] per direct child.
+## [Sprite3D] nodes and nested [MeshInstance3D] (not direct children of the piece) are merged into one box collider.
+## Each [MeshInstance3D] that is a direct child of the piece gets its own convex collider. The original [param root] is freed.
 
 const DEFAULT_MIN_THICKNESS: float = 1.0
 const DEFAULT_RANDOM_LINEAR_MAX: float = 1.5
@@ -35,12 +36,12 @@ static func create_ragdoll(
 		if not child is Node3D:
 			continue
 		var anchor: Node3D = child as Node3D
-		var sprites: Array[Sprite3D] = _find_sprite3ds_under(child)
-		if sprites.is_empty():
+		var sprites: Array[Sprite3D] = _find_sprite3ds_under(anchor)
+		var nested_meshes: Array[MeshInstance3D] = _find_nested_mesh_instances(anchor)
+		var direct_meshes: Array[MeshInstance3D] = _find_direct_mesh_instances(anchor)
+		if sprites.is_empty() and nested_meshes.is_empty() and direct_meshes.is_empty():
 			continue
-		var merged: AABB = _merged_sprite_aabb_in_anchor_space(anchor, sprites, min_thickness)
-		if merged.size == Vector3.ZERO:
-			continue
+		var merged: AABB = _merged_joined_bounds_in_anchor_space(anchor, sprites, nested_meshes, min_thickness)
 		anchor_xf.append(anchor.global_transform)
 		merged_local.append(merged)
 		dup_sources.append(anchor)
@@ -60,12 +61,25 @@ static func create_ragdoll(
 		rb.add_child(dup)
 		dup.global_transform = dup_sources[i].global_transform
 
-		var cs := CollisionShape3D.new()
-		var box := BoxShape3D.new()
-		box.size = merged_local[i].size
-		cs.shape = box
-		rb.add_child(cs)
-		cs.position = merged_local[i].get_center()
+		var joined: AABB = merged_local[i]
+		if joined.size != Vector3.ZERO:
+			var cs := CollisionShape3D.new()
+			var box := BoxShape3D.new()
+			box.size = joined.size
+			cs.shape = box
+			rb.add_child(cs)
+			cs.position = joined.get_center()
+
+		for dm: MeshInstance3D in _find_direct_mesh_instances(dup_sources[i] as Node3D):
+			if dm.mesh == null:
+				continue
+			var convex: Shape3D = dm.mesh.create_convex_shape(true, false)
+			if convex == null:
+				continue
+			var mcs := CollisionShape3D.new()
+			mcs.shape = convex
+			mcs.transform = dm.transform
+			rb.add_child(mcs)
 
 		rb.linear_velocity = Vector3(
 			randf_range(-random_linear_max, random_linear_max),
@@ -166,15 +180,44 @@ static func _find_sprite3ds_under(node: Node) -> Array[Sprite3D]:
 	return out
 
 
-static func _merged_sprite_aabb_in_anchor_space(
+static func _find_direct_mesh_instances(anchor: Node3D) -> Array[MeshInstance3D]:
+	var out: Array[MeshInstance3D] = []
+	for c: Node in anchor.get_children():
+		if c is MeshInstance3D:
+			out.append(c as MeshInstance3D)
+	return out
+
+
+## [MeshInstance3D] under [param anchor] that are not direct children (joined into one box with sprites).
+static func _find_nested_mesh_instances(anchor: Node3D) -> Array[MeshInstance3D]:
+	var out: Array[MeshInstance3D] = []
+	for c: Node in anchor.get_children():
+		if c is MeshInstance3D:
+			for ch: Node in c.get_children():
+				_collect_mesh_instances_under(ch, out)
+		else:
+			_collect_mesh_instances_under(c, out)
+	return out
+
+
+static func _collect_mesh_instances_under(node: Node, out: Array[MeshInstance3D]) -> void:
+	if node is MeshInstance3D:
+		out.append(node as MeshInstance3D)
+	for ch: Node in node.get_children():
+		_collect_mesh_instances_under(ch, out)
+
+
+## Merged box for all [Sprite3D] and nested meshes (see [method _find_nested_mesh_instances]).
+static func _merged_joined_bounds_in_anchor_space(
 	anchor: Node3D,
 	sprites: Array[Sprite3D],
+	nested_meshes: Array[MeshInstance3D],
 	min_thickness: float,
 ) -> AABB:
 	var inv: Transform3D = anchor.global_transform.affine_inverse()
 	var merged: AABB = AABB()
 	var first: bool = true
-	for s in sprites:
+	for s: Sprite3D in sprites:
 		var la: AABB = s.get_aabb()
 		for ci in range(8):
 			var pt: Vector3 = inv * s.global_transform * la.get_endpoint(ci)
@@ -183,6 +226,19 @@ static func _merged_sprite_aabb_in_anchor_space(
 				first = false
 			else:
 				merged = merged.expand(pt)
+	for m: MeshInstance3D in nested_meshes:
+		if m.mesh == null:
+			continue
+		var la: AABB = m.get_aabb()
+		for ci in range(8):
+			var pt: Vector3 = inv * m.global_transform * la.get_endpoint(ci)
+			if first:
+				merged = AABB(pt, Vector3.ZERO)
+				first = false
+			else:
+				merged = merged.expand(pt)
+	if first:
+		return AABB()
 
 	var center: Vector3 = merged.get_center()
 	var half: Vector3 = Vector3(

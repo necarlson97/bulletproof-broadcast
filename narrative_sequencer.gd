@@ -33,8 +33,6 @@ const _DMG_4 := "You have failed us."
 
 @export var collateral_traitor_lines: Array[String] = ["Excellent!"]
 @export var collateral_loyalist_lines: Array[String] = ["Ah. That was a loyalist. Oh well."]
-## Optional: shown during the bonus-parade stub; hidden again after.
-@export var bonus_section: Node3D
 
 var _officer: Officer
 var _pause_menu: CanvasLayer
@@ -50,7 +48,7 @@ var _parades_completed: int = 0
 var _active_schedule_index: int = 0
 var _intro_done: bool = false
 var _game_failed: bool = false
-## Prevents double [method _advance_after_parade_segment] from normal vs early completion.
+## Prevents double [method _advance_after_parade_segment] while a segment transition is in flight.
 var _resolving_parade_segment: bool = false
 var _collateral_rot_traitor: int = 0
 var _collateral_rot_loyalist: int = 0
@@ -69,12 +67,8 @@ func _ready() -> void:
 		push_error("NarrativeSequencer: no node in group 'parade'")
 		return
 	_focused_line = get_parent().get_node_or_null("FocusedLine") as FocusedLine
-	_parade.main_parade_complete.connect(_on_main_parade_complete)
 	_connect_disloyal_signals_on_parade_lines(_parade)
-	for seg: Parade in parade_schedule:
-		if seg.complete_when_last_line_releases_focus:
-			set_process(true)
-			break
+	set_process(true)
 	_run_intro_and_game.call_deferred()
 
 
@@ -128,19 +122,13 @@ func _process(_delta: float) -> void:
 		return
 	if not is_instance_valid(_parade):
 		return
-	if not _segment_wants_early_last_line_complete(_active_schedule_index):
+	if parade_schedule.is_empty() or _active_schedule_index < 0 or _active_schedule_index >= parade_schedule.size():
 		return
 	var last_pl: ParadeLine = _get_last_parade_line_by_spawn_index(_parade)
 	if last_pl == null or not last_pl.should_release_focus():
 		return
 	_parade.abort_all_parade_lines()
 	_schedule_parade_advance()
-
-
-func _segment_wants_early_last_line_complete(schedule_idx: int) -> bool:
-	if parade_schedule.is_empty() or schedule_idx < 0 or schedule_idx >= parade_schedule.size():
-		return false
-	return parade_schedule[schedule_idx].complete_when_last_line_releases_focus
 
 
 func _get_last_parade_line_by_spawn_index(parade: Parade) -> ParadeLine:
@@ -177,12 +165,6 @@ func _run_intro_and_game() -> void:
 	if _parade != null:
 		_active_schedule_index = 0
 		_parade.begin_marches()
-
-
-func _on_main_parade_complete() -> void:
-	if _game_failed:
-		return
-	_schedule_parade_advance()
 
 
 func _schedule_parade_advance() -> void:
@@ -238,12 +220,6 @@ func _load_schedule_segment(schedule_idx: int) -> void:
 func _run_victory_sequence() -> void:
 	if _game_failed:
 		return
-	if bonus_section != null:
-		bonus_section.visible = true
-	print("[NarrativeSequencer] Bonus parade (stub)")
-	await get_tree().create_timer(0.05).timeout
-	if bonus_section != null:
-		bonus_section.visible = false
 	if not is_instance_valid(_officer):
 		return
 	await _speak_async(_normalize_speech(_OUTRO_SPEECH))

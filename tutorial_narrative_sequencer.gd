@@ -21,7 +21,6 @@ var _cam_tween: Tween
 
 var _waiting_for_tutorial_shot: bool = false
 var _tutorial_shot_done: bool = false
-var _focused_line: FocusedLine = null
 
 
 func _ready() -> void:

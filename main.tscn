@@ -466,5 +466,8 @@ texture = ExtResource("8_5vw27")
 
 [node name="Limelighter" parent="." unique_id=345578488 instance=ExtResource("9_kek77")]
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1160167350]
+transform = Transform3D(1, 0, 0, 0, 0.4877073, 0.87300724, 0, -0.87300724, 0.4877073, 0, 138.77975, 0)
+
 [editable path="Camera3D/Officer"]
 [editable path="Camera3D/Officer/Limelight"]

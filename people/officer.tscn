@@ -148,6 +148,7 @@ theme_override_font_sizes/normal_font_size = 20
 text = "I've heard some… Disloyal subjects have snuck into the parade. That is why I am here."
 scroll_active = false
 horizontal_alignment = 1
+vertical_alignment = 1
 visible_characters = 10
 visible_characters_behavior = 1
 visible_ratio = 0.11764706
