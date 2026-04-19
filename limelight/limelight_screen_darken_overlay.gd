@@ -8,14 +8,20 @@ enum DebugView {
 	## B/W: limelight hole after scene depth test (matches gameplay darken).
 	OCCLUSION_MASK = 1,
 	SCENE_DEPTH = 2,
+	## Grayscale: cone mask RT depth (R channel).
 	MASK_DEPTH = 3,
 	DEPTH_OK = 4,
-	## B/W: raw cone from mask SubViewport only (full silhouette; ignores sprites).
+	## B/W: raw cone silhouette from cone mask SubViewport (before scene depth test).
 	CONE_SILHOUETTE = 5,
 	RAW_Z = 6,
+	## Raw normalized R from cone mask texture.
+	CONE_MASK_BUFFER = 7,
+	## Raw normalized R from disk mask texture.
+	DISK_MASK_BUFFER = 8,
 }
 
-@export var mask_viewport: SubViewport
+@export var mask_viewport_cone: SubViewport
+@export var mask_viewport_disk: SubViewport
 
 ## When not Normal, replaces the darken output to isolate mask vs depth (see shader enum order).
 @export var debug_view: DebugView = DebugView.NORMAL:
@@ -34,6 +40,18 @@ enum DebugView {
 	set(v):
 		mask_depth_decode_scale = v
 		_apply_debug_params()
+
+## [0..1] mix toward full brightness where the cone mask RT passes the depth test.
+@export_range(0.0, 1.0, 0.01) var cone_hole_lift: float = 0.8:
+	set(v):
+		cone_hole_lift = v
+		_apply_lift_params()
+
+## [0..1] mix toward full brightness where the disk mask RT passes the depth test (wins over cone).
+@export_range(0.0, 1.0, 0.01) var target_hole_lift: float = 1.0:
+	set(v):
+		target_hole_lift = v
+		_apply_lift_params()
 
 ## World-space tolerance for depth test (large maps / buffer precision).
 @export var depth_test_slop_m: float = 8.0:
@@ -64,9 +82,10 @@ func _ready() -> void:
 	_bind_mask_texture()
 	_apply_darkness()
 	_apply_debug_params()
+	_apply_lift_params()
 	_apply_depth_params()
-	if mask_viewport == null:
-		push_warning("LimelightScreenDarkenOverlay: assign mask_viewport (LimelightMaskViewport).")
+	if mask_viewport_cone == null or mask_viewport_disk == null:
+		push_warning("LimelightScreenDarkenOverlay: assign mask_viewport_cone and mask_viewport_disk (LimelightMaskViewport).")
 
 
 func _process(_delta: float) -> void:
@@ -86,9 +105,10 @@ func _apply_depth_params() -> void:
 
 func _bind_mask_texture() -> void:
 	var sm: ShaderMaterial = material_override as ShaderMaterial
-	if sm == null or mask_viewport == null:
+	if sm == null or mask_viewport_cone == null or mask_viewport_disk == null:
 		return
-	sm.set_shader_parameter("limelight_mask", mask_viewport.get_texture())
+	sm.set_shader_parameter("limelight_mask_cone", mask_viewport_cone.get_texture())
+	sm.set_shader_parameter("limelight_mask_disk", mask_viewport_disk.get_texture())
 
 
 func _apply_darkness() -> void:
@@ -104,3 +124,11 @@ func _apply_debug_params() -> void:
 	sm.set_shader_parameter("debug_view", int(debug_view))
 	sm.set_shader_parameter("debug_depth_vis_scale", debug_depth_vis_scale)
 	sm.set_shader_parameter("mask_depth_decode_scale", mask_depth_decode_scale)
+
+
+func _apply_lift_params() -> void:
+	var sm: ShaderMaterial = material_override as ShaderMaterial
+	if sm == null:
+		return
+	sm.set_shader_parameter("cone_hole_lift", cone_hole_lift)
+	sm.set_shader_parameter("target_hole_lift", target_hole_lift)

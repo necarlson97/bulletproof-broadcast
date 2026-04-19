@@ -1,14 +1,18 @@
 extends Node3D
 
 @onready var _camera: Camera3D = $Camera3D
-@onready var _mask_vp: Node = $LimelightMaskViewport
+@onready var _mask_vp_cone: Node = $LimelightMaskViewport
+@onready var _mask_vp_disk: Node = $LimelightMaskViewportDisk
 @onready var _overlay: Node = $Camera3D/LimelightScreenDarkenOverlay
 
 
 func _ready() -> void:
-	_mask_vp.set("follow_camera", _camera)
-	_mask_vp.set("hide_mask_layer_on", [_camera])
-	_overlay.set("mask_viewport", _mask_vp)
+	_mask_vp_cone.set("follow_camera", _camera)
+	_mask_vp_disk.set("follow_camera", _camera)
+	_mask_vp_cone.set("hide_mask_layer_on", [_camera])
+	_mask_vp_disk.set("hide_mask_layer_on", [_camera])
+	_overlay.set("mask_viewport_cone", _mask_vp_cone)
+	_overlay.set("mask_viewport_disk", _mask_vp_disk)
 	_camera.current = true
 	await get_tree().create_timer(0.15).timeout
 	print("limelight_mask_viewport_smoke_test: ok")

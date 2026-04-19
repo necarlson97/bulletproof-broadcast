@@ -8,5 +8,5 @@ void fragment() {
 	float d = max(-VERTEX.z, 0.0);
 	const float ENC_FAR_M = 1500.0;
 	float e = clamp(d / ENC_FAR_M, 0.0, 1.0);
-	ALBEDO = vec3(e);
+	ALBEDO = vec3(e, 0.0, 0.0);
 }

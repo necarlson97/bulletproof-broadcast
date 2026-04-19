@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://gndi7m5kbh1y"]
 
 [ext_resource type="Script" uid="uid://sdlqodmlo0ek" path="res://limelight/limelight.gd" id="1_limelight"]
-[ext_resource type="Texture2D" uid="uid://dprohc30fhgx8" path="res://assets/circle white.png" id="2_rhaq6"]
+[ext_resource type="Material" path="res://limelight/materials/limelight_mask_target_disk_material.tres" id="2_disk_mask"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_cone"]
 top_radius = 0.0
@@ -9,17 +9,23 @@ bottom_radius = 50.0
 height = 200.0
 rings = 0
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_disk"]
+top_radius = 50.0
+bottom_radius = 50.0
+height = 4.0
+rings = 0
+
 [node name="Limelight" type="Node3D" unique_id=1987127576]
 script = ExtResource("1_limelight")
 orbit_radius = 20.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1370487710]
+[node name="ConeSpotlightMesh" type="MeshInstance3D" parent="." unique_id=1370487710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
 mesh = SubResource("CylinderMesh_cone")
 
-[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1408810815]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1.8764572, 0)
-modulate = Color(1, 1, 1, 0.9764706)
-pixel_size = 0.5
-alpha_cut = 2
-texture = ExtResource("2_rhaq6")
+[node name="StationaryDiskMesh" type="MeshInstance3D" parent="." unique_id=1862840849]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+layers = 1024
+material_override = ExtResource("2_disk_mask")
+extra_cull_margin = 16384.0
+mesh = SubResource("CylinderMesh_disk")

@@ -1,10 +1,11 @@
 extends SubViewport
 class_name LimelightMaskViewport
 
-const _MASK_LAYER: int = 1 << 9
+## Which render layers this viewport draws (cone-only vs disk-only). Default 512 = layer 10 (cone).
+@export var mask_cull_layers: int = 512
 
 @export var follow_camera: Camera3D
-## Cameras that should not draw the mask layer (so mask geometry is only in this viewport).
+## Cameras that should not draw limelight mask layers (so mask geometry is only in mask SubViewports).
 @export var hide_mask_layer_on: Array[Camera3D] = []
 
 @onready var _cam: Camera3D = $Camera3D
@@ -16,7 +17,7 @@ func _ready() -> void:
 	var w: Window = get_window()
 	if not w.size_changed.is_connected(_sync_world_and_size):
 		w.size_changed.connect(_sync_world_and_size)
-	_cam.cull_mask = _MASK_LAYER
+	_cam.cull_mask = mask_cull_layers
 	_cam.current = true
 	# Parents assign hide_mask_layer_on in their _ready after this node's _ready; apply when stack unwinds.
 	call_deferred("_apply_layer_hide_from_cameras")
@@ -25,9 +26,10 @@ func _ready() -> void:
 
 
 func _apply_layer_hide_from_cameras() -> void:
+	var strip: int = LimelightRender.mask_layers_all_mask()
 	for c in hide_mask_layer_on:
 		if c != null and is_instance_valid(c):
-			c.cull_mask = c.cull_mask & ~_MASK_LAYER
+			c.cull_mask = c.cull_mask & ~strip
 
 
 func _sync_world_and_size() -> void:
@@ -50,4 +52,4 @@ func _process(_delta: float) -> void:
 	_cam.keep_aspect = follow_camera.keep_aspect
 	_cam.h_offset = follow_camera.h_offset
 	_cam.v_offset = follow_camera.v_offset
-	_cam.cull_mask = _MASK_LAYER
+	_cam.cull_mask = mask_cull_layers

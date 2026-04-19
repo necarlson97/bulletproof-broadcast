@@ -21,5 +21,6 @@ void fragment() {
 	float d = max(-VERTEX.z, 0.0);
 	const float ENC_FAR_M = 1500.0;
 	float e = clamp(d / ENC_FAR_M, 0.0, 1.0);
-	ALBEDO = vec3(e);
+	// R = depth; G = 0 => cone-only hole lift (see limelight_screen_darken cone_hole_lift).
+	ALBEDO = vec3(e, 0.0, 0.0);
 }

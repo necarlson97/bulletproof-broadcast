@@ -9,11 +9,15 @@ func _ready() -> void:
 	GameStats.reset()
 	var cam: Camera3D = get_node("Camera3D") as Camera3D
 	LimelightRender.hide_mask_layer_from_camera(cam)
-	var mask_vp: Node = get_node("LimelightMaskViewport")
-	mask_vp.set("follow_camera", cam)
-	mask_vp.set("hide_mask_layer_on", [cam])
+	var mask_vp_cone: Node = get_node("LimelightMaskViewport")
+	var mask_vp_disk: Node = get_node("LimelightMaskViewportDisk")
+	mask_vp_cone.set("follow_camera", cam)
+	mask_vp_disk.set("follow_camera", cam)
+	mask_vp_cone.set("hide_mask_layer_on", [cam])
+	mask_vp_disk.set("hide_mask_layer_on", [cam])
 	var darken: Node3D = get_node("Camera3D/LimelightScreenDarkenOverlay") as Node3D
-	darken.set("mask_viewport", mask_vp)
+	darken.set("mask_viewport_cone", mask_vp_cone)
+	darken.set("mask_viewport_disk", mask_vp_disk)
 	darken.visible = true
 
 	var lines_easy: Array[String] = [

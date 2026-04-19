@@ -14,6 +14,9 @@ script = ExtResource("1_smoke")
 
 [node name="LimelightMaskViewport" parent="." instance=ExtResource("2_vp")]
 
+[node name="LimelightMaskViewportDisk" parent="." instance=ExtResource("2_vp")]
+mask_cull_layers = 1024
+
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 12)
 

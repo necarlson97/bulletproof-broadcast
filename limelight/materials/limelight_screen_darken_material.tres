@@ -9,5 +9,7 @@ shader_parameter/darkness = 0.1
 shader_parameter/depth_test_slop_m = 8.0
 shader_parameter/depth_test_slop_ratio = 0.002
 shader_parameter/mask_depth_decode_scale = 1500.0
+shader_parameter/cone_hole_lift = 0.8
+shader_parameter/target_hole_lift = 1.0
 shader_parameter/debug_view = 0
 shader_parameter/debug_depth_vis_scale = 500.0

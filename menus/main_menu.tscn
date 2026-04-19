@@ -70,8 +70,13 @@ fov = 95.0
 [node name="LimelightMaskViewport" parent="Camera3D" unique_id=338784484 node_paths=PackedStringArray("follow_camera") instance=ExtResource("6_lgqab")]
 follow_camera = NodePath("..")
 
-[node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=34686236 node_paths=PackedStringArray("mask_viewport") instance=ExtResource("6_rx1ud")]
-mask_viewport = NodePath("../LimelightMaskViewport")
+[node name="LimelightMaskViewportDisk" parent="Camera3D" unique_id=338784485 node_paths=PackedStringArray("follow_camera") instance=ExtResource("6_lgqab")]
+mask_cull_layers = 1024
+follow_camera = NodePath("..")
+
+[node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=34686236 node_paths=PackedStringArray("mask_viewport_cone", "mask_viewport_disk") instance=ExtResource("6_rx1ud")]
+mask_viewport_cone = NodePath("../LimelightMaskViewport")
+mask_viewport_disk = NodePath("../LimelightMaskViewportDisk")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1084245481]
 environment = SubResource("Environment_2xa2j")

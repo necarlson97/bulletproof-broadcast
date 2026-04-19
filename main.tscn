@@ -71,6 +71,9 @@ mesh = SubResource("SphereMesh_w48qg")
 
 [node name="LimelightMaskViewport" parent="." unique_id=1740944466 instance=ExtResource("3_mskvp")]
 
+[node name="LimelightMaskViewportDisk" parent="." unique_id=1740944467 instance=ExtResource("3_mskvp")]
+mask_cull_layers = 1024
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=176286629]
 environment = SubResource("Environment_0xm2m")
 

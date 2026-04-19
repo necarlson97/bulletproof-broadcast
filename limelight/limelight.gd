@@ -5,8 +5,7 @@ const _CONE_MASK_MATERIAL: ShaderMaterial = preload("res://limelight/materials/l
 
 ## Ground plane (Y=0) orbit around an assigned target. Retarget uses a tweened blend toward
 ## the new goal, then continuous lerp while the target moves.
-## Mask mesh: LimelightRender mask layer + limelight_mask_fill material (white into mask RT).
-## Put any extra geometry on that layer with the same material to add holes (no shader array).
+## Cone: render layer 10 + [code]limelight_mask_cone_anchor[/code]. Disk: layer 11 + [code]limelight_mask_target_disk[/code] (separate mask RT; overlay prefers disk lift).
 
 @export var orbit_radius: float = 12.0
 @export var orbit_speed: float = 0.35
@@ -35,13 +34,11 @@ var _orbit_focus: Node3D
 
 func _ready() -> void:
 	_orbit_angle = randf() * TAU
-	var mi: MeshInstance3D = $MeshInstance3D
+	var mi: MeshInstance3D = $ConeSpotlightMesh
 	_shader_mat = _CONE_MASK_MATERIAL.duplicate() as ShaderMaterial
 	mi.material_override = _shader_mat
-	# Apex is moved in the mask shader; inflate AABB so frustum culling matches visible geometry.
 	mi.extra_cull_margin = 16384.0
-	# Layer 10 — must match LimelightRender.MASK_RENDER_LAYER in limelight_render.gd
-	mi.layers = 1 << 9
+	mi.layers = LimelightRender.mask_layer_cone_mask()
 	_orbit_center = global_position
 	_cache_cone_tip_local(mi.mesh)
 	_update_cone_anchor_shader()
@@ -96,7 +93,6 @@ func _process(delta: float) -> void:
 	_orbit_angle = fmod(_orbit_angle + orbit_speed * delta, TAU)
 	var offset: Vector3 = Vector3(cos(_orbit_angle), 0.0, sin(_orbit_angle)) * orbit_radius
 	var p: Vector3 = _orbit_center + offset
-	#p.y = 0.0
 	global_position = p
 	_update_cone_anchor_shader()
 
@@ -104,7 +100,7 @@ func _process(delta: float) -> void:
 func _update_cone_anchor_shader() -> void:
 	if _shader_mat == null:
 		return
-	var mi: MeshInstance3D = $MeshInstance3D
+	var mi: MeshInstance3D = $ConeSpotlightMesh
 	var tip_world: Vector3 = mi.global_transform * _tip_local
 	if _tip_anchor != null and is_instance_valid(_tip_anchor):
 		tip_world = _tip_anchor.global_position
@@ -137,7 +133,6 @@ func clear_target() -> void:
 		_retarget_tween = null
 	_target = null
 	_in_retarget = false
-	# Wander resumes next frame in _process when there is no ManualFocus.
 
 
 func get_follow_target() -> Node3D:
