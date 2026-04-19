@@ -14,6 +14,8 @@ const _HOVER_BODY_BOUNCE_HEIGHT: float = 4.0
 signal pressed(button_id: String, holder: ButtonHolder)
 ## Emitted when the pointer begins hovering this holder’s hit area (for menu officer aim).
 signal hover_began(holder: ButtonHolder)
+## Emitted when [method Person.kill] runs (not when the node leaves the tree for other reasons, e.g. scene change).
+signal killed()
 
 @onready var _area: Area3D = $Area3D
 @onready var _collision: CollisionShape3D = $Area3D/CollisionShape3D
@@ -73,7 +75,14 @@ func _get_bullet_hole_for_kill() -> Sprite3D:
 	return get_node_or_null("Face/BulletHole") as Sprite3D
 
 
+func kill() -> void:
+	killed.emit()
+	super.kill()
+
+
 func _refresh_hit_shape() -> void:
+	if _collision == null:
+		return
 	var box: BoxShape3D = _collision.shape as BoxShape3D
 	if box == null:
 		return

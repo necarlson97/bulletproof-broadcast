@@ -16,8 +16,9 @@
 [ext_resource type="Texture2D" uid="uid://ctsuddyln7k7b" path="res://assets/Logo.png" id="15_u3dsk"]
 [ext_resource type="Script" uid="uid://bwhuqnx4p7l6b" path="res://menus/main_menu.gd" id="16_main_menu"]
 [ext_resource type="Script" uid="uid://deokikrhdkufy" path="res://menus/logo.gd" id="16_ygrj5"]
+[ext_resource type="Script" uid="uid://d28w3e2hxhjqy" path="res://menus/settings_holder_spawner.gd" id="17_shspawn"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_ygrj5"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_lgqab"]
 viewport_path = NodePath("DialogBox/SubViewport")
 
 [sub_resource type="Environment" id="Environment_2xa2j"]
@@ -55,11 +56,11 @@ transform = Transform3D(0.9973655, 0, -0.07254193, 0, 1, 0, 0.07254193, 0, 0.997
 [node name="MuzzelFlash" parent="Officer/HandL/Gun" parent_id_path=PackedInt32Array(1660657085, 2019999971) index="1" unique_id=540988831]
 visible = false
 
-[node name="DialogBox" parent="Officer" index="8" unique_id=960094290]
+[node name="DialogBox" parent="Officer" index="9" unique_id=960094290]
 visible = false
 
 [node name="Sprite3D" parent="Officer/DialogBox" index="0" unique_id=960094292]
-texture = SubResource("ViewportTexture_ygrj5")
+texture = SubResource("ViewportTexture_lgqab")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1275133988]
 transform = Transform3D(1, 0, 0, 0, 0.9585417, 0.28495243, 0, -0.28495243, 0.9585417, -167.0181, 60.004288, 125.44641)
@@ -537,6 +538,10 @@ pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("15_u3dsk")
 script = ExtResource("16_ygrj5")
+
+[node name="SettingsHolderSpawner" type="Node3D" parent="." unique_id=1831957279]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -857.53674, 0, 0)
+script = ExtResource("17_shspawn")
 
 [editable path="Officer"]
 [editable path="Audence Spawner"]

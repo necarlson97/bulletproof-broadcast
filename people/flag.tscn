@@ -3,7 +3,22 @@
 [ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://people/person.tscn" id="1_ftnbb"]
 [ext_resource type="Texture2D" uid="uid://ci82opck53m4c" path="res://assets/flag.png" id="2_4wq2a"]
 [ext_resource type="Texture2D" uid="uid://cfgm3dt06pxm0" path="res://assets/flagpole.png" id="3_s2mxd"]
-[ext_resource type="Script" path="res://people/flag.gd" id="4_flag"]
+[ext_resource type="Script" uid="uid://3mqn33pysdj1" path="res://people/flag.gd" id="4_flag"]
+[ext_resource type="Shader" uid="uid://d2y1tskev8inu" path="res://people/flag_wind.gdshader" id="5_flag_wind"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_flag_wind"]
+render_priority = 0
+shader = ExtResource("5_flag_wind")
+shader_parameter/albedo_texture = ExtResource("2_4wq2a")
+shader_parameter/pixel_size = 2.0
+shader_parameter/flag_world_width = 2000.0
+shader_parameter/wind_time = 0.0
+shader_parameter/wind_speed = 5.0000002375
+shader_parameter/wave_amplitude = 0.30000001425
+shader_parameter/alpha_scissor_threshold = 0.5
+shader_parameter/ripple_along_height = 20.4350009706625
+shader_parameter/ripple_along_width = 2.702000128345
+shader_parameter/pole_on_left = true
 
 [node name="Flag" type="Node3D" unique_id=1932486709]
 script = ExtResource("4_flag")
@@ -14,6 +29,7 @@ visible = false
 
 [node name="SpriteFlag" type="Sprite3D" parent="." unique_id=1082963249]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 26.621058, 44.588387, 0.2473259)
+material_override = SubResource("ShaderMaterial_flag_wind")
 pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("2_4wq2a")
@@ -23,3 +39,7 @@ transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -0.02288794
 pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("3_s2mxd")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1429845273]
+transform = Transform3D(0.922464, 3.436446e-08, -0.38608316, 0.10378645, 0.96319073, 0.24797583, 0.37187174, -0.26881897, 0.88850874, -91.15969, 52.069298, 322.25055)
+visible = false

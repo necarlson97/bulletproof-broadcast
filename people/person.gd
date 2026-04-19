@@ -5,7 +5,14 @@ extends Node3D
 var _KILLED_SFX_DELAY_SEC := 0.4
 
 @onready var _eyes = $Face/Eyes
-@onready var _blood_droplet_emitter: Node3D = $Body/BloodDropletEmitter
+@onready var _blood_droplet_emitter: Node3D = _resolve_blood_droplet_emitter()
+
+
+func _resolve_blood_droplet_emitter() -> Node3D:
+	var under_body := get_node_or_null("Body/BloodDropletEmitter") as Node3D
+	if under_body != null:
+		return under_body
+	return get_node_or_null("Face/BloodDropletEmitter") as Node3D
 
 
 func set_sweating_active(active: bool) -> void:

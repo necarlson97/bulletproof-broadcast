@@ -42,5 +42,8 @@ transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 46.74277, 
 [node name="HandR" parent="." index="5" unique_id=1403083975]
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 18.004822, 1.464036)
 
-[node name="Flag" parent="." index="8" unique_id=1932486709 instance=ExtResource("5_jxx3g")]
+[node name="Camera3D" type="Camera3D" parent="." index="8" unique_id=540485103]
+transform = Transform3D(0.922464, 3.436446e-08, -0.38608316, 0.10378645, 0.96319073, 0.24797583, 0.37187174, -0.26881897, 0.88850874, -11.136833, 93.969986, 93.17078)
+
+[node name="Flag" parent="." index="9" unique_id=1932486709 instance=ExtResource("5_jxx3g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.160025, 46.40261, 1.1124763)

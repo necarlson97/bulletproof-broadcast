@@ -11,6 +11,7 @@ const MAIN_SCENE := "res://main.tscn"
 @onready var _tutorial_holder: ButtonHolder = $TutorialHolder
 @onready var _start_holder: ButtonHolder = $StartHolder
 @onready var _settings_holder: ButtonHolder = $SettingsHolder
+@onready var _settings_spawner: SettingsHolderSpawner = $SettingsHolderSpawner
 
 var _gun_rest_target: Node3D
 var _last_hovered: ButtonHolder
@@ -39,10 +40,21 @@ func _ready() -> void:
 		if not h.pressed.is_connected(_on_holder_pressed):
 			h.pressed.connect(_on_holder_pressed)
 
+	if not _settings_spawner.settings_holder_changed.is_connected(_on_settings_holder_changed):
+		_settings_spawner.settings_holder_changed.connect(_on_settings_holder_changed)
+
 
 func _physics_process(_delta: float) -> void:
 	if _last_hovered != null and is_instance_valid(_last_hovered):
 		_sync_gun_rest_to_face(_last_hovered)
+
+
+func _on_settings_holder_changed(holder: ButtonHolder) -> void:
+	_settings_holder = holder
+	if not holder.hover_began.is_connected(_on_holder_hover_began):
+		holder.hover_began.connect(_on_holder_hover_began)
+	if not holder.pressed.is_connected(_on_holder_pressed):
+		holder.pressed.connect(_on_holder_pressed)
 
 
 func _on_holder_hover_began(holder: ButtonHolder) -> void:

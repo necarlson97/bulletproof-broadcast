@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://people/person.tscn" id="1_maiud"]
 [ext_resource type="Texture2D" uid="uid://bp6vtq73ms7g3" path="res://assets/trumpet.png" id="2_maiud"]
 [ext_resource type="Texture2D" uid="uid://2u5tecs1edy" path="res://assets/trumpet sound.png" id="3_23k3a"]
-[ext_resource type="Script" path="res://people/trumpet.gd" id="4_trumpet"]
+[ext_resource type="Script" uid="uid://b8r5ebfddnnma" path="res://people/trumpet.gd" id="4_trumpet"]
 
 [node name="Trumpet" type="Node3D" unique_id=1932486709]
 script = ExtResource("4_trumpet")
@@ -23,3 +23,10 @@ transform = Transform3D(0.9155012, -0.4023153, 0, 0.4023153, 0.91550106, 0, 0, 0
 pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("3_23k3a")
+
+[node name="TrumpetSFX" type="AudioStreamPlayer3D" parent="." unique_id=99101941]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3169959, 7.9473515, 3.027275)
+volume_db = 6.0
+unit_size = 300.0
+max_distance = 1600.0
+bus = &"SFX"
