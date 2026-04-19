@@ -11,7 +11,9 @@ class_name ButtonHolder
 const _HOVER_BODY_BOUNCE_HALF_DUR: float = 0.12
 const _HOVER_BODY_BOUNCE_HEIGHT: float = 4.0
 
-signal pressed(button_id: String)
+signal pressed(button_id: String, holder: ButtonHolder)
+## Emitted when the pointer begins hovering this holder’s hit area (for menu officer aim).
+signal hover_began(holder: ButtonHolder)
 
 @onready var _area: Area3D = $Area3D
 @onready var _collision: CollisionShape3D = $Area3D/CollisionShape3D
@@ -60,6 +62,11 @@ func refresh_hit_area() -> void:
 	_refresh_hit_shape()
 
 
+## World aim point for the officer gun (face / head).
+func get_head_node() -> Node3D:
+	return $Face as Node3D
+
+
 func _refresh_hit_shape() -> void:
 	var box: BoxShape3D = _collision.shape as BoxShape3D
 	if box == null:
@@ -80,10 +87,11 @@ func _on_area_input_event(_camera: Node, event: InputEvent, _event_position: Vec
 		var mb: InputEventMouseButton = event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
 			print("%s clicked" % button_name)
-			pressed.emit(button_name)
+			pressed.emit(button_name, self)
 
 
 func _on_area_mouse_entered() -> void:
+	hover_began.emit(self)
 	_hovering = true
 	if _hover_loop_running:
 		return

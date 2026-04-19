@@ -13,9 +13,11 @@
 [ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="11_hplot"]
 [ext_resource type="PackedScene" uid="uid://8eagiuthp066" path="res://people/button_holder.tscn" id="13_rx1ud"]
 [ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight/limelight.tscn" id="14_u3dsk"]
+[ext_resource type="Texture2D" uid="uid://ctsuddyln7k7b" path="res://assets/Logo.png" id="15_u3dsk"]
 [ext_resource type="Script" uid="uid://bwhuqnx4p7l6b" path="res://menus/main_menu.gd" id="16_main_menu"]
+[ext_resource type="Script" uid="uid://deokikrhdkufy" path="res://menus/logo.gd" id="16_ygrj5"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_wcdpt"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_ygrj5"]
 viewport_path = NodePath("DialogBox/SubViewport")
 
 [sub_resource type="Environment" id="Environment_2xa2j"]
@@ -49,7 +51,6 @@ script = ExtResource("1_kk4mm")
 
 [node name="Officer" parent="." unique_id=1660657085 instance=ExtResource("5_ygrj5")]
 transform = Transform3D(0.9973655, 0, -0.07254193, 0, 1, 0, 0.07254193, 0, 0.9973655, -21.439026, 3.1028252, 36.328064)
-script = null
 
 [node name="MuzzelFlash" parent="Officer/HandL/Gun" parent_id_path=PackedInt32Array(1660657085, 2019999971) index="1" unique_id=540988831]
 visible = false
@@ -58,7 +59,7 @@ visible = false
 visible = false
 
 [node name="Sprite3D" parent="Officer/DialogBox" index="0" unique_id=960094292]
-texture = SubResource("ViewportTexture_wcdpt")
+texture = SubResource("ViewportTexture_ygrj5")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1275133988]
 transform = Transform3D(1, 0, 0, 0, 0.9585417, 0.28495243, 0, -0.28495243, 0.9585417, -167.0181, 60.004288, 125.44641)
@@ -68,6 +69,7 @@ fov = 95.0
 follow_camera = NodePath("..")
 
 [node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=34686236 node_paths=PackedStringArray("mask_viewport") instance=ExtResource("6_rx1ud")]
+visible = false
 mask_viewport = NodePath("../LimelightMaskViewport")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1084245481]
@@ -458,14 +460,14 @@ alpha_cut = 1
 texture = ExtResource("11_hplot")
 
 [node name="TutorialHolder" parent="." unique_id=2080817519 instance=ExtResource("13_rx1ud")]
-transform = Transform3D(0.9999708, 0.0076444745, 0, -0.0076444745, 0.9999708, 0, 0, 0, 1, -180.87189, 4.582081, 44.602043)
+transform = Transform3D(0.9999708, 0.0076444745, 0, -0.0076444745, 0.9999708, 0, 0, 0, 1, -163.85641, 4.582081, 44.602043)
 button_name = "Tutorial"
 
 [node name="SignScale" parent="TutorialHolder" index="1" unique_id=1687241682]
-transform = Transform3D(0.405, 0, 0, 0, 0.405, 0, 0, 0, 0.405, -0.9981079, 73.72792, -0.97922516)
+transform = Transform3D(0.405, 0, 0, 0, 0.405, 0, 0, 0, 0.405, -0.96769714, 69.751785, -0.97922516)
 
 [node name="Face" parent="TutorialHolder" index="2" unique_id=92908819]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12739563, 46.385334, 0)
+transform = Transform3D(0.9632658, -0.26855, 0, 0.26855, 0.9632658, 0, 0, 0, 1, -11.444168, 46.298832, 0)
 
 [node name="HandL" parent="TutorialHolder" index="4" unique_id=1368089338]
 transform = Transform3D(0.52500004, 6.9849193e-09, 0, -6.9849193e-09, 0.52500004, 0, 0, 0, 0.525, -15.729263, 64.76272, 1.4910431)
@@ -479,6 +481,9 @@ button_name = "Settings"
 
 [node name="SignScale" parent="SettingsHolder" index="1" unique_id=1687241682]
 transform = Transform3D(0.405, 0, 0, 0, 0.405, 0, 0, 0, 0.405, 0, 53.558304, -0.64643097)
+
+[node name="Sign" parent="SettingsHolder/SignScale" index="0" unique_id=2013640258]
+transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, 2.0005493, 0)
 
 [node name="Face" parent="SettingsHolder" index="2" unique_id=92908819]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1000061, 39.083088, 0.3327942)
@@ -494,7 +499,7 @@ transform = Transform3D(0.97888166, 0, -0.2044277, 0, 1, 0, 0.2044277, 0, 0.9788
 button_name = "Start Parade"
 
 [node name="SignScale" parent="StartHolder" index="1" unique_id=1687241682]
-transform = Transform3D(0.394, 0, 1.8491516e-08, 0, 0.394, 0, -1.8491516e-08, 0, 0.394, -0.5247078, 21.007683, 1.149807)
+transform = Transform3D(0.39400005, 0, 1.4901161e-08, 0, 0.394, 0, -1.4901161e-08, 0, 0.39400005, -0.5247116, 16.004784, 1.1498108)
 
 [node name="HandL" parent="StartHolder" index="4" unique_id=1368089338]
 transform = Transform3D(0.52500015, 3.7252916e-09, 1.4901161e-08, -3.7252903e-09, 0.525, 0, -1.4901161e-08, -5.551115e-17, 0.52500015, -14.924702, 13.615959, 3.6200752)
@@ -504,6 +509,7 @@ transform = Transform3D(0.52500015, 3.7252916e-09, 1.4901161e-08, -3.7252903e-09
 
 [node name="Limelight" parent="." unique_id=1987127576 instance=ExtResource("14_u3dsk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.02755, 4.647949, 51.43459)
+visible = false
 orbit_radius = 15.0
 
 [node name="MeshInstance3D" parent="Limelight" index="0" unique_id=1370487710]
@@ -511,6 +517,7 @@ mesh = SubResource("SphereMesh_wcdpt")
 
 [node name="Limelight3" parent="." unique_id=495507160 instance=ExtResource("14_u3dsk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -155.62663, 4.647949, 29.134678)
+visible = false
 orbit_radius = 15.0
 
 [node name="MeshInstance3D" parent="Limelight3" index="0" unique_id=1370487710]
@@ -518,12 +525,18 @@ mesh = SubResource("SphereMesh_wcdpt")
 
 [node name="Limelight2" parent="." unique_id=719145618 instance=ExtResource("14_u3dsk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -180.65492, 53.998474, 46.087967)
+visible = false
 orbit_radius = 15.0
 
 [node name="MeshInstance3D" parent="Limelight2" index="0" unique_id=1370487710]
 mesh = SubResource("SphereMesh_u3dsk")
 
-[connection signal="pressed" from="SettingsHolder" to="MainMenuPause" method="_on_settings_holder_pressed"]
+[node name="Logo" type="Sprite3D" parent="." unique_id=1341808695]
+transform = Transform3D(0.9782494, 0.03021306, 0.2052208, -0.01994268, 0.99845153, -0.05193124, -0.20647198, 0.046709057, 0.97733706, -280.208, 88.19163, -4.244461)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("15_u3dsk")
+script = ExtResource("16_ygrj5")
 
 [editable path="Officer"]
 [editable path="Audence Spawner"]

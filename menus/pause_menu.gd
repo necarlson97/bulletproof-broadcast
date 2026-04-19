@@ -76,6 +76,8 @@ func toggle_pause(_button_id: String = "") -> void:
 
 ## Opens the pause overlay with current stats. If already paused, refreshes labels only.
 func open_pause_menu() -> void:
+	if not is_inside_tree():
+		return
 	if _paused:
 		_refresh_stats()
 		return
@@ -101,6 +103,8 @@ func _kill_panel_tween() -> void:
 
 
 func _open_pause() -> void:
+	if not is_inside_tree():
+		return
 	_kill_panel_tween()
 	_saved_time_scale = Engine.time_scale
 	Engine.time_scale = 0.0
@@ -109,6 +113,12 @@ func _open_pause() -> void:
 	_dimmer.visible = true
 	_panel.visible = true
 	await get_tree().process_frame
+	if not is_inside_tree():
+		Engine.time_scale = _saved_time_scale
+		_paused = false
+		_dimmer.visible = false
+		_panel.visible = false
+		return
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	var w: float = _panel.size.x
 	var h: float = _panel.size.y
@@ -122,6 +132,12 @@ func _open_pause() -> void:
 	).set_ease(Tween.EASE_OUT)
 	await _panel_tween.finished
 	_panel_tween = null
+	if not is_inside_tree():
+		Engine.time_scale = _saved_time_scale
+		_paused = false
+		_dimmer.visible = false
+		_panel.visible = false
+		return
 
 
 func _close_pause() -> void:
@@ -166,6 +182,8 @@ func _refresh_stats() -> void:
 
 
 func _parade_lines_progress() -> Vector2i:
+	if not is_inside_tree():
+		return Vector2i(0, 0)
 	var parades: Array[Node] = get_tree().get_nodes_in_group("parade")
 	if parades.is_empty():
 		return Vector2i(0, 0)
@@ -245,5 +263,5 @@ func _on_main_menu_pressed() -> void:
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
 
 
-func _on_settings_holder_pressed(button_id: String) -> void:
+func _on_settings_holder_pressed(_button_id: String, _holder: ButtonHolder = null) -> void:
 	open_pause_menu()

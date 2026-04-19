@@ -55,11 +55,29 @@ autoplay = true
 max_distance = 40000.0
 bus = &"SFX"
 
-[node name="tank" parent="." index="9" unique_id=584675373 instance=ExtResource("4_88p23")]
+[node name="tank" parent="." index="9" unique_id=1713477501 instance=ExtResource("4_88p23")]
 transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
 script = ExtResource("6_tank")
 
-[node name="body" parent="tank" index="0" unique_id=240248302]
+[node name="body" parent="tank" index="0" unique_id=1930405567]
+material_override = ExtResource("5_ea3wh")
+
+[node name="mudflap" parent="tank/body" index="0" unique_id=46973244]
+material_override = ExtResource("5_ea3wh")
+
+[node name="turret" parent="tank/body" index="1" unique_id=2082490838]
+material_override = ExtResource("5_ea3wh")
+
+[node name="barrel" parent="tank/body/turret" index="0" unique_id=805754902]
+material_override = ExtResource("5_ea3wh")
+
+[node name="wheel" parent="tank/body" index="2" unique_id=532628121]
+material_override = ExtResource("5_ea3wh")
+
+[node name="wheel_001" parent="tank/body" index="3" unique_id=853654987]
+material_override = ExtResource("5_ea3wh")
+
+[node name="wheel_002" parent="tank/body" index="4" unique_id=331765313]
 material_override = ExtResource("5_ea3wh")
 
 [node name="Testing" type="Node3D" parent="." index="10" unique_id=776599262]

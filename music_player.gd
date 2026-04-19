@@ -3,8 +3,10 @@ extends Node
 ## Plays [grim-smirk, respite] in order, then loops forever. Non-spatial; Music bus only.
 
 const _TRACKS: Array[AudioStream] = [
-	preload("res://assets/music/grim-smirk.wav"),
+	preload("res://assets/music/chagrin.wav"),
 	preload("res://assets/music/respite.wav"),
+	preload("res://assets/music/grim-smirk.wav"),
+	
 ]
 
 var _track_index: int = 0

@@ -274,7 +274,11 @@ func _run_victory_sequence() -> void:
 		_KING_KILLER_SPEECH if _king_killed_on_final_parade else _OUTRO_SPEECH
 	)
 	await _speak_async(_normalize_speech(outro))
-	if is_instance_valid(_pause_menu) and _pause_menu.has_method("open_pause_menu"):
+	if (
+		is_instance_valid(_pause_menu)
+		and _pause_menu.is_inside_tree()
+		and _pause_menu.has_method("open_pause_menu")
+	):
 		await _pause_menu.open_pause_menu()
 
 
@@ -303,7 +307,11 @@ func _handle_damage_tier() -> void:
 			if is_instance_valid(_officer) and _gun_point != null:
 				_officer.shot_at(_gun_point)
 				_officer.kill()
-			if is_instance_valid(_pause_menu) and _pause_menu.has_method("open_pause_menu"):
+			if (
+				is_instance_valid(_pause_menu)
+				and _pause_menu.is_inside_tree()
+				and _pause_menu.has_method("open_pause_menu")
+			):
 				await _pause_menu.open_pause_menu()
 		_:
 			pass
