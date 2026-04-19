@@ -57,7 +57,7 @@ visible = false
 [node name="Officer" parent="Camera3D" unique_id=1660657085 instance=ExtResource("1_1bvp3")]
 transform = Transform3D(0.60398686, -0.7890968, -0.11191989, 0.75018144, 0.6102958, -0.25449482, 0.2691252, 0.06975135, 0.96057653, 86.491394, -18.014648, -69.834045)
 
-[node name="DialogBox" parent="Camera3D/Officer" index="8" unique_id=960094290]
+[node name="DialogBox" parent="Camera3D/Officer" index="9" unique_id=960094290]
 transform = Transform3D(0.6661122, 0.74579, -0.00958037, -0.74571294, 0.666181, 0.01072523, 0.014381021, 0, 0.9998966, -25.69519, 6.37693, 0.6651459)
 
 [node name="Sprite3D" parent="Camera3D/Officer/DialogBox" index="0" unique_id=960094292]
@@ -465,6 +465,7 @@ alpha_cut = 1
 texture = ExtResource("8_5vw27")
 
 [node name="Limelighter" parent="." unique_id=345578488 instance=ExtResource("9_kek77")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -734.93335)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1160167350]
 transform = Transform3D(1, 0, 0, 0, 0.4877073, 0.87300724, 0, -0.87300724, 0.4877073, 0, 138.77975, 0)

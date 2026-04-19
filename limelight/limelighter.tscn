@@ -1,8 +1,31 @@
 [gd_scene format=3 uid="uid://wohly26t3pk7"]
 
 [ext_resource type="Script" uid="uid://cbh1lv48yhgqn" path="res://limelight/limelighter.gd" id="1_limelighter"]
-[ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight/limelight.tscn" id="2_limelight"]
+[ext_resource type="Texture2D" uid="uid://1uveu2v8e4qx" path="res://assets/tower.png" id="2_c73ef"]
 
-[node name="Limelighter" type="Node3D"]
+[node name="Limelighter" type="Node3D" unique_id=1155815348]
 script = ExtResource("1_limelighter")
-limelight_scene = ExtResource("2_limelight")
+
+[node name="Tower1" type="Node3D" parent="." unique_id=663912287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -350, 0, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="Tower1" unique_id=2060306343]
+offset = Vector2(0, 500)
+pixel_size = 0.3
+alpha_cut = 1
+texture = ExtResource("2_c73ef")
+
+[node name="LimelightSource" type="Node3D" parent="Tower1" unique_id=1126764387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 211.96832, 0)
+
+[node name="Tower2" type="Node3D" parent="." unique_id=2087638876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 350, 0, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="Tower2" unique_id=449667737]
+offset = Vector2(0, 500)
+pixel_size = 0.3
+alpha_cut = 1
+texture = ExtResource("2_c73ef")
+
+[node name="LimelightSource" type="Node3D" parent="Tower2" unique_id=1105426602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 211.96832, 0)
