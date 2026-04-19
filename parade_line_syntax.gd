@@ -66,7 +66,7 @@ static func parse_line(s: String, can_pit: bool = true) -> Array[Dictionary]:
 				last["front"] = str(last["front"]) + word
 			else:
 				result.append({"loyal": true, "front": word, "back": ""})
-	if can_pit and result.size() <= 6:
+	if can_pit and result.size() <= 5:
 		var pit_head: Dictionary = _pit_spec()
 		var pit_tail: Dictionary = _pit_spec()
 		var wrapped: Array[Dictionary] = []
