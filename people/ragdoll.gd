@@ -17,6 +17,13 @@ const LIFETIME_BEFORE_FADE_SEC: float = 300.0
 ## Fade duration: scale + sprite alpha tweened to zero, then the body is freed.
 const FADE_OUT_SEC: float = 6.0
 
+## Sign ragdoll pieces: after the board settles, tween modulate toward [code]BloodDroplets.BLOOD_COLOR[/code].
+const SIGN_BLOOD_POLL_SEC: float = 0.2
+const SIGN_BLOOD_LOW_VEL_STREAK: int = 4
+const SIGN_BLOOD_MAX_WAIT_SEC: float = 18.0
+const SIGN_BLOOD_VEL_EPS: float = 0.15
+const SIGN_BLOOD_MODULATE_SEC: float = 7.0
+
 
 static func create_ragdoll(
 	root: Node3D,
@@ -101,6 +108,8 @@ static func create_ragdoll(
 		if scene_root != null:
 			_reparent_keep_global(rb, scene_root)
 		_schedule_piece_fade_and_free(rb)
+		if _anchor_has_sign_subtree(dup_sources[i] as Node3D):
+			_schedule_sign_blood_color_tween(rb, dup)
 
 	_detach_killed_sfx_before_root_freed(root, scene_root)
 	root.queue_free()
@@ -161,6 +170,75 @@ static func _fade_out_and_free_piece(rb: RigidBody3D) -> void:
 		end.a = 0.0
 		tween.tween_property(s, "modulate", end, FADE_OUT_SEC)
 	tween.finished.connect(func (): rb.queue_free(), CONNECT_ONE_SHOT)
+
+
+static func _anchor_has_sign_subtree(anchor: Node3D) -> bool:
+	return anchor.get_node_or_null("Sign") != null
+
+
+static func _schedule_sign_blood_color_tween(rb: RigidBody3D, dup_root: Node) -> void:
+	var tree: SceneTree = rb.get_tree()
+	if tree == null:
+		return
+	var state: Dictionary = {"elapsed": 0.0, "low_streak": 0}
+	tree.create_timer(SIGN_BLOOD_POLL_SEC).timeout.connect(
+		func () -> void:
+			_sign_blood_poll_step(rb, dup_root, state),
+		CONNECT_ONE_SHOT,
+	)
+
+
+static func _sign_blood_poll_step(rb: RigidBody3D, dup_root: Node, state: Dictionary) -> void:
+	if not is_instance_valid(rb) or not rb.is_inside_tree():
+		return
+	state["elapsed"] = float(state["elapsed"]) + SIGN_BLOOD_POLL_SEC
+	if rb.sleeping:
+		_start_sign_blood_modulate_tween(rb, dup_root)
+		return
+	if rb.linear_velocity.length() < SIGN_BLOOD_VEL_EPS and rb.angular_velocity.length() < SIGN_BLOOD_VEL_EPS:
+		state["low_streak"] = int(state["low_streak"]) + 1
+		if int(state["low_streak"]) >= SIGN_BLOOD_LOW_VEL_STREAK:
+			_start_sign_blood_modulate_tween(rb, dup_root)
+			return
+	else:
+		state["low_streak"] = 0
+	if float(state["elapsed"]) >= SIGN_BLOOD_MAX_WAIT_SEC:
+		_start_sign_blood_modulate_tween(rb, dup_root)
+		return
+	var tree: SceneTree = rb.get_tree()
+	if tree == null:
+		return
+	tree.create_timer(SIGN_BLOOD_POLL_SEC).timeout.connect(
+		func () -> void:
+			_sign_blood_poll_step(rb, dup_root, state),
+		CONNECT_ONE_SHOT,
+	)
+
+
+static func _start_sign_blood_modulate_tween(rb: RigidBody3D, dup_root: Node) -> void:
+	if not is_instance_valid(rb) or not rb.is_inside_tree():
+		return
+	if rb.get_meta("_sign_blood_tween_started", false):
+		return
+	rb.set_meta("_sign_blood_tween_started", true)
+	var dest: Color = BloodDroplets.BLOOD_COLOR
+	var tween: Tween = rb.create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_LINEAR)
+	for s: Sprite3D in _find_sprite3ds_under(dup_root):
+		tween.tween_property(s, "modulate", dest, SIGN_BLOOD_MODULATE_SEC)
+	for lbl: Label3D in _find_label3ds_under(dup_root):
+		tween.tween_property(lbl, "modulate", dest, SIGN_BLOOD_MODULATE_SEC)
+
+
+static func _find_label3ds_under(node: Node) -> Array[Label3D]:
+	var out: Array[Label3D] = []
+	if node is Label3D:
+		out.append(node as Label3D)
+	for c in node.get_children():
+		for lbl in _find_label3ds_under(c):
+			out.append(lbl)
+	return out
 
 
 ## Ensures each duplicated [Sprite3D] matches the live original (texture, etc.) before [method Node._ready] runs.
