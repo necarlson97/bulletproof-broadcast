@@ -29,3 +29,5 @@ texture = ExtResource("2_c73ef")
 
 [node name="LimelightSource" type="Node3D" parent="Tower2" unique_id=1105426602]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 211.96832, 0)
+
+[node name="Limelights" type="Node3D" parent="." unique_id=1155815349]

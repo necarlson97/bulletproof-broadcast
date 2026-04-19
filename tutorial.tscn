@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://wohly26t3pk7" path="res://limelight/limelighter.tscn" id="16_bb16k"]
 [ext_resource type="Script" uid="uid://bw3va8abn5l0w" path="res://tutorial.gd" id="tutorial_root"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_bsk3x"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_dl7dh"]
 viewport_path = NodePath("DialogBox/SubViewport")
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
@@ -50,16 +50,15 @@ near = 10.0
 far = 1500.0
 
 [node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=34686236 instance=ExtResource("6_5gpbq")]
-visible = false
 
 [node name="Officer" parent="Camera3D" unique_id=1660657085 instance=ExtResource("7_tfgte")]
 transform = Transform3D(0.94442713, -0.32529604, -0.04733233, 0.30907488, 0.92776, -0.2091276, 0.11194137, 0.18287641, 0.9767427, 56.86102, -45.01088, -79.45389)
 
-[node name="DialogBox" parent="Camera3D/Officer" index="8" unique_id=960094290]
+[node name="DialogBox" parent="Camera3D/Officer" index="9" unique_id=960094290]
 transform = Transform3D(0.9369252, 0.34031907, -0.0797132, -0.34232602, 0.9394965, -0.012609631, 0.070598975, 0.039102226, 0.99673796, 4.6887817, -4.088463, -0.85762024)
 
 [node name="Sprite3D" parent="Camera3D/Officer/DialogBox" index="0" unique_id=960094292]
-texture = SubResource("ViewportTexture_bsk3x")
+texture = SubResource("ViewportTexture_dl7dh")
 
 [node name="LimelightMaskViewport" parent="." unique_id=1740944466 instance=ExtResource("10_4ods2")]
 
@@ -501,7 +500,7 @@ alpha_cut = 1
 texture = ExtResource("15_k62om")
 
 [node name="Limelighter" parent="." unique_id=345578488 instance=ExtResource("16_bb16k")]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -739.2202)
 
 [node name="CameraPositions" type="Node3D" parent="." unique_id=1995309770]
 
@@ -536,7 +535,7 @@ near = 10.0
 far = 1500.0
 
 [node name="5" type="Camera3D" parent="CameraPositions" unique_id=1867698646]
-transform = Transform3D(1, 0, 0, 0, 0.9419813, 0.33566535, 0, -0.33566535, 0.9419813, -55.282238, 166.03024, 259.7944)
+transform = Transform3D(1, 0, 0, 0, 0.9419813, 0.33566535, 0, -0.33566535, 0.9419813, -54.98637, 166.03024, 259.7944)
 fov = 55.0
 near = 10.0
 far = 1500.0
@@ -561,11 +560,11 @@ start_text = "King = Bad"
 emitting = true
 
 [node name="Parader2" parent="." unique_id=184670704 instance=ExtResource("15_dl7dh")]
-transform = Transform3D(0.82432383, 0, 0.56611854, 0, 1, 0, -0.56611854, 0, 0.82432383, -317.55084, 4.0585136, -756.5314)
+transform = Transform3D(0.7452317, 0, 0.6668057, 0, 1, 0, -0.6668057, 0, 0.7452317, -279.04587, 4.0585136, -752.3741)
 start_text = "Yay"
 
 [node name="Parader3" parent="." unique_id=1170475438 instance=ExtResource("15_dl7dh")]
-transform = Transform3D(0.82432383, 0, 0.56611854, 0, 1, 0, -0.56611854, 0, 0.82432383, -249.47939, 4.0585136, -803.28064)
+transform = Transform3D(0.7452317, 0, 0.6668057, 0, 1, 0, -0.6668057, 0, 0.7452317, -217.50572, 4.0585136, -807.4379)
 start_text = "parades!"
 
 [editable path="Camera3D/Officer"]

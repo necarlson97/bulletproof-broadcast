@@ -17,8 +17,9 @@
 [ext_resource type="Script" uid="uid://bwhuqnx4p7l6b" path="res://menus/main_menu.gd" id="16_main_menu"]
 [ext_resource type="Script" uid="uid://deokikrhdkufy" path="res://menus/logo.gd" id="16_ygrj5"]
 [ext_resource type="Script" uid="uid://d28w3e2hxhjqy" path="res://menus/settings_holder_spawner.gd" id="17_shspawn"]
+[ext_resource type="PackedScene" uid="uid://wohly26t3pk7" path="res://limelight/limelighter.tscn" id="18_ysfef"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_lgqab"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_ysfef"]
 viewport_path = NodePath("DialogBox/SubViewport")
 
 [sub_resource type="Environment" id="Environment_2xa2j"]
@@ -60,7 +61,7 @@ visible = false
 visible = false
 
 [node name="Sprite3D" parent="Officer/DialogBox" index="0" unique_id=960094292]
-texture = SubResource("ViewportTexture_lgqab")
+texture = SubResource("ViewportTexture_ysfef")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1275133988]
 transform = Transform3D(1, 0, 0, 0, 0.9585417, 0.28495243, 0, -0.28495243, 0.9585417, -167.0181, 60.004288, 125.44641)
@@ -70,7 +71,6 @@ fov = 95.0
 follow_camera = NodePath("..")
 
 [node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=34686236 node_paths=PackedStringArray("mask_viewport") instance=ExtResource("6_rx1ud")]
-visible = false
 mask_viewport = NodePath("../LimelightMaskViewport")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1084245481]
@@ -538,6 +538,12 @@ pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("15_u3dsk")
 script = ExtResource("16_ygrj5")
+
+[node name="Limelighter" parent="." unique_id=1155815348 instance=ExtResource("18_ysfef")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -734.933)
+
+[node name="ManualFocus" type="Node3D" parent="Limelighter" unique_id=480256127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -143.62149, 0, 798.77344)
 
 [node name="SettingsHolderSpawner" type="Node3D" parent="." unique_id=1831957279]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -857.53674, 0, 0)

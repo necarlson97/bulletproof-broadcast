@@ -5,6 +5,9 @@ class_name LimelightRender
 ## Gameplay cameras should exclude this layer so mask meshes are not visible in the main pass.
 const MASK_RENDER_LAYER: int = 10
 
+## Outside the limelight mask, scene is multiplied by `(1.0 - this)`. Single project-wide default.
+const LIMELIGHT_SCREEN_DARKNESS: float = 0.1
+
 
 static func mask_layer_mask() -> int:
 	return 1 << (MASK_RENDER_LAYER - 1)

@@ -102,7 +102,7 @@ var _intro_completed_by_skip: bool = false
 ## True if the player shot the king ([KingParader]) during the final parade segment.
 var _king_killed_on_final_parade: bool = false
 
-## Matches [TutorialNarrativeSequencer.limelight_fade_out_sec] — fade before final outro dialogue.
+## Fade duration for the limelight overlay before final outro dialogue (main game).
 @export var limelight_fade_out_sec: float = 0.45
 
 var _limelight_overlay: LimelightScreenDarkenOverlay
@@ -367,7 +367,7 @@ func _fade_limelight_out_for_outro() -> void:
 	_limelight_fade_tween.tween_property(_limelight_overlay, "darkness", 0.0, limelight_fade_out_sec)
 	await _limelight_fade_tween.finished
 	_limelight_overlay.visible = false
-	_limelighter.visible = false
+	_limelighter.set_limelight_meshes_visible(false)
 
 
 func _speak_async(text: String) -> void:

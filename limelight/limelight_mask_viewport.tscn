@@ -4,6 +4,8 @@
 
 [node name="LimelightMaskViewport" type="SubViewport"]
 handle_input_locally = false
+transparent_bg = true
+use_hdr = true
 script = ExtResource("1_vp")
 
 [node name="Camera3D" type="Camera3D" parent="."]

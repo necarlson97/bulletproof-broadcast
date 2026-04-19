@@ -20,6 +20,10 @@ var _pending_button_id: String = ""
 
 
 func _ready() -> void:
+	var cam: Camera3D = $Camera3D
+	var mask_vp: Node = $Camera3D/LimelightMaskViewport
+	mask_vp.set("hide_mask_layer_on", [cam])
+
 	_gun_rest_target = Node3D.new()
 	_gun_rest_target.name = "MenuGunRestTarget"
 	add_child(_gun_rest_target)

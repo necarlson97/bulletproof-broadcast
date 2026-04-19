@@ -5,4 +5,7 @@
 [resource]
 render_priority = 127
 shader = ExtResource("1_shader")
-shader_parameter/darkness = 0.65
+shader_parameter/inv_projection_matrix = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/darkness = 0.1
+shader_parameter/depth_test_slop_m = 8.0
+shader_parameter/depth_test_slop_ratio = 0.002

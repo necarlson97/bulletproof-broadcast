@@ -12,15 +12,12 @@ const _WRONG_SHOT_HINT := "Hrm. Not quite. Try another?"
 @export var camera_tween_sec: float = 1.25
 ## Default flip animation is 1s; allow a short buffer before the next line.
 @export var flip_pause_sec: float = 1.05
-@export var limelight_fade_in_sec: float = 0.55
 
 var _camera: Camera3D
 var _camera_positions: Node3D
 var _faux: ParadeLineFaux
 
 var _cam_tween: Tween
-## Scene full-strength [member LimelightScreenDarkenOverlay.darkness] (cached before fade-in zeros it).
-var _limelight_darkness_full: float = 0.9
 
 var _waiting_for_tutorial_shot: bool = false
 var _tutorial_shot_done: bool = false
@@ -35,8 +32,6 @@ func _ready() -> void:
 	_faux = get_parent().get_node_or_null("Parade/ParadeLine") as ParadeLineFaux
 	_limelight_overlay = get_parent().get_node_or_null("Camera3D/LimelightScreenDarkenOverlay") as LimelightScreenDarkenOverlay
 	_limelighter = get_parent().get_node_or_null("Limelighter") as Limelighter
-	if is_instance_valid(_limelight_overlay):
-		_limelight_darkness_full = _limelight_overlay.darkness
 	if is_instance_valid(_faux):
 		_faux.visible = false
 	_intro_done = true
@@ -126,7 +121,7 @@ func _run_tutorial() -> void:
 	if not is_inside_tree():
 		return
 	_waiting_for_tutorial_shot = false
-	await _teardown_focused_line()
+	_teardown_focused_line()
 	if not is_inside_tree():
 		return
 
@@ -221,33 +216,10 @@ func _setup_focused_line_for_shooting() -> void:
 	await get_tree().process_frame
 	if not is_inside_tree():
 		return
-	await _fade_tutorial_limelight(true)
 
 
 func _teardown_focused_line() -> void:
-	await _fade_tutorial_limelight(false)
 	if _focused_line != null and is_instance_valid(_focused_line):
 		_focused_line.set_parade_line(null)
 		_focused_line.queue_free()
 	_focused_line = null
-
-
-func _fade_tutorial_limelight(fade_in: bool) -> void:
-	if not is_instance_valid(_limelight_overlay) or not is_instance_valid(_limelighter):
-		return
-	if _limelight_fade_tween != null and is_instance_valid(_limelight_fade_tween):
-		_limelight_fade_tween.kill()
-	_limelight_fade_tween = create_tween()
-	_limelight_fade_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	var duration: float = limelight_fade_in_sec if fade_in else limelight_fade_out_sec
-	if fade_in:
-		_limelighter.visible = true
-		_limelight_overlay.visible = true
-		_limelight_overlay.darkness = 0.0
-		_limelight_fade_tween.tween_property(_limelight_overlay, "darkness", _limelight_darkness_full, duration)
-		await _limelight_fade_tween.finished
-	else:
-		_limelight_fade_tween.tween_property(_limelight_overlay, "darkness", 0.0, duration)
-		await _limelight_fade_tween.finished
-		_limelight_overlay.visible = false
-		_limelighter.visible = false
