@@ -133,7 +133,7 @@ func _get_waypoint(child_name: String) -> Node3D:
 	return _camera_positions.get_node_or_null(child_name) as Node3D
 
 
-func notify_parader_shot(was_loyal: bool) -> void:
+func notify_parader_shot(was_loyal: bool, _target: Parader = null) -> void:
 	if not _waiting_for_tutorial_shot:
 		return
 	if was_loyal:

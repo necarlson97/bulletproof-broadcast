@@ -77,7 +77,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		GameStats.traitors_executed += 1
 	if _officer != null:
 		_officer.shot_at(target)
-	_notify_narrative_collateral(was_loyal)
+	_notify_narrative_collateral(was_loyal, target)
 	target.kill()
 	get_viewport().set_input_as_handled()
 
@@ -117,10 +117,10 @@ func _skip_missing_spawn_slots(parade: Node) -> void:
 		_focus_spawn_index += 1
 
 
-func _notify_narrative_collateral(was_loyal: bool) -> void:
+func _notify_narrative_collateral(was_loyal: bool, target: Parader) -> void:
 	for n: Node in get_tree().get_nodes_in_group("narrative_sequencer"):
 		if n.has_method("notify_parader_shot"):
-			n.notify_parader_shot(was_loyal)
+			n.notify_parader_shot(was_loyal, target)
 			return
 
 

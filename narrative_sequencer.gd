@@ -21,18 +21,63 @@ const _POST_PROTEST_SPEECH := (
 
 const _PRE_RETENUE_SPEECH := "He's... He's here..."
 
-const _OUTRO_SPEECH := "You did it!\nYour gruel will be waiting for you in your cell. Congratulations."
+const _OUTRO_SPEECH := "You did it!\nThe parade was a grand success\nYour gruel will be waiting for you in your cell. Congratulations."
+const _KING_KILLER_SPEECH := "Oh god.\nWhat have we done?\nAre we... free?\nOr is this the end for us?\nWhat will the people think?\nWell. You made your choice. The end.\n"
 
 const _DMG_1 := (
 	"Ah! A malcontent was shown on broadcast!\n"
 	+ "If you keep letting that happen, it will be over for us."
 )
-const _DMG_2 := "Don't let any more traitors reach the camera - please!"
+const _DMG_2 := "Don't let any more traitors reach the camera - please!\nYou know what happens if we fail."
 const _DMG_3 := "Another tratior made it! Please! I'm Scared!"
 const _DMG_4 := "You have failed us."
 
-@export var collateral_traitor_lines: Array[String] = ["Excellent!"]
-@export var collateral_loyalist_lines: Array[String] = ["Ah. That was a loyalist. Oh well."]
+@export var collateral_traitor_lines: Array[String] = [
+	"Excellent.",
+	"Great shot!",
+	"Good. One less problem.",
+	"Efficient.",
+	"The king thanks your vigilance.",
+	"Order is maintained.",
+	"As expected.",
+	"A necessary correction.",
+	"Compliance restored.",
+	"Justice, applied.",
+	"You are learning.",
+	"Acceptable outcome.",
+	"That one was overdue.",
+	"Dissent removed.",
+	"Clean work.",
+	"Good.",
+	"Proper judgment.",
+	"Another error corrected.",
+	"They chose poorly.",
+	"Loyalty verified.",
+	"Continue.",
+    "This is how stability is preserved."
+]
+@export var collateral_loyalist_lines: Array[String] = [
+	"Ah. That was a loyalist. Oh well.",
+	"They were innocent. Unfortunate.",
+	"Don't kill everyone. Too much paperwork.",
+	"A regrettable misclassification.",
+	"Uh - they were compliant.",
+	"That one was ours.",
+	"Whoops. Not ideal.",
+	"You will note this in your report.",
+	"A minor loss.",
+	"Try to be more precise.",
+	"The crown awknowledges this error.",
+	"Hey! That citizen was loyal.",
+	"We will adjust the records.",
+	"You are being inefficient.",
+	"Careless.",
+	"That mistake will be logged.",
+	"Incorrect target.",
+	"Royalty expects better.",
+	"Their service is concluded.",
+    "Do not make a habit of that."
+]
 
 var _officer: Officer
 var _pause_menu: CanvasLayer
@@ -54,6 +99,8 @@ var _collateral_rot_traitor: int = 0
 var _collateral_rot_loyalist: int = 0
 ## Set when '>' skips the intro so [method _run_intro_and_game] does not start the parade twice.
 var _intro_completed_by_skip: bool = false
+## True if the player shot the king ([KingParader]) during the final parade segment.
+var _king_killed_on_final_parade: bool = false
 
 
 func _ready() -> void:
@@ -207,6 +254,8 @@ func _load_schedule_segment(schedule_idx: int) -> void:
 		push_error("NarrativeSequencer: bad parade_schedule index %d" % schedule_idx)
 		return
 	_active_schedule_index = schedule_idx
+	if schedule_idx == parade_schedule.size() - 1:
+		_king_killed_on_final_parade = false
 	var template: Parade = parade_schedule[schedule_idx]
 	await _parade.load_from_template(template)
 	if _game_failed or not is_instance_valid(_parade):
@@ -222,7 +271,10 @@ func _run_victory_sequence() -> void:
 		return
 	if not is_instance_valid(_officer):
 		return
-	await _speak_async(_normalize_speech(_OUTRO_SPEECH))
+	var outro: String = (
+		_KING_KILLER_SPEECH if _king_killed_on_final_parade else _OUTRO_SPEECH
+	)
+	await _speak_async(_normalize_speech(outro))
 	if is_instance_valid(_pause_menu) and _pause_menu.has_method("open_pause_menu"):
 		await _pause_menu.open_pause_menu()
 
@@ -258,11 +310,17 @@ func _handle_damage_tier() -> void:
 			pass
 
 
-func notify_parader_shot(was_loyal: bool) -> void:
+func notify_parader_shot(was_loyal: bool, target: Parader = null) -> void:
 	if not _intro_done or _game_failed:
 		return
 	if not is_instance_valid(_officer):
 		return
+	if (
+		target is KingParader
+		and parade_schedule.size() > 0
+		and _active_schedule_index == parade_schedule.size() - 1
+	):
+		_king_killed_on_final_parade = true
 	var line: String
 	if was_loyal:
 		if collateral_loyalist_lines.is_empty():

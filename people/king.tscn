@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cdh3m4oqe52rw" path="res://tank.blend" id="4_88p23"]
 [ext_resource type="Material" uid="uid://el1uxh8couvl" path="res://people/tank_green.tres" id="5_ea3wh"]
 [ext_resource type="Script" uid="uid://cp582isa0sljq" path="res://tank.gd" id="6_tank"]
+[ext_resource type="AudioStream" uid="uid://66grnq18200" path="res://assets/sfx/tank loop.wav" id="7_tankloop"]
 
 [node name="King" unique_id=1731856409 instance=ExtResource("1_vrcau")]
 script = ExtResource("3_king")
@@ -46,7 +47,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 127.51102, 1.8482857)
 [node name="KilledSfx" parent="." index="7" unique_id=261830412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 122.88696, 0)
 
-[node name="tank" parent="." index="8" unique_id=2135245126 instance=ExtResource("4_88p23")]
+[node name="TankLoopSfx" type="AudioStreamPlayer3D" parent="." index="8" unique_id=-1676663175]
+stream = ExtResource("7_tankloop")
+volume_db = -6.0
+unit_size = 1000.0
+autoplay = true
+max_distance = 40000.0
+bus = &"SFX"
+
+[node name="tank" parent="." index="9" unique_id=2135245126 instance=ExtResource("4_88p23")]
 transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
 script = ExtResource("6_tank")
 
@@ -71,7 +80,7 @@ material_override = ExtResource("5_ea3wh")
 [node name="mudflap" parent="tank" index="6" unique_id=2056859102]
 material_override = ExtResource("5_ea3wh")
 
-[node name="Testing" type="Node3D" parent="." index="9" unique_id=776599262]
+[node name="Testing" type="Node3D" parent="." index="10" unique_id=776599262]
 visible = false
 
 [node name="Camera3D" type="Camera3D" parent="Testing" index="0" unique_id=1236701171]

@@ -2,12 +2,15 @@ class_name Ragdoll
 extends Object
 
 ## Builds cardboard-style ragdoll pieces from [param root]: one [RigidBody3D] per direct child.
+## A direct child using [code]tank.gd[/code] is handled recursively so its own children split off.
 ## [Sprite3D] nodes and nested [MeshInstance3D] (not direct children of the piece) are merged into one box collider.
 ## Each [MeshInstance3D] that is a direct child of the piece gets its own convex collider. The original [param root] is freed.
 
 const DEFAULT_MIN_THICKNESS: float = 1.0
 const DEFAULT_RANDOM_LINEAR_MAX: float = 1.5
 const DEFAULT_RANDOM_ANGULAR_MAX: float = 2.0
+
+const _TANK_SCRIPT: Script = preload("res://tank.gd")
 
 ## Seconds each piece stays fully visible before fading (independent of parade line lifetime).
 const LIFETIME_BEFORE_FADE_SEC: float = 300.0
@@ -34,6 +37,9 @@ static func create_ragdoll(
 
 	for child in root.get_children():
 		if not child is Node3D:
+			continue
+		if _is_tank_script(child):
+			create_ragdoll(child as Node3D, min_thickness, random_linear_max, random_angular_max)
 			continue
 		var anchor: Node3D = child as Node3D
 		var sprites: Array[Sprite3D] = _find_sprite3ds_under(anchor)
@@ -168,6 +174,10 @@ static func _copy_sprite3d_state_from_original(orig_root: Node, copy_root: Node)
 	var n: int = mini(orig_root.get_child_count(), copy_root.get_child_count())
 	for i in n:
 		_copy_sprite3d_state_from_original(orig_root.get_child(i), copy_root.get_child(i))
+
+
+static func _is_tank_script(node: Node) -> bool:
+	return node.get_script() == _TANK_SCRIPT
 
 
 static func _find_sprite3ds_under(node: Node) -> Array[Sprite3D]:
