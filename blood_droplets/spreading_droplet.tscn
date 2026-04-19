@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c6p3ejxrd77om"]
 
 [ext_resource type="Script" uid="uid://bvi121v875u31" path="res://blood_droplets/spreading_droplet.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dprohc30fhgx8" path="res://assets/circle whiite.png" id="2_qm6dv"]
+[ext_resource type="Texture2D" uid="uid://dprohc30fhgx8" path="res://assets/circle white.png" id="2_qm6dv"]
 
 [node name="SpreadingDroplet" type="Node3D" unique_id=1242878171]
 script = ExtResource("1_script")

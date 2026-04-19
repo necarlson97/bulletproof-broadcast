@@ -11,7 +11,9 @@ const FALLING_POOL_INITIAL := 128
 ## Max spreading droplets in [b]growing[/b] or [b]full[/b] state; shrinking ones do not count.
 const SPREADING_MAX_GROWING := 146
 ## Upper cap for random spread target radius (world units).
-const SPREAD_MAX_WORLD := 28.0
+const SPREAD_MAX_WORLD := 100.0
+## Small world-space Z jitter to reduce overlapping stain z-fighting.
+const SPREAD_Z_JITTER := 3.0
 
 const KILL_DROPLET_COUNT_MIN := 1
 const KILL_DROPLET_COUNT_MAX := 3
@@ -118,7 +120,9 @@ func _spawn_spreading(ground_pos: Vector3, start_radius: float) -> void:
 		if is_instance_valid(raw_oldest):
 			(raw_oldest as SpreadingDroplet).shrink()
 	var sd: SpreadingDroplet = _acquire_spreading()
-	sd.activate(ground_pos, start_radius)
+	var jittered_pos: Vector3 = ground_pos
+	jittered_pos.z += randf_range(-SPREAD_Z_JITTER, SPREAD_Z_JITTER)
+	sd.activate(jittered_pos, start_radius)
 	_spreading_fifo.append(sd)
 
 

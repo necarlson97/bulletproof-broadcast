@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://wl2gs26ionpd" path="res://assets/mussel flash.png" id="6_8tq1q"]
 [ext_resource type="Script" uid="uid://ds0feevveqrth" path="res://people/officer.gd" id="7_officer"]
 [ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://signs/sign_font.tres" id="7_umrfj"]
-[ext_resource type="Texture2D" uid="uid://dprohc30fhgx8" path="res://assets/circle whiite.png" id="8_j0xif"]
+[ext_resource type="Texture2D" uid="uid://dprohc30fhgx8" path="res://assets/circle white.png" id="8_j0xif"]
 [ext_resource type="AudioStream" uid="uid://cysrevd3kxstj" path="res://assets/sfx/heh-1.wav" id="10_jra6a"]
 [ext_resource type="AudioStream" uid="uid://bjnm03u66lwnc" path="res://assets/sfx/heh-2.wav" id="11_2kw6a"]
 [ext_resource type="AudioStream" uid="uid://lgm3rt5pstw4" path="res://assets/sfx/heh-3.wav" id="12_vjb1p"]

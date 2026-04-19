@@ -94,6 +94,10 @@ var _line_path_z: float = 0.0
 var _had_disloyal_at_spawn: bool = false
 ## When true, this line was moved under [Parade]'s former-segments bucket; skip disloyal-at-check narrative.
 var _retired_from_active_segment: bool = false
+## Guard against duplicate delayed-free requests from multiple end paths.
+var _free_requested: bool = false
+## Hard cap so a looping/bugged audio node cannot keep a line alive forever.
+const _AUDIO_TAIL_MAX_WAIT_SEC: float = 8.0
 
 
 func retire_from_active_segment() -> void:
@@ -454,7 +458,7 @@ func _march_step(z: float) -> void:
 
 func _on_march_finished() -> void:
 	line_march_finished.emit()
-	queue_free()
+	_queue_free_after_audio_tail()
 
 
 ## Stops the march and frees the line without emitting [signal line_march_finished] (e.g. segment ended early).
@@ -462,7 +466,59 @@ func abort_march_without_completion() -> void:
 	if _march_tween != null:
 		_march_tween.kill()
 		_march_tween = null
-	queue_free()
+	_queue_free_after_audio_tail()
+
+
+func _queue_free_after_audio_tail() -> void:
+	if _free_requested:
+		return
+	_free_requested = true
+	var active_audio: Array[Node] = []
+	_collect_active_audio_children_recursive(self, active_audio)
+	if active_audio.is_empty():
+		queue_free()
+		return
+	var state: Dictionary = {
+		"remaining": active_audio.size(),
+		"finished": false,
+	}
+	var complete_free := func () -> void:
+		if bool(state["finished"]):
+			return
+		state["finished"] = true
+		queue_free()
+	for n: Node in active_audio:
+		if not is_instance_valid(n):
+			state["remaining"] = int(state["remaining"]) - 1
+			continue
+		n.finished.connect(func () -> void:
+			state["remaining"] = int(state["remaining"]) - 1
+			if int(state["remaining"]) <= 0:
+				complete_free.call()
+		, CONNECT_ONE_SHOT)
+	if int(state["remaining"]) <= 0:
+		complete_free.call()
+		return
+	get_tree().create_timer(_AUDIO_TAIL_MAX_WAIT_SEC).timeout.connect(func () -> void:
+		complete_free.call()
+	, CONNECT_ONE_SHOT)
+
+
+func _collect_active_audio_children_recursive(root: Node, out: Array[Node]) -> void:
+	for child: Node in root.get_children():
+		if _is_active_audio_player(child):
+			out.append(child)
+		_collect_active_audio_children_recursive(child, out)
+
+
+func _is_active_audio_player(node: Node) -> bool:
+	if (
+		not (node is AudioStreamPlayer)
+		and not (node is AudioStreamPlayer2D)
+		and not (node is AudioStreamPlayer3D)
+	):
+		return false
+	return bool(node.get("playing"))
 
 
 func begin_march(delay_sec: float) -> void:
