@@ -9,3 +9,5 @@ start_z = -1300.0
 check_z = 150.0
 approach_speed = 150.0
 line_spawn_spacing = 800.0
+line_width = 600.0
+sign_target_width_multiplier = 1.0

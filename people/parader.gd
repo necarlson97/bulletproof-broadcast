@@ -96,6 +96,25 @@ func set_parade_line_z(line_z: float) -> void:
 	_target_z = line_z
 
 
+## Formation slot along parent [ParadeLine] local X ([method set_parade_target]). Same space as [member Node3D.position].
+## Do not compare to [member Node3D.global_position] without mapping through the line’s [member Node3D.global_transform].
+## [member Node3D.position] may lag when outside the comfort zone on purpose.
+func get_formation_target_x() -> float:
+	return _target_x
+
+
+func get_formation_target_z() -> float:
+	return _target_z
+
+
+## World-space point of the formation slot (for comparing to [member Node3D.global_position]).
+func get_formation_target_global() -> Vector3:
+	var pl: Node3D = get_parent() as Node3D
+	if pl == null:
+		return global_position
+	return pl.global_transform * Vector3(_target_x, position.y, _target_z)
+
+
 func clear_parade_march_follow() -> void:
 	_parade_march_follow = false
 	_march_needs_walk_bounce = false
@@ -110,6 +129,9 @@ func _process(delta: float) -> void:
 		if dist_xz <= _comfort_radius:
 			_comfort_corr_active = false
 			_march_needs_walk_bounce = false
+			# Do not snap [member Node3D.position] to [member _target_x] / [member _target_z] here. The gap between
+			# slot and actual position is intentional: we stay “comfortably” off the target so we keep stepping
+			# with tweened catch-up motion instead of locking dead on the formation.
 		else:
 			if not _comfort_corr_active:
 				_comfort_corr_active = true

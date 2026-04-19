@@ -32,8 +32,9 @@ func _build_paraders() -> void:
 		pr._comfort_radius = 10
 	
 	var spacing: float = _spacing_per_char()
-	_layout_paraders_x(spacing)
 	_scale_signs(spacing)
+	_layout_paraders_x(spacing)
+	_fit_formation_to_road_width()
 
 
 func begin_march(_delay_sec: float) -> void:

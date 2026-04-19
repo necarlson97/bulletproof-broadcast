@@ -1,37 +1,131 @@
 [gd_scene format=3 uid="uid://8eagiuthp066"]
 
-[ext_resource type="PackedScene" uid="uid://ciphyem15ww82" path="res://people/parader.tscn" id="1_0feov"]
 [ext_resource type="Script" uid="uid://br3tbty1h04a2" path="res://people/button_holder.gd" id="2_button_holder"]
+[ext_resource type="Script" uid="uid://240gnk1fksh6" path="res://people/person_color.gd" id="2_ksyje"]
+[ext_resource type="PackedScene" uid="uid://c5vhmcnqvrdx" path="res://signs/sign_flippable.tscn" id="3_la80j"]
 [ext_resource type="Texture2D" uid="uid://dvycpleeo7mts" path="res://assets/bullet hole.png" id="3_u01qr"]
 [ext_resource type="Texture2D" uid="uid://c20tc8wrs6g7g" path="res://assets/face.png" id="4_d4ybx"]
+[ext_resource type="Texture2D" uid="uid://ob1puyx1mh81" path="res://assets/eyes.png" id="5_u7q22"]
+[ext_resource type="Script" uid="uid://cen8j7vsmpme5" path="res://people/eyes.gd" id="6_4cdad"]
+[ext_resource type="Texture2D" uid="uid://dyow8hnrq8x6o" path="res://assets/body.png" id="8_q45u0"]
+[ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://signs/sign_font.tres" id="9_455w6"]
+[ext_resource type="Texture2D" uid="uid://dryyo116sd08a" path="res://assets/droplet.png" id="10_i5pok"]
+
+[sub_resource type="Curve" id="Curve_2v3k6"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.114864886, 1), 0.0, 0.0, 0, 0, Vector2(0.39864868, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_hoeld"]
+curve = SubResource("Curve_2v3k6")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hoeld"]
+emission_shape = 3
+emission_box_extents = Vector3(6.265, 2.705, 0.01)
+scale_curve = SubResource("CurveTexture_hoeld")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xktsn"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("10_i5pok")
+stencil_flags = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5w3b2"]
+material = SubResource("StandardMaterial3D_xktsn")
+size = Vector2(4, 4)
+orientation = 2
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0feov"]
 size = Vector3(60, 30, 10)
 
-[node name="ButtonHolder" unique_id=1731856409 instance=ExtResource("1_0feov")]
+[node name="ButtonHolder" type="Node3D" unique_id=1731856409]
 script = ExtResource("2_button_holder")
-button_name = ""
-hit_depth = 12.0
 
-[node name="BulletHole" type="Sprite3D" parent="Face" parent_id_path=PackedInt32Array(92908819) index="1" unique_id=1039262011]
+[node name="PersonColor" type="Node3D" parent="." unique_id=1700000001]
+script = ExtResource("2_ksyje")
+
+[node name="SignScale" type="Node3D" parent="." unique_id=1687241682]
+transform = Transform3D(0.635, 0, 0, 0, 0.635, 0, 0, 0, 0.635, 0, 49.558777, -0.97922325)
+
+[node name="Sign" parent="SignScale" unique_id=2013640258 instance=ExtResource("3_la80j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.337379, 0)
+
+[node name="Face" type="Sprite3D" parent="." unique_id=92908819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 42.8, 0)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("4_d4ybx")
+
+[node name="Eyes" type="Sprite3D" parent="Face" unique_id=161895202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.6, 0.5)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("5_u7q22")
+script = ExtResource("6_4cdad")
+
+[node name="BloodDropletEmitter" type="Node3D" parent="Face" unique_id=1858209420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 4.427738, 1.2643309)
+
+[node name="BulletHole" type="Sprite3D" parent="Face" unique_id=1039262011]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 4.427738, 0.1410799)
 visible = false
 pixel_size = 0.06
 alpha_cut = 1
 texture = ExtResource("3_u01qr")
 
-[node name="Label3D" parent="Body" parent_id_path=PackedInt32Array(1678367108) index="0" unique_id=1425867495]
-visible = false
+[node name="Body" type="Sprite3D" parent="." unique_id=1678367108]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.2, 0)
+modulate = Color(0.30588236, 0.34509805, 0.21176471, 1)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("8_q45u0")
 
-[node name="BulletHole" parent="Body" parent_id_path=PackedInt32Array(1678367108) index="1" unique_id=1858209419]
+[node name="Label3D" type="Label3D" parent="Body" unique_id=1425867495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.65851, 0.3258009)
+visible = false
+pixel_size = 0.1
+alpha_cut = 1
+modulate = Color(0.662474, 0.725739, 0.4792577, 1)
+text = "1"
+font = ExtResource("9_455w6")
+font_size = 300
+
+[node name="BulletHole" type="Sprite3D" parent="Body" unique_id=1858209419]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.033691406, 0.1410799)
 visible = false
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("3_u01qr")
 
-[node name="HandL" parent="." index="4" unique_id=1368089338]
+[node name="HandL" type="Sprite3D" parent="." unique_id=1368089338]
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 46.74277, 1.4910412)
+pixel_size = 0.1
+alpha_cut = 1
 texture = ExtResource("4_d4ybx")
 
-[node name="Area3D" type="Area3D" parent="." index="8" unique_id=441558032]
+[node name="HandR" type="Sprite3D" parent="." unique_id=1403083975]
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 46.74277, 1.464036)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("4_d4ybx")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0" unique_id=1028402147]
+[node name="Sweating" type="GPUParticles3D" parent="." unique_id=612296555]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 47.424057, 1.8482857)
+emitting = false
+amount = 2
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_hoeld")
+draw_pass_1 = SubResource("PlaneMesh_5w3b2")
+
+[node name="KilledSfx" type="AudioStreamPlayer3D" parent="." unique_id=261830412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 42.8, 0)
+unit_size = 1000.0
+max_distance = 40000.0
+bus = &"SFX"
+
+[node name="Area3D" type="Area3D" parent="." unique_id=441558032]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1028402147]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 57.90861, 0)
 shape = SubResource("BoxShape3D_0feov")

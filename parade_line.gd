@@ -13,11 +13,13 @@ const _PIT_HOLDER_SCENES: Array[PackedScene] = [
 	preload("res://people/baton_holder.tscn"),
 	preload("res://people/trumpet_holder.tscn"),
 ]
+## Each pit bookend’s share of [member line_width] subtracted before sign [method _spacing_per_char] (both ends: ×2).
+const _PIT_PARADER_WIDTH: float = 20.0
 
 @export var parader_scene: PackedScene = preload("res://people/parader.tscn")
-## Bookend band paraders (flag / baton / trumpet); need horizontal budget — see [member min_line_width_for_pit_paraders].
+## Bookend band paraders (flag / baton / trumpet) when sign-parader count is at most [member pit_bookend_max_sign_paraders] (digit budget).
 @export var pit_paraders_enabled: bool = true
-@export var min_line_width_for_pit_paraders: float = 450.0
+@export var pit_bookend_max_sign_paraders: int = 6
 
 var line_string: String = ""
 ## Stable order among siblings; set by [Parade] when spawning (for [FocusedLine]).
@@ -32,16 +34,20 @@ var check_z: float = 100.0
 var fence_line_z: float = -700.0
 ## If not greater than [member marching_speed], the whole march uses [member marching_speed] only.
 var approach_speed: float = 0.0
-## Total horizontal budget. spacing_per_char = line_width / decompose(0).length()
-## (visible text at step 0, including spaces between pieces).
+## Road width in parade-line local X: after layout, sign (and pit) extents are scaled to fit
+## [code][-line_width/2, line_width/2][/code] — see [method _fit_formation_to_road_width].
+## [method _spacing_per_char] also uses this (minus pit reserve for spacing math only).
 ## Each parader's SignScale is set so sign width ≈ spacing_per_char * char count * sign_target_width_multiplier.
 ## Default > 1: gap = board halves + elastic (same size order); boards alone look small next to the air gap.
 var line_width: float = 600.0
 ## Multiplies sign board target width only (parader spacing still uses resulting half-widths + elastic).
 var sign_target_width_multiplier: float = 4
+## Scales the extra gap term [code]spacing_per_char × (c0 + c1)[/code] between adjacent parader centers.
+## Set to [code]0[/code] so center distance equals [code]half_width[i] + half_width[i+1][/code] only (tight packing).
+@export var sign_gap_elastic_scale: float = 1.0
 
-## For each adjacent pair (i, i+1): half_width(sign i) + half_width(sign i+1) in parader space.
-var _parader_x_targets: Array[float] = []
+## Each entry: [code]half_width(i) + half_width(i+1)[/code] for that gap (not parader slot [member Parader._target_x]).
+var _gap_half_width_sums: Array[float] = []
 
 var _parader_nodes: Array[Node3D] = []
 var _specs: Array[Dictionary] = []
@@ -110,9 +116,23 @@ static func _spec_char_count(spec: Dictionary) -> int:
 	return maxi(f.length(), b.length())
 
 
+func _sign_line_budget_width() -> float:
+	if _pit_start == null:
+		return line_width
+	return maxf(line_width - _PIT_PARADER_WIDTH * 2.0, 1.0)
+
+
+func _spacing_char_denominator() -> int:
+	var sum: int = 0
+	for spec: Dictionary in _specs:
+		sum += _spec_char_count(spec)
+	return maxi(sum, 1)
+
+
 func _spacing_per_char() -> float:
-	var visible_len: int = maxi(ParadeLineSyntax.visible_text_length(_specs, 0), 1)
-	return line_width / float(visible_len)
+	# Use sum of per-sign character counts — not [method ParadeLineSyntax.visible_text_length], which joins
+	# words with spaces (e.g. "aa aa aa" counts 8) and charges the road budget for gaps between signs.
+	return _sign_line_budget_width() / float(_spacing_char_denominator())
 
 
 func _spawn_paraders() -> void:
@@ -163,7 +183,7 @@ func _maybe_spawn_pits() -> void:
 		return
 	if _specs.is_empty():
 		return
-	if line_width < min_line_width_for_pit_paraders:
+	if _specs.size() > pit_bookend_max_sign_paraders:
 		return
 	var used: Dictionary = {}
 	for i: int in range(_specs.size()):
@@ -244,14 +264,16 @@ func _layout_paraders_x(spacing_per_char: float) -> void:
 		var p: Node3D = _parader_nodes[idx]
 		half_widths.append(p.call("get_sign_half_width") as float)
 
-	_parader_x_targets.clear()
+	_gap_half_width_sums.clear()
 	var gaps: Array[float] = []
 	for k: int in range(t - 1):
 		var base: float = half_widths[k] + half_widths[k + 1]
-		_parader_x_targets.append(base)
+		_gap_half_width_sums.append(base)
 		var c0: int = _char_count_for_parader_index(k)
 		var c1: int = _char_count_for_parader_index(k + 1)
-		gaps.append(base + spacing_per_char * float(c0 + c1))
+		gaps.append(
+			base + spacing_per_char * float(c0 + c1) * sign_gap_elastic_scale
+		)
 
 	if t == 1:
 		var pr_one: Parader = _parader_nodes[0] as Parader
@@ -276,6 +298,43 @@ func _layout_paraders_x(spacing_per_char: float) -> void:
 			x += gaps[i]
 
 
+## Maps formation so left/right sign (and pit) edges sit in [code][-line_width/2, line_width/2][/code].
+## [method _spacing_per_char] only sets nominal board scale; elastic gaps can make raw span exceed the road otherwise.
+func _fit_formation_to_road_width() -> void:
+	if _parader_nodes.is_empty():
+		return
+	var lo: float = INF
+	var hi: float = -INF
+	for p: Node3D in _parader_nodes:
+		var pr: Parader = p as Parader
+		var cx: float = pr.get_formation_target_x() if pr != null else p.position.x
+		var hw: float = p.call("get_sign_half_width") as float
+		lo = minf(lo, cx - hw)
+		hi = maxf(hi, cx + hw)
+	var span: float = hi - lo
+	if span <= 0.0 or not is_finite(span):
+		return
+	var w: float = line_width
+	if span <= w + 0.5:
+		return
+	var fit_scale: float = w / span
+	var half_w: float = w * 0.5
+	for p: Node3D in _parader_nodes:
+		var pr: Parader = p as Parader
+		if pr == null:
+			continue
+		var cx0: float = pr.get_formation_target_x()
+		var cz0: float = pr.get_formation_target_z()
+		var cx1: float = -half_w + (cx0 - lo) * fit_scale
+		pr.set_parade_target(cx1, cz0)
+		if pr.inert_pit:
+			pr.pit_formation_half_width *= fit_scale
+		else:
+			var sign_scale: Node3D = pr.get_node_or_null("SignScale") as Node3D
+			if sign_scale != null:
+				sign_scale.scale *= Vector3(fit_scale, fit_scale, fit_scale)
+
+
 func _build_paraders() -> void:
 	if _specs.is_empty():
 		return
@@ -286,6 +345,7 @@ func _build_paraders() -> void:
 	_scale_signs(spacing)
 	_attach_parader_flee_scripts()
 	_layout_paraders_x(spacing)
+	_fit_formation_to_road_width()
 
 
 func _specs_has_any_disloyal() -> bool:
@@ -398,6 +458,7 @@ func _refit_line_formation_after_casualty() -> void:
 		return
 	var spacing: float = _spacing_per_char()
 	_layout_paraders_x(spacing)
+	_fit_formation_to_road_width()
 
 
 func unregister_parader_from_march(parader: Node3D) -> void:

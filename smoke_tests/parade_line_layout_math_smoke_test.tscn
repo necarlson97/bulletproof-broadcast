@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b36yyeyotmg3y"]
+
+[ext_resource type="Script" path="res://smoke_tests/parade_line_layout_math_smoke_test.gd" id="1_layout"]
+
+[node name="ParadeLineLayoutMathSmokeTest" type="Node3D"]
+script = ExtResource("1_layout")
