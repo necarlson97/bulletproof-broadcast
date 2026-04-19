@@ -5,9 +5,9 @@ const MAIN_MENU_SCENE := "res://menus/main_menu.tscn"
 
 const _TWEEN_SEC := 0.35
 
-const _OVERVIEW_COLOR_SAFE := "2E3A3F"
-const _OVERVIEW_COLOR_DANGER := "D8C36A"
-const _OVERVIEW_COLOR_DEAD := "A13A32"
+const _OVERVIEW_COLOR_SAFE := Color("d2dde1ff")
+const _OVERVIEW_COLOR_DANGER := Color("D8C36A")
+const _OVERVIEW_COLOR_DEAD := Color("A13A32")
 
 const _SPEAK_SFX_PREVIEW_CLIPS: Array[AudioStream] = [
 	preload("res://assets/sfx/heh-1.wav"),
@@ -164,14 +164,16 @@ func _close_pause() -> void:
 
 func _refresh_stats() -> void:
 	var mal: int = int(_stats.get("malcontents_broadcast"))
-	var overview_hex: String = _OVERVIEW_COLOR_SAFE
+	var overview_hex: String = _OVERVIEW_COLOR_SAFE.to_html()
 	var overview_msg: String = "You are safe"
 	if mal >= 4:
-		overview_hex = _OVERVIEW_COLOR_DEAD
+		overview_hex = _OVERVIEW_COLOR_DEAD.to_html()
 		overview_msg = "You are dead"
 	elif mal >= 1:
-		overview_hex = _OVERVIEW_COLOR_DANGER
+		overview_hex = _OVERVIEW_COLOR_DANGER.to_html()
 		overview_msg = "You are in danger"
+	elif GameStats.king_killed:
+		overview_msg = "The king is dead. Long live the king?"
 	_label_overview.text = "[color=#%s]%s[/color]" % [overview_hex, overview_msg]
 
 	var pt: Vector2i = _parade_lines_progress()

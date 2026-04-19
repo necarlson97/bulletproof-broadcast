@@ -1,6 +1,6 @@
 extends Node3D
 
-## Idle animation for imported tank: body rumble, wheel spin, turret yaw + barrel pitch toward active Camera3D.
+## Idle animation for imported tank: body rumble, wheel spin, turret yaw + barrel pitch (random local euler).
 ## Expects hierarchy: tank/body/(turret/barrel, wheels*, mudflap).
 
 @export var rumble_enabled: bool = true
@@ -14,15 +14,16 @@ extends Node3D
 @export var wheel_spin_axis: Vector3 = Vector3.UP
 
 @export var aim_enabled: bool = true
-## Looped: wait 1–2s → tween 5s to a random point → wait 1–2s → tween 1–2s back toward camera.
 @export var distraction_enabled: bool = true
-## Random look target is this far from the turret (world units).
-@export var distraction_target_distance: float = 35.0
-@export var distraction_target_distance_jitter: float = 15.0
-## Added to computed yaw if the mesh forward axis does not match +Z on XZ.
-@export var turret_yaw_offset: float = 0.0
-## Extra twist around barrel local X after aiming (radians); mesh uses +Y as bore axis at rest.
-@export var barrel_pitch_offset: float = 0.0
+## Idle loop: wait, then tween turret/barrel to new random angles (degrees from scene rest pose).
+@export var distraction_wait_min: float = 4.0
+@export var distraction_wait_max: float = 6.0
+@export var aim_tween_duration_min: float = 4.0
+@export var aim_tween_duration_max: float = 6.0
+## Random yaw is local Y on the turret, +/- this many degrees from its starting rotation.
+@export var aim_turret_range_deg: float = 90.0
+## Random pitch is local X on the barrel, +/- this many degrees from its starting rotation.
+@export var aim_barrel_range_deg: float = 10.0
 
 @onready var _body: Node3D = $body
 @onready var _turret: Node3D = $body/turret
@@ -34,14 +35,14 @@ var _rumble_tween: Tween
 var _rumble_timer: Timer
 var _halted: bool = false
 
-## When true, _process does not drive aim (tween_method does). When false and not following camera, _aim_hold_point is used.
-var _aim_in_tween: bool = false
-var _aim_follow_camera: bool = true
-var _aim_hold_point: Vector3
+var _base_turret_y: float
+var _base_barrel_x: float
 
 
 func _ready() -> void:
 	_body_base_position = _body.position
+	_base_turret_y = _turret.rotation.y
+	_base_barrel_x = _barrel.rotation.x
 	for wheel_name in ["body/wheel", "body/wheel_001", "body/wheel_002"]:
 		var w := get_node_or_null(wheel_name) as Node3D
 		if w != null:
@@ -77,56 +78,6 @@ func _process(_delta: float) -> void:
 		var step := wheel_spin_speed * _delta
 		for w in _wheels:
 			w.rotate_object_local(wheel_spin_axis.normalized(), step)
-	if not aim_enabled or _aim_in_tween:
-		return
-	if _aim_follow_camera:
-		_apply_aim()
-	else:
-		_apply_aim_to_point(_aim_hold_point)
-
-
-func _apply_aim() -> void:
-	var cam := get_viewport().get_camera_3d()
-	if cam == null:
-		return
-	_apply_aim_to_point(cam.global_position)
-
-
-func _apply_aim_to_point(target_world: Vector3) -> void:
-	# Horizontal yaw from turret position (XZ plane).
-	var to_tgt_xz := Vector3(
-		target_world.x - _turret.global_position.x,
-		0.0,
-		target_world.z - _turret.global_position.z
-	)
-	if to_tgt_xz.length_squared() < 1e-8:
-		return
-	to_tgt_xz = to_tgt_xz.normalized()
-	var yaw := atan2(to_tgt_xz.x, to_tgt_xz.z) + turret_yaw_offset
-	_turret.rotation.y = yaw
-	# Barrel is under turret: bore axis local +Y; pitch only in turret space (yaw comes from turret).
-	var to_barrel := target_world - _barrel.global_position
-	if to_barrel.length_squared() < 1e-8:
-		return
-	var dir_world := to_barrel.normalized()
-	var turret_rot: Basis = _turret.global_transform.basis.orthonormalized()
-	var dir_turret: Vector3 = turret_rot.inverse() * dir_world
-	var up_turret: Vector3 = turret_rot.inverse() * Vector3.UP
-	var basis_barrel: Basis = _basis_with_y_aligned_to(dir_turret, up_turret)
-	basis_barrel = basis_barrel * Basis.from_euler(Vector3(barrel_pitch_offset, 0.0, 0.0))
-	var scl := _barrel.basis.get_scale()
-	_barrel.basis = basis_barrel.orthonormalized().scaled_local(scl)
-
-
-## Rest pose: local +Y is the bore axis. Builds a rotation-only basis whose +Y matches [dir] (world space).
-func _basis_with_y_aligned_to(dir: Vector3, up_ref: Vector3 = Vector3.UP) -> Basis:
-	var y_axis := dir.normalized()
-	var x_axis := up_ref.cross(y_axis)
-	if x_axis.length_squared() < 1e-10:
-		x_axis = Vector3.RIGHT.cross(y_axis)
-	x_axis = x_axis.normalized()
-	var z_axis := x_axis.cross(y_axis).normalized()
-	return Basis(x_axis, y_axis, z_axis)
 
 
 func _wait_seconds_or_halt(seconds: float) -> void:
@@ -148,60 +99,20 @@ func _await_tween_or_halt(tw: Tween) -> void:
 		await tree.process_frame
 
 
-func _random_look_target_point() -> Vector3:
-	var origin := _turret.global_position
-	var dir := Vector3(randf_range(-1.0, 1.0), randf_range(-0.15, 0.95), randf_range(-1.0, 1.0))
-	if dir.length_squared() < 1e-6:
-		dir = Vector3(1, 0.3, -0.5)
-	dir = dir.normalized()
-	var dist := distraction_target_distance + randf_range(-distraction_target_distance_jitter, distraction_target_distance_jitter)
-	return origin + dir * maxf(5.0, dist)
-
-
 func _distraction_loop() -> void:
 	while is_inside_tree() and distraction_enabled and aim_enabled and not _halted:
-		await _wait_seconds_or_halt(randf_range(4.0, 6.0))
+		await _wait_seconds_or_halt(randf_range(distraction_wait_min, distraction_wait_max))
 		if _halted or not is_inside_tree() or not distraction_enabled or not aim_enabled:
 			return
-		var cam := get_viewport().get_camera_3d()
-		if cam == null:
-			continue
-		var from_pt := cam.global_position
-		var to_pt := _random_look_target_point()
-		_aim_follow_camera = false
-		_aim_in_tween = true
+		var target_y := _base_turret_y + deg_to_rad(randf_range(-aim_turret_range_deg, aim_turret_range_deg))
+		var target_x := _base_barrel_x + deg_to_rad(randf_range(-aim_barrel_range_deg, aim_barrel_range_deg))
+		var dur := randf_range(aim_tween_duration_min, aim_tween_duration_max)
 		var tw := create_tween()
+		tw.set_parallel(true)
 		tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		tw.tween_method(func(w: float) -> void: _aim_lerp_points(from_pt, to_pt, w), 0.0, 1.0, 5.0)
+		tw.tween_property(_turret, ^"rotation:y", target_y, dur)
+		tw.tween_property(_barrel, ^"rotation:x", target_x, dur)
 		await _await_tween_or_halt(tw)
-		if _halted or not is_inside_tree():
-			return
-		_aim_in_tween = false
-		_aim_hold_point = to_pt
-		await _wait_seconds_or_halt(randf_range(4.0, 6.0))
-		if _halted or not is_inside_tree() or not distraction_enabled or not aim_enabled:
-			return
-		_aim_in_tween = true
-		var return_dur := randf_range(5.0, 6.0)
-		tw = create_tween()
-		tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		tw.tween_method(func(w: float) -> void: _aim_lerp_to_live_camera(to_pt, w), 0.0, 1.0, return_dur)
-		await _await_tween_or_halt(tw)
-		if _halted or not is_inside_tree():
-			return
-		_aim_in_tween = false
-		_aim_follow_camera = true
-
-
-func _aim_lerp_points(from_pt: Vector3, to_pt: Vector3, w: float) -> void:
-	_apply_aim_to_point(from_pt.lerp(to_pt, w))
-
-
-func _aim_lerp_to_live_camera(from_pt: Vector3, w: float) -> void:
-	var cam := get_viewport().get_camera_3d()
-	if cam == null:
-		return
-	_apply_aim_to_point(from_pt.lerp(cam.global_position, w))
 
 
 func _on_rumble_tick() -> void:

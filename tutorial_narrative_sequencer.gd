@@ -13,16 +13,12 @@ const _WRONG_SHOT_HINT := "Hrm. Not quite. Try another?"
 ## Default flip animation is 1s; allow a short buffer before the next line.
 @export var flip_pause_sec: float = 1.05
 @export var limelight_fade_in_sec: float = 0.55
-@export var limelight_fade_out_sec: float = 0.45
 
 var _camera: Camera3D
 var _camera_positions: Node3D
 var _faux: ParadeLineFaux
 
 var _cam_tween: Tween
-var _limelight_fade_tween: Tween
-var _limelight_overlay: LimelightScreenDarkenOverlay
-var _limelighter: Limelighter
 ## Scene full-strength [member LimelightScreenDarkenOverlay.darkness] (cached before fade-in zeros it).
 var _limelight_darkness_full: float = 0.9
 

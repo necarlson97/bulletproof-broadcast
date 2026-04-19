@@ -102,6 +102,13 @@ var _intro_completed_by_skip: bool = false
 ## True if the player shot the king ([KingParader]) during the final parade segment.
 var _king_killed_on_final_parade: bool = false
 
+## Matches [TutorialNarrativeSequencer.limelight_fade_out_sec] — fade before final outro dialogue.
+@export var limelight_fade_out_sec: float = 0.45
+
+var _limelight_overlay: LimelightScreenDarkenOverlay
+var _limelighter: Limelighter
+var _limelight_fade_tween: Tween
+
 
 func _ready() -> void:
 	add_to_group("narrative_sequencer")
@@ -109,6 +116,8 @@ func _ready() -> void:
 	_officer = get_parent().get_node_or_null("Camera3D/Officer") as Officer
 	_pause_menu = get_parent().get_node_or_null("PauseMenu") as CanvasLayer
 	_gun_point = get_parent().get_node_or_null("Camera3D/Officer/Face") as Node3D
+	_limelight_overlay = get_parent().get_node_or_null("Camera3D/LimelightScreenDarkenOverlay") as LimelightScreenDarkenOverlay
+	_limelighter = get_parent().get_node_or_null("Limelighter") as Limelighter
 	_parade = get_tree().get_first_node_in_group("parade") as Parade
 	if _parade == null:
 		push_error("NarrativeSequencer: no node in group 'parade'")
@@ -270,6 +279,7 @@ func _run_victory_sequence() -> void:
 		return
 	if not is_instance_valid(_officer):
 		return
+	await _fade_limelight_out_for_outro()
 	var outro: String = (
 		_KING_KILLER_SPEECH if _king_killed_on_final_parade else _OUTRO_SPEECH
 	)
@@ -328,6 +338,7 @@ func notify_parader_shot(was_loyal: bool, target: Parader = null) -> void:
 		and _active_schedule_index == parade_schedule.size() - 1
 	):
 		_king_killed_on_final_parade = true
+		GameStats.king_killed = true
 	var line: String
 	if was_loyal:
 		if collateral_loyalist_lines.is_empty():
@@ -344,6 +355,19 @@ func notify_parader_shot(was_loyal: bool, target: Parader = null) -> void:
 
 func _normalize_speech(s: String) -> String:
 	return s.replace("\f", "\n")
+
+
+func _fade_limelight_out_for_outro() -> void:
+	if not is_instance_valid(_limelight_overlay) or not is_instance_valid(_limelighter):
+		return
+	if _limelight_fade_tween != null and is_instance_valid(_limelight_fade_tween):
+		_limelight_fade_tween.kill()
+	_limelight_fade_tween = create_tween()
+	_limelight_fade_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_limelight_fade_tween.tween_property(_limelight_overlay, "darkness", 0.0, limelight_fade_out_sec)
+	await _limelight_fade_tween.finished
+	_limelight_overlay.visible = false
+	_limelighter.visible = false
 
 
 func _speak_async(text: String) -> void:

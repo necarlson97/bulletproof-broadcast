@@ -6,6 +6,7 @@ const _KING_PARADER: PackedScene = preload("res://people/king.tscn")
 
 
 func _ready() -> void:
+	GameStats.reset()
 	var cam: Camera3D = get_node("Camera3D") as Camera3D
 	var mask_vp: Node = get_node("LimelightMaskViewport")
 	mask_vp.set("follow_camera", cam)
@@ -20,16 +21,16 @@ func _ready() -> void:
 		"{Order is} [maintained by,useless. Fuck] {the king.}",
 		"<In this> [country,cage], {we are} (free,happy)!",
 		"{The rebels} are (trying,working) {to destroy} <our> [freedom,chains]!",
-		"<Only when> we [comply,resist], can <we> create!",
+		"<Only when> we [comply,resist], can <we> (create,flourish)!",
 		"Rebellion is insolent, <it can> <only> [destroy,liberate]!",
 		"Let them eat [cake,the rich]!"
 	]
 	var lines_medium: Array[String] = [	
 		# Mediumish
 		"We are all (united,joined) <in> [harmony,stupidity].",
-		"The (monarch,crown) loves all <its> [citizens,traitors].",
+		"The (monarch,crown) (loves,guards) all <its> [citizens,traitors].",
 		"[Look to,Hate] <your> (beloved,lovley) royalty <for> <their> [might,mistrust]!",
-		"Our [Great,Awful] (King,Leader) is [protecting,ruining] your life.",
+		"Our [Great,Awful] (King,Leader) is [protecting,ruining] your (life,future).",
 		"[You, Sheep] <must not> <fret -> we are forever [free,fools]!",
 	]
 	var lines_hard: Array[String] = [	
@@ -37,7 +38,7 @@ func _ready() -> void:
 		"Love the [king,rebel]! <Enjoy> <your> [parade,shackles]! [Obey,Fuck] <the> state!",
 		"{The king} sacrifices [his time,our lives] <for> [all of us,no reason].",
 		"{I am} weak, <but> [with,death to] the king, <I am> strong!",
-		"Love your king? <Time> <for a> [banquet,guillotine]!",
+		"(Love,Adore) your king? <Time> <for a> [banquet,guillotine]!",
 	]
 	
 	var lines_protest: Array[String] = [	
@@ -97,5 +98,6 @@ func _build_parade_schedule(
 	var fifth_parade: Parade = _build_parade(lines_king)
 	fifth_parade.marching_speed = 175.0
 	fifth_parade.parader_scene_override = _KING_PARADER
+	fifth_parade.check_z += 200
 	fifth_parade.end_z += 400
 	return [first_parade, second_parade, third_parade, fourth_parade, fifth_parade]
