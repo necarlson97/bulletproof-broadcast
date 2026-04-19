@@ -43,6 +43,12 @@ var _check_logged: bool = false
 ## March path Z from the line tween (authoritative for focus thresholds).
 var _line_path_z: float = 0.0
 var _had_disloyal_at_spawn: bool = false
+## When true, this line was moved under [Parade]'s former-segments bucket; skip disloyal-at-check narrative.
+var _retired_from_active_segment: bool = false
+
+
+func retire_from_active_segment() -> void:
+	_retired_from_active_segment = true
 
 
 func _prune_freed_paraders() -> void:
@@ -374,6 +380,8 @@ func _crossed_z_marching(prev_z: float, cur_z: float, threshold: float) -> bool:
 
 
 func _log_disloyal_at_check() -> void:
+	if _retired_from_active_segment:
+		return
 	_prune_freed_paraders()
 	var any_disloyal: bool = false
 	for i: int in _parader_nodes.size():

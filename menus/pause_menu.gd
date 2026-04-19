@@ -232,6 +232,7 @@ func _on_retry_pressed() -> void:
 	_paused = false
 	_dimmer.visible = false
 	_panel.visible = false
+	GameStats.reset()
 	get_tree().change_scene_to_file(MAIN_SCENE)
 
 

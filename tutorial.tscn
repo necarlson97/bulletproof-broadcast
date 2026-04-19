@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://5ij8vquji131" path="res://devtools_time_scale.gd" id="2_k08xv"]
 [ext_resource type="PackedScene" uid="uid://gyj4nn4b8m53" path="res://menus/pause_menu.tscn" id="3_g52lx"]
 [ext_resource type="PackedScene" uid="uid://b1wac4jce0e2i" path="res://scenery/ground.tscn" id="5_dudfa"]
+[ext_resource type="PackedScene" uid="uid://b8lscndrk01" path="res://limelight/limelight_screen_darken_overlay.tscn" id="6_5gpbq"]
 [ext_resource type="PackedScene" uid="uid://dbc275amwc630" path="res://people/officer.tscn" id="7_tfgte"]
 [ext_resource type="PackedScene" uid="uid://b8lmvp001" path="res://limelight/limelight_mask_viewport.tscn" id="10_4ods2"]
 [ext_resource type="PackedScene" uid="uid://cklqhp4v1uemv" path="res://scenery/film_camera.tscn" id="11_0gmok"]
@@ -47,6 +48,9 @@ transform = Transform3D(1, 0, 0, 0, 0.94198126, 0.33566532, 0, -0.33566532, 0.94
 fov = 55.0
 near = 10.0
 far = 1500.0
+
+[node name="LimelightScreenDarkenOverlay" parent="Camera3D" unique_id=34686236 instance=ExtResource("6_5gpbq")]
+visible = false
 
 [node name="Officer" parent="Camera3D" unique_id=1660657085 instance=ExtResource("7_tfgte")]
 transform = Transform3D(0.94442713, -0.32529604, -0.04733233, 0.30907488, 0.92776, -0.2091276, 0.11194137, 0.18287641, 0.9767427, 56.86102, -45.01088, -79.45389)

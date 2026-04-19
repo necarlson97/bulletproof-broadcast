@@ -26,6 +26,8 @@ class_name Parade
 @export var force_all_paraders_disloyal: bool = false
 
 var _march_delays: Array[float] = []
+## Holds prior segments' [ParadeLine]s so they can finish marching after [method load_from_template].
+var _former_segments: Node3D
 
 
 func _ready() -> void:
@@ -130,10 +132,28 @@ func apply_segment_config_from(source: Parade) -> void:
 		parade_line_scene = source.parade_line_scene
 
 
-## Clears existing [ParadeLine] children and applies [param template], then spawns lines.
+func _ensure_former_segments() -> void:
+	if _former_segments != null and is_instance_valid(_former_segments):
+		return
+	_former_segments = Node3D.new()
+	_former_segments.name = "FormerParadeLines"
+	add_child(_former_segments)
+	move_child(_former_segments, 0)
+
+
+## Moves active [ParadeLine] children under [member _former_segments] so they keep marching off-screen,
+## then applies [param template] and spawns the next segment as direct children.
 func load_from_template(template: Parade) -> void:
+	_ensure_former_segments()
+	var to_reparent: Array[Node] = []
 	for c: Node in get_children():
-		c.queue_free()
+		if c == _former_segments:
+			continue
+		if c is ParadeLine:
+			to_reparent.append(c)
+	for c: Node in to_reparent:
+		(c as ParadeLine).retire_from_active_segment()
+		c.reparent(_former_segments)
 	apply_segment_config_from(template)
 	await get_tree().process_frame
 	_spawn_lines()
@@ -152,9 +172,15 @@ func begin_marches() -> void:
 		idx += 1
 
 
-## Frees all [ParadeLine] children without emitting line completion (e.g. segment ended early).
+## Frees every [ParadeLine] (active direct children and any under [member _former_segments]).
 func abort_all_parade_lines() -> void:
 	for c: Node in get_children():
 		var pl: ParadeLine = c as ParadeLine
 		if pl != null:
 			pl.abort_march_without_completion()
+	if _former_segments != null and is_instance_valid(_former_segments):
+		var linger: Array[Node] = _former_segments.get_children()
+		for c: Node in linger:
+			var pl2: ParadeLine = c as ParadeLine
+			if pl2 != null:
+				pl2.abort_march_without_completion()

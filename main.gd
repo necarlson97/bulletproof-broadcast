@@ -88,7 +88,7 @@ func _build_parade_schedule(
 	var first_parade: Parade = _build_parade(lines_easy + lines_medium)
 	var second_parade: Parade = _build_parade(lines_protest)
 	second_parade.force_all_paraders_disloyal = true
-	second_parade.marching_speed = 200.0
+	second_parade.marching_speed = 150.0
 	second_parade.approach_speed = 300.0
 	second_parade.line_spawn_spacing = 400.0
 	var third_parade: Parade = _build_parade(lines_hard)

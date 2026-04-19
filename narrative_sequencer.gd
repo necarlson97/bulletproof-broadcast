@@ -174,7 +174,6 @@ func _process(_delta: float) -> void:
 	var last_pl: ParadeLine = _get_last_parade_line_by_spawn_index(_parade)
 	if last_pl == null or not last_pl.should_release_focus():
 		return
-	_parade.abort_all_parade_lines()
 	_schedule_parade_advance()
 
 

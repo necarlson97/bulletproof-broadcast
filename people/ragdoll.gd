@@ -106,23 +106,26 @@ static func create_ragdoll(
 	root.queue_free()
 
 
-## [param root] is queued for freeing; move [KilledSfx] out first so one-shots keep playing.
+## [param root] is queued for freeing; move direct-child [AudioStreamPlayer3D] nodes out first so one-shots keep playing.
 static func _detach_killed_sfx_before_root_freed(root: Node3D, new_parent: Node) -> void:
 	if new_parent == null:
 		return
-	var ap: AudioStreamPlayer3D = root.get_node_or_null("KilledSfx") as AudioStreamPlayer3D
-	if ap == null:
-		return
-	var xf: Transform3D = ap.global_transform
-	root.remove_child(ap)
-	new_parent.add_child(ap)
-	ap.global_transform = xf
-	ap.finished.connect(
-		func () -> void:
-			if is_instance_valid(ap):
-				ap.queue_free()
-	, CONNECT_ONE_SHOT,
-	)
+	var players: Array[AudioStreamPlayer3D] = []
+	for c: Node in root.get_children():
+		if c is AudioStreamPlayer3D:
+			players.append(c as AudioStreamPlayer3D)
+	for ap: AudioStreamPlayer3D in players:
+		var p: AudioStreamPlayer3D = ap
+		var xf: Transform3D = p.global_transform
+		root.remove_child(p)
+		new_parent.add_child(p)
+		p.global_transform = xf
+		p.finished.connect(
+			func () -> void:
+				if is_instance_valid(p):
+					p.queue_free()
+		, CONNECT_ONE_SHOT,
+		)
 
 
 static func _reparent_keep_global(node: Node3D, new_parent: Node) -> void:
@@ -190,8 +193,13 @@ static func _find_sprite3ds_under(node: Node) -> Array[Sprite3D]:
 	return out
 
 
+## Direct [MeshInstance3D] children of [param anchor], plus [param anchor] itself when it is a mesh (typical for GLTF/Blend parts).
 static func _find_direct_mesh_instances(anchor: Node3D) -> Array[MeshInstance3D]:
 	var out: Array[MeshInstance3D] = []
+	if anchor is MeshInstance3D:
+		var self_mi: MeshInstance3D = anchor as MeshInstance3D
+		if self_mi.mesh != null:
+			out.append(self_mi)
 	for c: Node in anchor.get_children():
 		if c is MeshInstance3D:
 			out.append(c as MeshInstance3D)

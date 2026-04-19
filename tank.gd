@@ -1,6 +1,7 @@
 extends Node3D
 
 ## Idle animation for imported tank: body rumble, wheel spin, turret yaw + barrel pitch toward active Camera3D.
+## Expects hierarchy: tank/body/(turret/barrel, wheels*, mudflap).
 
 @export var rumble_enabled: bool = true
 ## Max random offset per axis (local space, same units as the scene).
@@ -24,8 +25,8 @@ extends Node3D
 @export var barrel_pitch_offset: float = 0.0
 
 @onready var _body: Node3D = $body
-@onready var _turret: Node3D = $turret
-@onready var _barrel: Node3D = $barrel
+@onready var _turret: Node3D = $body/turret
+@onready var _barrel: Node3D = $body/turret/barrel
 @onready var _wheels: Array[Node3D] = []
 
 var _body_base_position: Vector3
@@ -41,7 +42,7 @@ var _aim_hold_point: Vector3
 
 func _ready() -> void:
 	_body_base_position = _body.position
-	for wheel_name in ["wheel", "wheel_001", "wheel_002"]:
+	for wheel_name in ["body/wheel", "body/wheel_001", "body/wheel_002"]:
 		var w := get_node_or_null(wheel_name) as Node3D
 		if w != null:
 			_wheels.append(w)
@@ -103,19 +104,18 @@ func _apply_aim_to_point(target_world: Vector3) -> void:
 	to_tgt_xz = to_tgt_xz.normalized()
 	var yaw := atan2(to_tgt_xz.x, to_tgt_xz.z) + turret_yaw_offset
 	_turret.rotation.y = yaw
-	# Rest pose: barrel points along local +Y (vertical). Aim by aligning +Y toward target, then optional X tweak.
+	# Barrel is under turret: bore axis local +Y; pitch only in turret space (yaw comes from turret).
 	var to_barrel := target_world - _barrel.global_position
 	if to_barrel.length_squared() < 1e-8:
 		return
 	var dir_world := to_barrel.normalized()
-	var basis_world := _basis_with_y_aligned_to(dir_world)
-	basis_world = basis_world * Basis.from_euler(Vector3(barrel_pitch_offset, 0.0, 0.0))
-	var parent := _barrel.get_parent_node_3d() as Node3D
-	if parent == null:
-		return
-	var basis_local := parent.global_transform.basis.inverse() * basis_world
+	var turret_rot: Basis = _turret.global_transform.basis.orthonormalized()
+	var dir_turret: Vector3 = turret_rot.inverse() * dir_world
+	var up_turret: Vector3 = turret_rot.inverse() * Vector3.UP
+	var basis_barrel: Basis = _basis_with_y_aligned_to(dir_turret, up_turret)
+	basis_barrel = basis_barrel * Basis.from_euler(Vector3(barrel_pitch_offset, 0.0, 0.0))
 	var scl := _barrel.basis.get_scale()
-	_barrel.basis = basis_local.orthonormalized().scaled_local(scl)
+	_barrel.basis = basis_barrel.orthonormalized().scaled_local(scl)
 
 
 ## Rest pose: local +Y is the bore axis. Builds a rotation-only basis whose +Y matches [dir] (world space).

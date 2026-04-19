@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://c5jna01vqjdf0" path="res://assets/grass blade.png" id="11_hplot"]
 [ext_resource type="PackedScene" uid="uid://8eagiuthp066" path="res://people/button_holder.tscn" id="13_rx1ud"]
 [ext_resource type="PackedScene" uid="uid://gndi7m5kbh1y" path="res://limelight/limelight.tscn" id="14_u3dsk"]
-[ext_resource type="Script" path="res://menus/main_menu.gd" id="16_main_menu"]
+[ext_resource type="Script" uid="uid://bwhuqnx4p7l6b" path="res://menus/main_menu.gd" id="16_main_menu"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wcdpt"]
 viewport_path = NodePath("DialogBox/SubViewport")
@@ -48,10 +48,10 @@ script = ExtResource("1_kk4mm")
 [node name="Ground" parent="." unique_id=231829925 instance=ExtResource("4_u3dsk")]
 
 [node name="Officer" parent="." unique_id=1660657085 instance=ExtResource("5_ygrj5")]
-transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, -226.70789, 3.1028252, 36.328064)
+transform = Transform3D(0.9973655, 0, -0.07254193, 0, 1, 0, 0.07254193, 0, 0.9973655, -21.439026, 3.1028252, 36.328064)
 script = null
 
-[node name="MuzzelFlash" parent="Officer/HandL/Gun" parent_id_path=PackedInt32Array(1660657085, 2019999971) index="0" unique_id=540988831]
+[node name="MuzzelFlash" parent="Officer/HandL/Gun" parent_id_path=PackedInt32Array(1660657085, 2019999971) index="1" unique_id=540988831]
 visible = false
 
 [node name="DialogBox" parent="Officer" index="8" unique_id=960094290]
