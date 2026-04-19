@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b8cw8bhs61ny5"]
+
+[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://people/person.tscn" id="1_4ygbx"]
+[ext_resource type="Texture2D" uid="uid://u1iimd24yisk" path="res://assets/baton.png" id="2_0ofug"]
+[ext_resource type="Script" path="res://people/baton.gd" id="3_baton"]
+
+[node name="Baton" type="Node3D" unique_id=1932486709]
+script = ExtResource("3_baton")
+
+[node name="Person" parent="." unique_id=1660657085 instance=ExtResource("1_4ygbx")]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 14.578711, -34.65908, 1.1710738)
+visible = false
+
+[node name="SpriteBaton" type="Sprite3D" parent="." unique_id=1501295244]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -0.022887945, 7.9473515, 0)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("2_0ofug")

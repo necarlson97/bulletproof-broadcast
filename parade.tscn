@@ -6,5 +6,6 @@
 script = ExtResource("1_parade")
 marching_speed = 50.0
 start_z = -1300.0
+check_z = 150.0
 approach_speed = 150.0
 line_spawn_spacing = 800.0

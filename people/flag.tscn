@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://c5w38274fa0oq"]
+
+[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://people/person.tscn" id="1_ftnbb"]
+[ext_resource type="Texture2D" uid="uid://ci82opck53m4c" path="res://assets/flag.png" id="2_4wq2a"]
+[ext_resource type="Texture2D" uid="uid://cfgm3dt06pxm0" path="res://assets/flagpole.png" id="3_s2mxd"]
+[ext_resource type="Script" path="res://people/flag.gd" id="4_flag"]
+
+[node name="Flag" type="Node3D" unique_id=1932486709]
+script = ExtResource("4_flag")
+
+[node name="Person" parent="." unique_id=1660657085 instance=ExtResource("1_ftnbb")]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 14.578711, -34.65908, 1.1710738)
+visible = false
+
+[node name="SpriteFlag" type="Sprite3D" parent="." unique_id=1082963249]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 26.621058, 44.588387, 0.2473259)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("2_4wq2a")
+
+[node name="SpritePole" type="Sprite3D" parent="." unique_id=1501295244]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -0.022887945, 28.952501, 0)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("3_s2mxd")

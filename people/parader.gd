@@ -1,8 +1,8 @@
 extends "res://people/person.gd"
 class_name Parader
 
-const _SHIRT_LOYAL_A := Color("#444A32")
-const _SHIRT_LOYAL_B := Color("#2E3A3F")
+@export var _SHIRT_LOYAL_A := Color("#444A32")
+@export var _SHIRT_LOYAL_B := Color("#2E3A3F")
 const _SHIRT_DISLOYAL_A := Color("#444A32")
 const _SHIRT_DISLOYAL_B := Color("#3F2E2E")
 

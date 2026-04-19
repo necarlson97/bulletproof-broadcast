@@ -53,62 +53,120 @@ func _run_tutorial() -> void:
 	await _speak_async(
 		"Greetings broadcaster.\nToday is going to be a wonderful parade, full of great love for the king."
 	)
+	if not is_inside_tree():
+		return
 	await _speak_async(
 		"(click/space to make me speak faster)"
 	)
+	if not is_inside_tree():
+		return
 	await _speak_async(
 		"I've heard some… Disloyal subjects have snuck into the parade.\nThat is why I am here."
 	)
+	if not is_inside_tree():
+		return
 
 	await _tween_camera_to_waypoint("1")
+	if not is_inside_tree():
+		return
 	if is_instance_valid(_faux):
 		_faux.visible = true
 	await _speak_async(
 		"The paraders will come down this road, bearing signs, heading towards our camera."
 	)
+	if not is_inside_tree():
+		return
 
 	await _tween_camera_to_waypoint("2")
+	if not is_inside_tree():
+		return
 	await _speak_async("We will read their signs as they come.\nSome will flip their signs.")
+	if not is_inside_tree():
+		return
 
 	if is_instance_valid(_faux):
 		_faux.flip_next()
+		if not is_inside_tree():
+			return
 		await get_tree().create_timer(flip_pause_sec).timeout
+	if not is_inside_tree():
+		return
 	await _speak_async("This is fine - the king loves variety.\nBut a traitor might try to change the sentiment!")
+	if not is_inside_tree():
+		return
 
 	if is_instance_valid(_faux):
 		_faux.flip_next()
+		if not is_inside_tree():
+			return
 		await get_tree().create_timer(flip_pause_sec).timeout
+	if not is_inside_tree():
+		return
 	await _speak_async("We must ensure no such agitators are broadcast!")
+	if not is_inside_tree():
+		return
 
 	await _setup_focused_line_for_shooting()
+	if not is_inside_tree():
+		return
 	_tutorial_shot_done = false
 	_waiting_for_tutorial_shot = true
 	await _speak_async(
 		"You see the numbers on their shirt? Press the key to tell me which one to shoot."
 	)
+	if not is_inside_tree():
+		return
 	while not _tutorial_shot_done:
 		if not is_inside_tree():
 			return
 		await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	_waiting_for_tutorial_shot = false
 	await _teardown_focused_line()
+	if not is_inside_tree():
+		return
 
 	await _speak_async("Simple as that.")
+	if not is_inside_tree():
+		return
 
 	await _tween_camera_to_waypoint("3")
+	if not is_inside_tree():
+		return
 	await _speak_async("If any malcontents reach the camera… Well…")
+	if not is_inside_tree():
+		return
 	await _speak_async("We will be visiting the king's 'private office', as they say.")
+	if not is_inside_tree():
+		return
 
 	await _tween_camera_to_waypoint("6")
+	if not is_inside_tree():
+		return
 	await _speak_async("Watch the crowd - they'll get more rowdy if a traitor gets close")
+	if not is_inside_tree():
+		return
 
 	await _tween_camera_to_waypoint("4")
+	if not is_inside_tree():
+		return
 	await _speak_async("Certain rebels may even have a 'tell'.")
+	if not is_inside_tree():
+		return
 
 	await _tween_camera_to_waypoint("5")
+	if not is_inside_tree():
+		return
 	await _speak_async("But mostly - read their signs.")
+	if not is_inside_tree():
+		return
 	await _speak_async("If we are fast, and brutal…")
+	if not is_inside_tree():
+		return
 	await _speak_async("We might just make it home okay.")
+	if not is_inside_tree():
+		return
 	await _speak_async("Ready?")
 
 	if is_inside_tree():
@@ -161,6 +219,8 @@ func _setup_focused_line_for_shooting() -> void:
 	get_parent().add_child(fl)
 	fl.set_parade_line(_faux)
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	await _fade_tutorial_limelight(true)
 
 

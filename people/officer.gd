@@ -6,8 +6,8 @@ const _MUZZLE_FLASH_SEC := 0.1
 const _GUN_REST_RETURN_DELAY_SEC := 1.0
 ## How fast the hand eases toward the rest aim (higher = snappier).
 const _GUN_REST_AIM_SLERP := 6.0
-const _SMOKE_SCALE_START := 1.3
-const _SMOKE_SCALE_END := 0.35
+const _SMOKE_SCALE_START := 2.0
+const _SMOKE_SCALE_END := 0.01
 
 const _SHOT_CLIPS: Array[AudioStream] = [
 	preload("res://assets/sfx/shot.wav"),
@@ -36,6 +36,11 @@ const _SPEAK_SFX_CLIPS: Array[AudioStream] = [
 @onready var _dialog_box: Node3D = $DialogBox
 @onready var _speech_label: RichTextLabel = $DialogBox/SubViewport/Control/Panel/Label
 @onready var _speak_sfx: AudioStreamPlayer3D = $KilledSfx
+
+
+func _get_bullet_hole_for_kill() -> Sprite3D:
+	return get_node_or_null("Face/BulletHole") as Sprite3D
+
 
 var _muzzle_timer: Timer
 

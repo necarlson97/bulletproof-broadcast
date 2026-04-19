@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://ctwwligrmfym1"]
+
+[ext_resource type="PackedScene" uid="uid://d2ax5tuuuqgky" path="res://people/person.tscn" id="1_maiud"]
+[ext_resource type="Texture2D" uid="uid://bp6vtq73ms7g3" path="res://assets/trumpet.png" id="2_maiud"]
+[ext_resource type="Texture2D" uid="uid://2u5tecs1edy" path="res://assets/trumpet sound.png" id="3_23k3a"]
+[ext_resource type="Script" path="res://people/trumpet.gd" id="4_trumpet"]
+
+[node name="Trumpet" type="Node3D" unique_id=1932486709]
+script = ExtResource("4_trumpet")
+
+[node name="Person" parent="." unique_id=1660657085 instance=ExtResource("1_maiud")]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -13.826691, -34.65908, 1.1710738)
+visible = false
+
+[node name="SpriteTrumpet" type="Sprite3D" parent="." unique_id=1501295244]
+transform = Transform3D(0.9155012, -0.4023153, 0, 0.4023153, 0.91550106, 0, 0, 0, 0.9999999, 2.3169959, 7.9473515, 3.027275)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("2_maiud")
+
+[node name="SpriteSound" type="Sprite3D" parent="." unique_id=99101940]
+transform = Transform3D(0.9155012, -0.4023153, 0, 0.4023153, 0.91550106, 0, 0, 0, 0.9999999, 22.66349, 16.88858, 3.027275)
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("3_23k3a")

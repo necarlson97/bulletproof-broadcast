@@ -4,11 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://daluy1banvb3v" path="res://assets/officer hat.png" id="2_b17gm"]
 [ext_resource type="Texture2D" uid="uid://dm4p3x2o5fgwo" path="res://assets/glasses.png" id="2_vffdj"]
 [ext_resource type="Texture2D" uid="uid://bv5aa03kv80r0" path="res://assets/suit.png" id="5_fv4ir"]
+[ext_resource type="Texture2D" uid="uid://dvycpleeo7mts" path="res://assets/bullet hole.png" id="5_j0xif"]
 [ext_resource type="Texture2D" uid="uid://b0vs8xafso325" path="res://assets/pistol.png" id="5_vtp5g"]
 [ext_resource type="Texture2D" uid="uid://wl2gs26ionpd" path="res://assets/mussel flash.png" id="6_8tq1q"]
-[ext_resource type="Texture2D" uid="uid://dp40s3oa4i230" path="res://assets/circle.png" id="7_0eu3y"]
 [ext_resource type="Script" uid="uid://ds0feevveqrth" path="res://people/officer.gd" id="7_officer"]
 [ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://signs/sign_font.tres" id="7_umrfj"]
+[ext_resource type="Texture2D" uid="uid://dprohc30fhgx8" path="res://assets/circle whiite.png" id="8_j0xif"]
 
 [sub_resource type="Curve" id="Curve_2v3k6"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.114864886, 1), 0.0, 0.0, 0, 0, Vector2(0.39864868, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -27,7 +28,9 @@ scale_curve = SubResource("CurveTexture_hoeld")
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
-albedo_texture = ExtResource("7_0eu3y")
+shading_mode = 0
+albedo_color = Color(0.78352344, 0.7835234, 0.7835234, 1)
+albedo_texture = ExtResource("8_j0xif")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5drij"]
 material = SubResource("StandardMaterial3D_f0swo")
@@ -63,12 +66,19 @@ pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("2_vffdj")
 
+[node name="BulletHole" type="Sprite3D" parent="Face" parent_id_path=PackedInt32Array(92908819) index="2" unique_id=613750287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 5.8484077, 0.1410799)
+visible = false
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("5_j0xif")
+
 [node name="Body" parent="." index="2" unique_id=1678367108]
 modulate = Color(0.3019608, 0.3137255, 0.20784314, 1)
 texture = ExtResource("5_fv4ir")
 
 [node name="HandL" parent="." index="3" unique_id=1368089338]
-transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 31.695404, 1.4910412)
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -23.292234, 31.695404, 1.4910412)
 
 [node name="Gun" type="Sprite3D" parent="HandL" index="0" unique_id=2019999971]
 transform = Transform3D(0.9999998, 0, 0, 0, 0.9999998, 0, 0, 0, 0.9999998, -2.5241604, 0.21461868, -0.25529408)
@@ -80,8 +90,8 @@ texture = ExtResource("5_vtp5g")
 [node name="Smoking" type="GPUParticles3D" parent="HandL/Gun" index="0" unique_id=1924743513]
 transform = Transform3D(1.9047624, 0, 0, 0, 1.9047624, 0, 0, 0, 1.9047624, -34.154892, 17.447815, 0.93576)
 emitting = false
-amount = 20
-lifetime = 2.0
+amount = 30
+lifetime = 1.5999999999999999
 one_shot = true
 process_material = SubResource("ParticleProcessMaterial_j0xif")
 draw_pass_1 = SubResource("PlaneMesh_5drij")
