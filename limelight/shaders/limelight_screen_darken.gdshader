@@ -2,6 +2,8 @@ shader_type spatial;
 // Fullscreen pass: darken everywhere except where the mask RT shows limelight coverage and depth allows it.
 // Binary: nearest-sampled mask + step(); overlapping limelights max() to white — same as one cone.
 //
+// Ordering: spatial + hint_screen_texture vs alpha blend — see LimelightRender (web/Compatibility; no compositor fix).
+//
 // Mask RT: RGB = same normalized linear depth 0..1 (meters / mask_depth_decode_scale). Opaque GLES may not preserve ALPHA.
 // Scene linear depth: use built-in INV_PROJECTION_MATRIX so depth buffer unpack matches the renderer.
 //

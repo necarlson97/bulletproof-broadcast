@@ -1,6 +1,8 @@
 extends MeshInstance3D
 class_name LimelightScreenDarkenOverlay
 
+## Fullscreen 3D pass: see [LimelightRender] (web + Compatibility; alpha cutout when you need clean layering).
+
 enum DebugView {
 	NORMAL = 0,
 	## B/W: limelight hole after scene depth test (matches gameplay darken).

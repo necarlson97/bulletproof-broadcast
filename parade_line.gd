@@ -96,6 +96,8 @@ var _had_disloyal_at_spawn: bool = false
 var _retired_from_active_segment: bool = false
 ## Guard against duplicate delayed-free requests from multiple end paths.
 var _free_requested: bool = false
+## Set while waiting on [AudioStreamPlayer] tails before [method queue_free]; empty when idle.
+var _audio_tail_state: Dictionary = {}
 ## Hard cap so a looping/bugged audio node cannot keep a line alive forever.
 const _AUDIO_TAIL_MAX_WAIT_SEC: float = 8.0
 
@@ -478,30 +480,47 @@ func _queue_free_after_audio_tail() -> void:
 	if active_audio.is_empty():
 		queue_free()
 		return
-	var state: Dictionary = {
+	_audio_tail_state = {
 		"remaining": active_audio.size(),
 		"finished": false,
 	}
-	var complete_free := func () -> void:
-		if bool(state["finished"]):
-			return
-		state["finished"] = true
-		queue_free()
 	for n: Node in active_audio:
 		if not is_instance_valid(n):
-			state["remaining"] = int(state["remaining"]) - 1
+			_audio_tail_state["remaining"] = int(_audio_tail_state["remaining"]) - 1
 			continue
-		n.finished.connect(func () -> void:
-			state["remaining"] = int(state["remaining"]) - 1
-			if int(state["remaining"]) <= 0:
-				complete_free.call()
-		, CONNECT_ONE_SHOT)
-	if int(state["remaining"]) <= 0:
-		complete_free.call()
+		n.finished.connect(_on_audio_tail_one_finished, CONNECT_ONE_SHOT)
+	if int(_audio_tail_state["remaining"]) <= 0:
+		_audio_tail_try_queue_free()
 		return
-	get_tree().create_timer(_AUDIO_TAIL_MAX_WAIT_SEC).timeout.connect(func () -> void:
-		complete_free.call()
-	, CONNECT_ONE_SHOT)
+	# Child [Timer] is freed with this line — avoids orphan [SceneTreeTimer] callbacks after [queue_free].
+	var timer := Timer.new()
+	timer.name = "AudioTailMaxWait"
+	timer.wait_time = _AUDIO_TAIL_MAX_WAIT_SEC
+	timer.one_shot = true
+	add_child(timer)
+	timer.timeout.connect(_on_audio_tail_max_wait_timeout, CONNECT_ONE_SHOT)
+	timer.start()
+
+
+func _on_audio_tail_one_finished() -> void:
+	if _audio_tail_state.is_empty():
+		return
+	_audio_tail_state["remaining"] = int(_audio_tail_state["remaining"]) - 1
+	if int(_audio_tail_state["remaining"]) <= 0:
+		_audio_tail_try_queue_free()
+
+
+func _on_audio_tail_max_wait_timeout() -> void:
+	_audio_tail_try_queue_free()
+
+
+func _audio_tail_try_queue_free() -> void:
+	if _audio_tail_state.is_empty():
+		return
+	if bool(_audio_tail_state["finished"]):
+		return
+	_audio_tail_state["finished"] = true
+	queue_free()
 
 
 func _collect_active_audio_children_recursive(root: Node, out: Array[Node]) -> void:

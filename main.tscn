@@ -15,7 +15,7 @@
 [ext_resource type="Script" uid="uid://5ij8vquji131" path="res://devtools_time_scale.gd" id="14_devts"]
 [ext_resource type="PackedScene" uid="uid://gyj4nn4b8m53" path="res://menus/pause_menu.tscn" id="15_pause"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_vivmo"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_w48qg"]
 viewport_path = NodePath("DialogBox/SubViewport")
 
 [sub_resource type="SphereMesh" id="SphereMesh_w48qg"]
@@ -59,7 +59,7 @@ transform = Transform3D(0.60398686, -0.7890968, -0.11191989, 0.75018144, 0.61029
 transform = Transform3D(0.6661122, 0.74579, -0.00958037, -0.74571294, 0.666181, 0.01072523, 0.014381021, 0, 0.9998966, -25.69519, 6.37693, 0.6651459)
 
 [node name="Sprite3D" parent="Camera3D/Officer/DialogBox" index="0" unique_id=960094292]
-texture = SubResource("ViewportTexture_vivmo")
+texture = SubResource("ViewportTexture_w48qg")
 
 [node name="Limelight" parent="Camera3D/Officer" unique_id=1381778601 instance=ExtResource("13_w48qg")]
 transform = Transform3D(0.8459605, 0.31341872, 0.43141544, -1.0815077e-07, 0.80903715, -0.587757, -0.53324544, 0.49721932, 0.6844137, -6.453659, 41.57496, -19.620026)
