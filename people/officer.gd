@@ -255,7 +255,8 @@ func _finish_speech() -> void:
 
 
 func _play_speak_blip() -> void:
-	_play_sfx_grab_bag(_speak_sfx, _SPEAK_SFX_CLIPS)
+	$TalkSfx.stop()
+	$TalkSfx.play()
 
 
 func shot_at(target: Node3D) -> void:
@@ -273,7 +274,7 @@ func shot_at(target: Node3D) -> void:
 	_muzzle_timer.wait_time = _MUZZLE_FLASH_SEC
 	_muzzle_timer.start()
 	_play_smoking_one_shot()
-	_play_sfx_grab_bag(_shot_sfx, _SHOT_CLIPS)
+	$ShotSfx.play()
 	get_tree().call_group("spectator", "jump_on_shot")
 
 

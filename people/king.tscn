@@ -4,12 +4,20 @@
 [ext_resource type="Texture2D" uid="uid://cmf1iy48t4k0a" path="res://assets/crown.png" id="2_1s2pd"]
 [ext_resource type="Script" uid="uid://bubdrbb7kdwa1" path="res://people/king_parader.gd" id="3_king"]
 [ext_resource type="PackedScene" uid="uid://cdh3m4oqe52rw" path="res://tank.blend" id="4_88p23"]
+[ext_resource type="AudioStream" uid="uid://psmmwsjmc8mf" path="res://assets/sfx/king-cry.wav" id="4_thr45"]
 [ext_resource type="Material" uid="uid://el1uxh8couvl" path="res://people/tank_green.tres" id="5_ea3wh"]
 [ext_resource type="Script" uid="uid://cp582isa0sljq" path="res://tank.gd" id="6_tank"]
 [ext_resource type="AudioStream" uid="uid://66grnq18200" path="res://assets/sfx/tank loop.wav" id="7_tankloop"]
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_66txm"]
+random_pitch = 1.2599211
+streams_count = 1
+stream_0/stream = ExtResource("4_thr45")
+
 [node name="King" unique_id=1731856409 instance=ExtResource("1_vrcau")]
 script = ExtResource("3_king")
+_SHIRT_LOYAL_A = Color(0.63529414, 0.14901961, 0.4627451, 1)
+_SHIRT_LOYAL_B = Color(0.8117647, 0.24313726, 0.48235294, 1)
 
 [node name="PersonColor" parent="." index="0" unique_id=1700000001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 80.08696, 0)
@@ -46,6 +54,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 127.51102, 1.8482857)
 
 [node name="KilledSfx" parent="." index="7" unique_id=261830412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 122.88696, 0)
+stream = SubResource("AudioStreamRandomizer_66txm")
 
 [node name="TankLoopSfx" type="AudioStreamPlayer3D" parent="." index="8" unique_id=-1676663175]
 stream = ExtResource("7_tankloop")

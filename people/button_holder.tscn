@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dyow8hnrq8x6o" path="res://assets/body.png" id="8_q45u0"]
 [ext_resource type="SystemFont" uid="uid://c3v62pn45lnar" path="res://signs/sign_font.tres" id="9_455w6"]
 [ext_resource type="Texture2D" uid="uid://dryyo116sd08a" path="res://assets/droplet.png" id="10_i5pok"]
+[ext_resource type="AudioStream" uid="uid://cckw7y80xxq0c" path="res://people/oofs.tres" id="11_la80j"]
 
 [sub_resource type="Curve" id="Curve_2v3k6"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.114864886, 1), 0.0, 0.0, 0, 0, Vector2(0.39864868, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -120,6 +121,7 @@ draw_pass_1 = SubResource("PlaneMesh_5w3b2")
 
 [node name="KilledSfx" type="AudioStreamPlayer3D" parent="." unique_id=261830412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 42.8, 0)
+stream = ExtResource("11_la80j")
 unit_size = 1000.0
 max_distance = 40000.0
 bus = &"SFX"

@@ -28,6 +28,8 @@ var _hover_tween: Tween
 
 func _ready() -> void:
 	super._ready()
+	_KILLED_SFX_DELAY_SEC = 0.2
+	
 	remove_from_group("parader")
 	clear_parade_march_follow()
 	set_process(false)

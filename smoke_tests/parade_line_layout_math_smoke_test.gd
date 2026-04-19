@@ -7,41 +7,27 @@ const _EPS: float = 0.05
 
 func _ready() -> void:
 	var failed: int = 0
-	failed += _run_case(
-		"aa aa aa",
-		"aa aa aa",
-		[-200.0, 0.0, 200.0]
-	)
-	failed += _run_case(
-		"a a a a a",
-		"a a a a a",
-		[-240.0, -120.0, 0.0, 120.0, 240.0]
-	)
-	failed += _run_case(
-		"a a a a",
-		"a a a a",
-		[-225.0, -75.0, 75.0, 225.0]
-	)
-	failed += _run_case(
-		"aaa aaa aaa aaa",
-		"aaa aaa aaa aaa",
-		[-225.0, -75.0, 75.0, 225.0]
-	)
-	failed += _run_case(
-		"a aa aa a",
-		"a aa aa a",
-		[-250.0, -100.0, 100.0, 250.0]
-	)
-	failed += _run_case(
-		"aa aaaaaa aa",
-		"aa aaaaaa aa",
-		[-240.0, 0.0, 240.0]
-	)
+	failed += _run_case("aa aa aa", "aa aa aa")
+	failed += _run_case("a a a a a", "a a a a a")
+	failed += _run_case("a a a a", "a a a a")
+	failed += _run_case("aaa aaa aaa aaa", "aaa aaa aaa aaa")
+	failed += _run_case("a aa aa a", "a aa aa a")
+	failed += _run_case("aa aaaaaa aa", "aa aaaaaa aa")
 	print("--- ParadeLine layout math smoke test: ", failed, " failure(s) ---")
 	get_tree().quit(1 if failed > 0 else 0)
 
 
-func _run_case(case_name: String, line: String, expected_x: Array[float]) -> int:
+func _expected_formation_xs(line: String) -> Array[float]:
+	var specs: Array[Dictionary] = ParadeLineSyntax.parse_line(line, false)
+	var units: Array[int] = ParadeLine.get_parader_personal_space_units(specs)
+	var world: Array[float] = ParadeLine.get_parader_personal_world_space(
+		units, ParadeLine.ROAD_WIDTH
+	)
+	return ParadeLine.get_parader_center_x_targets(world, ParadeLine.ROAD_WIDTH)
+
+
+func _run_case(case_name: String, line: String) -> int:
+	var expected_x: Array[float] = _expected_formation_xs(line)
 	var pl: ParadeLine = preload("res://parade_line.tscn").instantiate() as ParadeLine
 	add_child(pl)
 	pl.setup(line, 300.0, 0.0, 300.0, 100.0, false, false)

@@ -48,7 +48,9 @@ func _ready() -> void:
 	]
 	
 	var lines_retenue: Array[String] = [
-		"(I AM,OBEY) {THE KING}."
+		"pppp pppp pppp pppp pppp pppp",
+		"(I AM,OBEY) {THE KING}.",
+		"pppp pppp pppp pppp pppp pppp",
 	]
 	var lines_king: Array[String] = [
 		"{THE KING}"
@@ -95,6 +97,7 @@ func _build_parade_schedule(
 	var third_parade: Parade = _build_parade(lines_hard)
 	var fourth_parade: Parade = _build_parade(lines_retenue)
 	fourth_parade.marching_speed = 150.0
+	fourth_parade.line_spawn_spacing = 200
 	var fifth_parade: Parade = _build_parade(lines_king)
 	fifth_parade.marching_speed = 175.0
 	fifth_parade.parader_scene_override = _KING_PARADER

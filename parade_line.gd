@@ -15,7 +15,7 @@ const _PIT_PREFABS: Array[PackedScene] = [
 ]
 
 ## Parade road width in line-local X; all horizontal spacing is derived from this.
-const ROAD_WIDTH: float = 550.0
+const ROAD_WIDTH: float = 450.0
 
 
 static func get_parader_personal_space_units(specs: Array[Dictionary]) -> Array[int]:
@@ -145,10 +145,12 @@ func _spawn_paraders() -> void:
 	var flipper_idx: int = 0
 	var flip_z_lo: float = minf(lerpf(start_z, check_z, 0.5), lerpf(start_z, check_z, 0.75))
 	var flip_z_hi: float = maxf(lerpf(start_z, check_z, 0.5), lerpf(start_z, check_z, 0.75))
+	var chosen_pit_prefab: PackedScene = _PIT_PREFABS.pick_random()
 	for idx: int in range(count):
 		var spec: Dictionary = _specs[idx]
 		var back: String = str(spec.get("back", ""))
-		var is_pit: bool = (back == "pp")
+		var front: String = str(spec.get("front", ""))
+		var is_pit: bool = front.replace("p", "") == "" and front.length() > 0
 		var flip: bool = not back.is_empty() and not is_pit
 		var digit: String = ""
 		if count <= 10:
@@ -159,7 +161,7 @@ func _spawn_paraders() -> void:
 				flipper_idx += 1
 		var parader_prefab: PackedScene = parader_scene
 		if is_pit:
-			parader_prefab = _PIT_PREFABS.pick_random()
+			parader_prefab = chosen_pit_prefab
 		var p: Node3D = parader_prefab.instantiate() as Node3D
 		add_child(p)
 		p.position = Vector3(0.0, 0.0, start_z)
@@ -193,6 +195,40 @@ func _attach_parader_flee_scripts() -> void:
 		flee.call("setup", self, par_i as Parader, par_w as Parader)
 
 
+## Scales each parader's [code]SignScale[/code] so the sign's horizontal extent matches [param personal_world_space] for that index.
+## Call only after sign text/layout is set ([method Parader.configure_parader] / [method Sign.set_text]).
+func scale_signs(personal_world_space: Array[float] = []) -> void:
+	var t: int = _parader_nodes.size()
+	if t == 0:
+		return
+	var world: Array[float] = personal_world_space
+	if world.is_empty():
+		var units: Array[int] = get_parader_personal_space_units(_specs)
+		world = get_parader_personal_world_space(units, ROAD_WIDTH)
+	if world.size() != t:
+		return
+	for i: int in range(t):
+		var pr: Parader = _parader_nodes[i] as Parader
+		if pr != null and pr.inert_pit:
+			continue
+		var sign_scale: Node3D = _parader_nodes[i].get_node_or_null("SignScale") as Node3D
+		var sign_node: Node3D = _parader_nodes[i].get_node_or_null("SignScale/Sign") as Node3D
+		if sign_scale == null or sign_node == null:
+			continue
+		var board: Sign = sign_node as Sign
+		if board == null:
+			continue
+		var target_w: float = world[i]
+		var layout_w: float = board.get_layout_width()
+		if layout_w <= 0.001:
+			continue
+		var cur_w: float = layout_w * absf(sign_scale.scale.x) * absf(sign_node.scale.x)
+		if cur_w <= 0.001:
+			continue
+		var factor: float = target_w / cur_w
+		sign_scale.scale *= Vector3(factor, factor, factor)
+
+
 func _layout_paraders_x() -> void:
 	var t: int = _parader_nodes.size()
 	if t == 0:
@@ -215,6 +251,7 @@ func _build_paraders() -> void:
 		return
 
 	_spawn_paraders()
+	scale_signs()
 	_attach_parader_flee_scripts()
 	_layout_paraders_x()
 
@@ -322,7 +359,7 @@ func get_focus_bounds_global() -> Variant:
 	}
 
 
-## Re-centers survivors on X using [method _layout_paraders_x].
+## Re-centers survivors on X using [method _layout_paraders_x] only (sign scale is unchanged).
 func _refit_line_formation_after_casualty() -> void:
 	_prune_freed_paraders()
 	if _parader_nodes.is_empty():

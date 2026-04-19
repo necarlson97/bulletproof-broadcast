@@ -9,8 +9,8 @@
 
 [node name="Pit" unique_id=1731856409 instance=ExtResource("1_fvb4o")]
 script = ExtResource("2_61gw0")
-_SHIRT_LOYAL_A = Color(0.40784314, 0.39607844, 0.33333334, 1)
-_SHIRT_LOYAL_B = Color(0.34117648, 0.32156864, 0.2627451, 1)
+_SHIRT_LOYAL_A = Color(0.76862746, 0.654902, 0.29803923, 1)
+_SHIRT_LOYAL_B = Color(0.87058824, 0.59607846, 0.36078432, 1)
 start_text = ""
 inert_pit = true
 pit_formation_half_width = 24.0
@@ -23,13 +23,13 @@ visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.337379, 0)
 
 [node name="Body" parent="." index="3" unique_id=1678367108]
-modulate = Color(0.41568628, 0.40392157, 0.34117648, 1)
+modulate = Color(0.76862746, 0.654902, 0.29803923, 1)
 
 [node name="Label3D" type="Label3D" parent="Body" index="0" unique_id=1425867495]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.65851, 0.3258009)
 pixel_size = 0.1
 alpha_cut = 1
-modulate = Color(0.65882355, 0.61960787, 0.5294118, 1)
+modulate = Color(0.9529412, 0.87058824, 0.627451, 1)
 text = "1"
 font = ExtResource("4_p4yty")
 font_size = 300
@@ -41,10 +41,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.033691406, 0.6237912)
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -10.676765, 20.474712, 2.4242344)
 
 [node name="HandR" parent="." index="5" unique_id=1403083975]
-transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 33.796265, 1.2832556)
+transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, 14.7, 33.796265, 2.7370367)
 
 [node name="KilledSfx" parent="." index="7" unique_id=261830412]
 stream = ExtResource("5_61gw0")
 
 [node name="Trumpet" parent="." index="8" unique_id=1932486709 instance=ExtResource("5_fvb4o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.027458, 33.917576, -1.9346657)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.027458, 33.917576, -0.48088455)

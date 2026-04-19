@@ -10,7 +10,7 @@ var _flip_next_index: int = 0
 
 func _ready() -> void:
 	if not parade_line_string.is_empty():
-		setup(parade_line_string, marching_speed, -300, end_z, check_z)
+		setup(parade_line_string, marching_speed, -300, end_z, check_z, false, false)
 
 
 func _build_paraders() -> void:
@@ -22,6 +22,9 @@ func _build_paraders() -> void:
 		pr.flip_at_z = INF
 		pr.clear_parade_march_follow()
 		pr._comfort_radius = 10
+		# March follow is off; snap to slot so line spacing is visible without the march loop.
+		p.position.x = pr.get_formation_target_x()
+		p.position.z = pr.get_formation_target_z()
 
 
 func begin_march(_delay_sec: float) -> void:
