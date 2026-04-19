@@ -32,7 +32,11 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	var e: float = _compute_crowd_excitement_from_disloyal()
+	var e: float = (
+		1.0
+		if GameStats.king_killed
+		else _compute_crowd_excitement_from_disloyal()
+	)
 	for n: Node in get_tree().get_nodes_in_group("spectator"):
 		if not is_instance_valid(n):
 			continue
