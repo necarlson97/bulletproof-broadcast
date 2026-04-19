@@ -10,7 +10,13 @@ class_name ParadeLineSyntax
 const _WS := " \t\n\r"
 
 
-static func parse_line(s: String) -> Array[Dictionary]:
+static func _pit_spec() -> Dictionary:
+	return {"loyal": true, "front": "pppp", "back": "pp"}
+
+
+## When [param can_pit] is true and the parsed line has at most six specs, bookends the line with
+## pit entries ([code]front[/code] and [code]back[/code] [code]"pp"[/code] → two personal-space units each).
+static func parse_line(s: String, can_pit: bool = true) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var pos: int = 0
 	var n: int = s.length()
@@ -60,6 +66,14 @@ static func parse_line(s: String) -> Array[Dictionary]:
 				last["front"] = str(last["front"]) + word
 			else:
 				result.append({"loyal": true, "front": word, "back": ""})
+	if can_pit and result.size() <= 6:
+		var pit_head: Dictionary = _pit_spec()
+		var pit_tail: Dictionary = _pit_spec()
+		var wrapped: Array[Dictionary] = []
+		wrapped.append(pit_head)
+		wrapped.append_array(result)
+		wrapped.append(pit_tail)
+		return wrapped
 	return result
 
 
@@ -207,7 +221,7 @@ static func _apply_steps(specs: Array[Dictionary], order: Array[int], steps: int
 
 ## steps: number of transitions applied in canonical order (see transition_indices). -1 = all.
 static func decompose(s: String, steps: int = 0) -> String:
-	var specs: Array[Dictionary] = parse_line(s)
+	var specs: Array[Dictionary] = parse_line(s, false)
 	if specs.is_empty():
 		return ""
 	var order: Array[int] = transition_indices(specs)

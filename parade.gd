@@ -16,17 +16,10 @@ class_name Parade
 @export var approach_speed: float = 900.0
 ## World-Z gap between consecutive lines when each starts; stagger follows the same fast-then-slow timing as each line's march.
 @export var line_spawn_spacing: float = 1000.0
-## Horizontal budget for each parade line; spacing_per_char = line_width / sum of spec char counts.
-@export var line_width: float = 50.0
-## Scales sign board target width (see ParadeLine.sign_target_width_multiplier).
-@export var sign_target_width_multiplier: float = 10.0
 ## When set, spawned [ParadeLine]s use this instead of each line's default [member ParadeLine.parader_scene].
 @export var parader_scene_override: PackedScene
 ## Overrides parsed loyalty: every parader is disloyal (e.g. protest wave).
 @export var force_all_paraders_disloyal: bool = false
-## Passed to each spawned [ParadeLine] (band bookends).
-@export var pit_paraders_enabled: bool = true
-@export var pit_bookend_max_sign_paraders: int = 6
 
 var _march_delays: Array[float] = []
 ## Holds prior segments' [ParadeLine]s so they can finish marching after [method load_from_template].
@@ -99,16 +92,12 @@ func _spawn_lines() -> void:
 			pl.parader_scene = parader_scene_override
 		pl.fence_line_z = fence_line_z
 		pl.approach_speed = approach_speed
-		pl.pit_paraders_enabled = pit_paraders_enabled
-		pl.pit_bookend_max_sign_paraders = pit_bookend_max_sign_paraders
 		pl.setup(
 			line_strings[i],
 			marching_speed,
 			start_z,
 			end_z,
-			line_width,
 			check_z,
-			sign_target_width_multiplier,
 			force_all_paraders_disloyal
 		)
 		add_child(pl)
@@ -129,11 +118,7 @@ func apply_segment_config_from(source: Parade) -> void:
 	end_z = source.end_z
 	check_z = source.check_z
 	line_spawn_spacing = source.line_spawn_spacing
-	line_width = source.line_width
-	sign_target_width_multiplier = source.sign_target_width_multiplier
 	force_all_paraders_disloyal = source.force_all_paraders_disloyal
-	pit_paraders_enabled = source.pit_paraders_enabled
-	pit_bookend_max_sign_paraders = source.pit_bookend_max_sign_paraders
 	parader_scene_override = source.parader_scene_override
 	if source.parade_line_scene != null:
 		parade_line_scene = source.parade_line_scene

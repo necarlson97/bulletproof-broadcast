@@ -7,7 +7,7 @@ const _LINE := "(a,A)(b,B)(c,C)(d,D)(e,E)(f,F)(g,G)(h,H)(i,I)(j,J)"
 
 
 func _ready() -> void:
-	_line.setup(_LINE, 300.0, 0.0, 300.0, 800.0, 100.0, 2.2)
+	_line.setup(_LINE, 300.0, 0.0, 300.0, 100.0)
 
 
 func _unhandled_input(event: InputEvent) -> void:

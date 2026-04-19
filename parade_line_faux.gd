@@ -10,15 +10,7 @@ var _flip_next_index: int = 0
 
 func _ready() -> void:
 	if not parade_line_string.is_empty():
-		setup(
-			parade_line_string,
-			marching_speed,
-			-300,
-			end_z,
-			60.0,
-			check_z,
-			8
-		)
+		setup(parade_line_string, marching_speed, -300, end_z, check_z)
 
 
 func _build_paraders() -> void:
@@ -30,11 +22,6 @@ func _build_paraders() -> void:
 		pr.flip_at_z = INF
 		pr.clear_parade_march_follow()
 		pr._comfort_radius = 10
-	
-	var spacing: float = _spacing_per_char()
-	_scale_signs(spacing)
-	_layout_paraders_x(spacing)
-	_fit_formation_to_road_width()
 
 
 func begin_march(_delay_sec: float) -> void:
