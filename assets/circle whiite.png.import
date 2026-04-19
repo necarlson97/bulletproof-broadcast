@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dvycpleeo7mts"
-path.s3tc="res://.godot/imported/bullet hole.png-888af862c1ce131de9e38a0bddfcc8c8.s3tc.ctex"
+uid="uid://dprohc30fhgx8"
+path.s3tc="res://.godot/imported/circle whiite.png-09259a7aab33226d499d63dde09ffcdc.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/bullet hole.png"
-dest_files=["res://.godot/imported/bullet hole.png-888af862c1ce131de9e38a0bddfcc8c8.s3tc.ctex"]
+source_file="res://assets/circle whiite.png"
+dest_files=["res://.godot/imported/circle whiite.png-09259a7aab33226d499d63dde09ffcdc.s3tc.ctex"]
 
 [params]
 

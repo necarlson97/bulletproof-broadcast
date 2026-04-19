@@ -19,13 +19,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.337379, 0)
 modulate = Color(0.30588236, 0.34509805, 0.21176471, 1)
 
 [node name="Label3D" type="Label3D" parent="Body" index="0" unique_id=1425867495]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.65851, 1.5389643)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.65851, 0.3258009)
 pixel_size = 0.1
 alpha_cut = 1
 modulate = Color(0.662474, 0.725739, 0.4792577, 1)
 text = "1"
 font = ExtResource("4_74hdk")
 font_size = 300
+
+[node name="BulletHole" parent="Body" index="1" unique_id=1858209419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.033691406, 0.6237912)
 
 [node name="HandL" parent="." index="4" unique_id=1368089338]
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 46.74277, 1.4910412)

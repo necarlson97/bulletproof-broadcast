@@ -24,6 +24,8 @@ func set_sweating_active(active: bool) -> void:
 
 
 func kill() -> void:
+	_show_bullet_hole_on_kill()
+	BloodDroplets.spawn_kill_spray(_get_kill_spray_origin())
 	var ap: AudioStreamPlayer3D = _killed_sfx
 	var tree := get_tree()
 	if tree != null and ap != null:
@@ -40,6 +42,25 @@ func kill() -> void:
 	if pl != null and pl.has_method("unregister_parader_from_march"):
 		pl.call("unregister_parader_from_march", self)
 	Ragdoll.create_ragdoll(self)
+
+
+func _show_bullet_hole_on_kill() -> void:
+	var bh: Sprite3D = _get_bullet_hole_for_kill()
+	if bh == null:
+		return
+	bh.visible = true
+	bh.rotation_degrees.z = randf_range(0.0, 360.0)
+
+
+func _get_bullet_hole_for_kill() -> Sprite3D:
+	return get_node_or_null("Body/BulletHole") as Sprite3D
+
+
+func _get_kill_spray_origin() -> Vector3:
+	var bh: Sprite3D = _get_bullet_hole_for_kill()
+	if bh != null:
+		return bh.global_position
+	return global_position
 
 
 static func _play_sfx_grab_bag(player: AudioStreamPlayer3D, clips: Array[AudioStream]) -> void:

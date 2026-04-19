@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cn3l7ceje88vs" path="res://people/person.gd" id="5_person"]
 [ext_resource type="Script" uid="uid://240gnk1fksh6" path="res://people/person_color.gd" id="6_personcolor"]
 [ext_resource type="Texture2D" uid="uid://dryyo116sd08a" path="res://assets/droplet.png" id="7_2v3k6"]
+[ext_resource type="Texture2D" uid="uid://dvycpleeo7mts" path="res://assets/bullet hole.png" id="7_353sk"]
 
 [sub_resource type="Curve" id="Curve_2v3k6"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.114864886, 1), 0.0, 0.0, 0, 0, Vector2(0.39864868, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -57,6 +58,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.2, 0)
 pixel_size = 0.1
 alpha_cut = 1
 texture = ExtResource("3_aoiax")
+
+[node name="BulletHole" type="Sprite3D" parent="Body" unique_id=1858209419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.033691406, 0.1410799)
+visible = false
+pixel_size = 0.1
+alpha_cut = 1
+texture = ExtResource("7_353sk")
 
 [node name="HandL" type="Sprite3D" parent="." unique_id=1368089338]
 transform = Transform3D(0.525, 0, 0, 0, 0.525, 0, 0, 0, 0.525, -14.4, 36.2, 1.4910412)

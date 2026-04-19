@@ -23,6 +23,7 @@ buses/default_bus_layout="uid://b2x0rryjqjifg"
 
 GameStats="*res://game_stats.gd"
 MusicPlayer="*res://music_player.tscn"
+BloodDroplets="*res://blood_droplets/blood_droplets.gd"
 
 [physics]
 

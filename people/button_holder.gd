@@ -67,6 +67,10 @@ func get_head_node() -> Node3D:
 	return $Face as Node3D
 
 
+func _get_bullet_hole_for_kill() -> Sprite3D:
+	return get_node_or_null("Face/BulletHole") as Sprite3D
+
+
 func _refresh_hit_shape() -> void:
 	var box: BoxShape3D = _collision.shape as BoxShape3D
 	if box == null:

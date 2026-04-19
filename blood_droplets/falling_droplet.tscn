@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dsnauedu15vrs"]
+
+[ext_resource type="Script" uid="uid://bjeapbgu5d18t" path="res://blood_droplets/falling_droplet.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dprohc30fhgx8" path="res://assets/circle whiite.png" id="2_fyqv7"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1"]
+radius = 3.2
+
+[node name="FallingDroplet" type="CharacterBody3D" unique_id=235883686]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1262678485]
+shape = SubResource("SphereShape3D_1")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=2127932415]
+pixel_size = 0.05
+alpha_cut = 1
+texture = ExtResource("2_fyqv7")
