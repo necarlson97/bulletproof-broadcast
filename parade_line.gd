@@ -8,8 +8,16 @@ signal line_march_finished
 
 const _DIGITS: Array[String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 const _PARADER_FLEE_SCRIPT: GDScript = preload("res://people/parader_flee.gd")
+const _PIT_HOLDER_SCENES: Array[PackedScene] = [
+	preload("res://people/flag_holder.tscn"),
+	preload("res://people/baton_holder.tscn"),
+	preload("res://people/trumpet_holder.tscn"),
+]
 
 @export var parader_scene: PackedScene = preload("res://people/parader.tscn")
+## Bookend band paraders (flag / baton / trumpet); need horizontal budget — see [member min_line_width_for_pit_paraders].
+@export var pit_paraders_enabled: bool = true
+@export var min_line_width_for_pit_paraders: float = 450.0
 
 var line_string: String = ""
 ## Stable order among siblings; set by [Parade] when spawning (for [FocusedLine]).
@@ -37,6 +45,8 @@ var _parader_x_targets: Array[float] = []
 
 var _parader_nodes: Array[Node3D] = []
 var _specs: Array[Dictionary] = []
+var _pit_start: Node3D = null
+var _pit_end: Node3D = null
 var _march_tween: Tween
 var _prev_march_z: float = 0.0
 var _check_logged: bool = false
@@ -134,12 +144,72 @@ func _spawn_paraders() -> void:
 		p.call("configure_parader", spec["front"], back_variant, spec["loyal"], digit, flip_at_z)
 
 
+func _sign_parader_offset() -> int:
+	return 1 if _pit_start != null else 0
+
+
+func _take_unused_digit(used: Dictionary) -> String:
+	for d: String in _DIGITS:
+		if not used.has(d):
+			used[d] = true
+			return d
+	return "0"
+
+
+func _maybe_spawn_pits() -> void:
+	_pit_start = null
+	_pit_end = null
+	if not pit_paraders_enabled:
+		return
+	if _specs.is_empty():
+		return
+	if line_width < min_line_width_for_pit_paraders:
+		return
+	var used: Dictionary = {}
+	for i: int in range(_specs.size()):
+		var lbl: Label3D = _parader_nodes[i].get_node_or_null("Body/Label3D") as Label3D
+		if lbl != null and not lbl.text.is_empty():
+			used[lbl.text] = true
+	var d0: String = _take_unused_digit(used)
+	var d1: String = _take_unused_digit(used)
+	var scene_a: PackedScene = _PIT_HOLDER_SCENES[randi() % _PIT_HOLDER_SCENES.size()]
+	var scene_b: PackedScene = _PIT_HOLDER_SCENES[randi() % _PIT_HOLDER_SCENES.size()]
+	var pit_a: Node3D = scene_a.instantiate() as Node3D
+	var pit_b: Node3D = scene_b.instantiate() as Node3D
+	add_child(pit_a)
+	move_child(pit_a, 0)
+	add_child(pit_b)
+	pit_a.position = Vector3(0.0, 0.0, start_z)
+	pit_b.position = Vector3(0.0, 0.0, start_z)
+	_parader_nodes.insert(0, pit_a)
+	_parader_nodes.append(pit_b)
+	_pit_start = pit_a
+	_pit_end = pit_b
+	var pr_a: Parader = pit_a as Parader
+	var pr_b: Parader = pit_b as Parader
+	if pr_a != null:
+		pr_a.configure_parader("", null, true, d0, INF)
+	if pr_b != null:
+		pr_b.configure_parader("", null, true, d1, INF)
+
+
+func _char_count_for_parader_index(par_idx: int) -> int:
+	var t: int = _parader_nodes.size()
+	if _pit_start != null and par_idx == 0:
+		return 0
+	if _pit_end != null and par_idx == t - 1:
+		return 0
+	var spec_i: int = par_idx - (1 if _pit_start != null else 0)
+	return _spec_char_count(_specs[spec_i])
+
+
 func _scale_signs(spacing_per_char: float) -> void:
 	var count: int = _specs.size()
+	var off: int = _sign_parader_offset()
 	for idx: int in range(count):
 		var spec_sc: Dictionary = _specs[idx]
 		var cc: int = _spec_char_count(spec_sc)
-		var par: Node3D = _parader_nodes[idx]
+		var par: Node3D = _parader_nodes[off + idx]
 		var sign_scale: Node3D = par.get_node("SignScale") as Node3D
 		var sign_node: Sign = par.get_node("SignScale/Sign") as Sign
 		var base_w: float = sign_node.get_layout_width() * absf(sign_node.scale.x)
@@ -151,6 +221,7 @@ func _scale_signs(spacing_per_char: float) -> void:
 
 func _attach_parader_flee_scripts() -> void:
 	var count: int = _specs.size()
+	var off: int = _sign_parader_offset()
 	for idx: int in range(count):
 		var spec_f: Dictionary = _specs[idx]
 		if not spec_f.get("fleeing", false):
@@ -160,24 +231,29 @@ func _attach_parader_flee_scripts() -> void:
 			continue
 		var flee: Node3D = _PARADER_FLEE_SCRIPT.new() as Node3D
 		flee.name = "ParaderFlee"
-		_parader_nodes[idx].add_child(flee)
-		flee.call("setup", self, _parader_nodes[idx] as Parader, _parader_nodes[watched_idx] as Parader)
+		var par_i: Node3D = _parader_nodes[off + idx]
+		var par_w: Node3D = _parader_nodes[off + watched_idx]
+		par_i.add_child(flee)
+		flee.call("setup", self, par_i as Parader, par_w as Parader)
 
 
 func _layout_paraders_x(spacing_per_char: float) -> void:
-	var count: int = _specs.size()
+	var t: int = _parader_nodes.size()
 	var half_widths: Array[float] = []
-	var char_counts: Array[int] = []
-	for idx: int in range(count):
+	for idx: int in range(t):
 		var p: Node3D = _parader_nodes[idx]
 		half_widths.append(p.call("get_sign_half_width") as float)
-		char_counts.append(_spec_char_count(_specs[idx]))
 
 	_parader_x_targets.clear()
-	for i: int in range(count - 1):
-		_parader_x_targets.append(half_widths[i] + half_widths[i + 1])
+	var gaps: Array[float] = []
+	for k: int in range(t - 1):
+		var base: float = half_widths[k] + half_widths[k + 1]
+		_parader_x_targets.append(base)
+		var c0: int = _char_count_for_parader_index(k)
+		var c1: int = _char_count_for_parader_index(k + 1)
+		gaps.append(base + spacing_per_char * float(c0 + c1))
 
-	if count == 1:
+	if t == 1:
 		var pr_one: Parader = _parader_nodes[0] as Parader
 		if pr_one != null:
 			pr_one.set_parade_target(0.0, _line_path_z)
@@ -185,18 +261,12 @@ func _layout_paraders_x(spacing_per_char: float) -> void:
 			_parader_nodes[0].position.x = 0.0
 		return
 
-	var gaps: Array[float] = []
-	for i: int in range(count - 1):
-		gaps.append(
-			_parader_x_targets[i] + spacing_per_char * float(char_counts[i] + char_counts[i + 1])
-		)
-
 	var sum_gaps: float = 0.0
 	for g: float in gaps:
 		sum_gaps += g
 
 	var x: float = -sum_gaps * 0.5
-	for i: int in range(count):
+	for i: int in range(t):
 		var pr_i: Parader = _parader_nodes[i] as Parader
 		if pr_i != null:
 			pr_i.set_parade_target(x, _line_path_z)
@@ -211,6 +281,7 @@ func _build_paraders() -> void:
 		return
 
 	_spawn_paraders()
+	_maybe_spawn_pits()
 	var spacing: float = _spacing_per_char()
 	_scale_signs(spacing)
 	_attach_parader_flee_scripts()
@@ -254,6 +325,12 @@ func _no_disloyal_alive() -> bool:
 		if pr != null and not pr.loyal:
 			return false
 	return true
+
+
+## True when no disloyal parader remains in this line (killed paraders are unregistered).
+func all_disloyal_eliminated() -> bool:
+	_prune_freed_paraders()
+	return _no_disloyal_alive()
 
 
 ## Live paraders in line order, for [Limelighter] (empty if none).
@@ -328,11 +405,18 @@ func unregister_parader_from_march(parader: Node3D) -> void:
 	if pr != null:
 		pr.clear_parade_march_follow()
 	var at: int = _parader_nodes.find(parader)
-	if at >= 0:
-		_parader_nodes.remove_at(at)
-		if at < _specs.size():
-			_specs.remove_at(at)
-		_refit_line_formation_after_casualty()
+	if at < 0:
+		return
+	_parader_nodes.remove_at(at)
+	if parader == _pit_start:
+		_pit_start = null
+	elif parader == _pit_end:
+		_pit_end = null
+	else:
+		var sign_idx: int = at - (1 if _pit_start != null else 0)
+		if sign_idx >= 0 and sign_idx < _specs.size():
+			_specs.remove_at(sign_idx)
+	_refit_line_formation_after_casualty()
 
 
 func _nearest_disloyal_index(flee_idx: int) -> int:

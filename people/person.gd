@@ -15,6 +15,7 @@ const _KILLED_CLIPS: Array[AudioStream] = [
 
 @onready var _eyes = $Face/Eyes
 @onready var _killed_sfx: AudioStreamPlayer3D = $KilledSfx
+@onready var _blood_droplet_emitter: Node3D = $Body/BloodDropletEmitter
 
 
 func set_sweating_active(active: bool) -> void:
@@ -25,7 +26,8 @@ func set_sweating_active(active: bool) -> void:
 
 func kill() -> void:
 	_show_bullet_hole_on_kill()
-	BloodDroplets.spawn_kill_spray(_get_kill_spray_origin())
+	if _blood_droplet_emitter != null and _blood_droplet_emitter.visible:
+		BloodDroplets.spawn_kill_spray(_get_kill_spray_origin())
 	var ap: AudioStreamPlayer3D = _killed_sfx
 	var tree := get_tree()
 	if tree != null and ap != null:
@@ -57,6 +59,8 @@ func _get_bullet_hole_for_kill() -> Sprite3D:
 
 
 func _get_kill_spray_origin() -> Vector3:
+	if _blood_droplet_emitter != null and is_instance_valid(_blood_droplet_emitter):
+		return _blood_droplet_emitter.global_position
 	var bh: Sprite3D = _get_bullet_hole_for_kill()
 	if bh != null:
 		return bh.global_position

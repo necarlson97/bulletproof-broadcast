@@ -32,6 +32,10 @@ var _comfort_corr_elapsed: float = 0.0
 var _comfort_corr_start_pos: Vector3 = Vector3.ZERO
 
 @export var start_text: String = ""
+## Band / pit: loyal marcher with a digit, no sign gameplay ([ParadeLine] bookends).
+@export var inert_pit: bool = false
+## Used for line layout when [member inert_pit] (no sign width).
+@export var pit_formation_half_width: float = 24.0
 
 @onready var _body: Sprite3D = $Body
 var _body_bounce_base_y: float = 0.0
@@ -61,21 +65,23 @@ func _apply_shirt_colors() -> void:
 
 func configure_parader(front: String, back: Variant, loyal_flag: bool, digit: String, p_flip_at_z: float = INF) -> void:
 	loyal = loyal_flag
-	flip_at_z = p_flip_at_z
+	flip_at_z = INF if inert_pit else p_flip_at_z
 	_march_flip_done = false
 	_prev_z_for_flip = NAN
 	_comfort_radius = randf_range(_COMFORT_DIST_MIN, _COMFORT_DIST_MAX)
 	set_process(true)
 	_apply_shirt_colors()
+	var digit_label: Label3D = $Body/Label3D as Label3D
+	digit_label.text = digit
+	digit_label.visible = not digit.is_empty()
+	if inert_pit:
+		return
 	# Parent may call before our _ready(); @onready is not set yet.
 	var flippable: SignFlippable = $SignScale/Sign as SignFlippable
 	if back == null or str(back).is_empty():
 		flippable.set_contents(front, null)
 	else:
 		flippable.set_contents(front, back)
-	var digit_label: Label3D = $Body/Label3D as Label3D
-	digit_label.text = digit
-	digit_label.visible = not digit.is_empty()
 
 
 ## Full formation target (column X and line Z). Does not move the node — [method _process] uses comfort + tween.
@@ -168,6 +174,8 @@ func _crossed_march_z(prev_z: float, cur_z: float, threshold: float) -> bool:
 
 
 func get_sign_half_width() -> float:
+	if inert_pit:
+		return pit_formation_half_width
 	var scale_n: Node3D = $SignScale as Node3D
 	var sn: Node3D = $SignScale/Sign as Node3D
 	var board: Sign = sn as Sign

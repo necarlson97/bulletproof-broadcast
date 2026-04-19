@@ -24,6 +24,9 @@ class_name Parade
 @export var parader_scene_override: PackedScene
 ## Overrides parsed loyalty: every parader is disloyal (e.g. protest wave).
 @export var force_all_paraders_disloyal: bool = false
+## Passed to each spawned [ParadeLine] (band bookends).
+@export var pit_paraders_enabled: bool = true
+@export var min_line_width_for_pit_paraders: float = 450.0
 
 var _march_delays: Array[float] = []
 ## Holds prior segments' [ParadeLine]s so they can finish marching after [method load_from_template].
@@ -96,6 +99,8 @@ func _spawn_lines() -> void:
 			pl.parader_scene = parader_scene_override
 		pl.fence_line_z = fence_line_z
 		pl.approach_speed = approach_speed
+		pl.pit_paraders_enabled = pit_paraders_enabled
+		pl.min_line_width_for_pit_paraders = min_line_width_for_pit_paraders
 		pl.setup(
 			line_strings[i],
 			marching_speed,
@@ -127,6 +132,8 @@ func apply_segment_config_from(source: Parade) -> void:
 	line_width = source.line_width
 	sign_target_width_multiplier = source.sign_target_width_multiplier
 	force_all_paraders_disloyal = source.force_all_paraders_disloyal
+	pit_paraders_enabled = source.pit_paraders_enabled
+	min_line_width_for_pit_paraders = source.min_line_width_for_pit_paraders
 	parader_scene_override = source.parader_scene_override
 	if source.parade_line_scene != null:
 		parade_line_scene = source.parade_line_scene

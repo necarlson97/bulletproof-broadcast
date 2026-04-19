@@ -119,6 +119,9 @@ func _run_tutorial() -> void:
 	while not _tutorial_shot_done:
 		if not is_inside_tree():
 			return
+		if is_instance_valid(_faux) and _faux.all_disloyal_eliminated():
+			_tutorial_shot_done = true
+			break
 		await get_tree().process_frame
 	if not is_inside_tree():
 		return
@@ -201,11 +204,8 @@ func _get_waypoint(child_name: String) -> Node3D:
 func notify_parader_shot(was_loyal: bool, _target: Parader = null) -> void:
 	if not _waiting_for_tutorial_shot:
 		return
-	if was_loyal:
-		if is_instance_valid(_officer):
-			_officer.speak(_normalize_speech(_WRONG_SHOT_HINT))
-		return
-	_tutorial_shot_done = true
+	if was_loyal and is_instance_valid(_officer):
+		_officer.speak(_normalize_speech(_WRONG_SHOT_HINT))
 
 
 func _setup_focused_line_for_shooting() -> void:

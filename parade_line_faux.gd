@@ -50,6 +50,10 @@ func flip_next() -> void:
 	if i >= n:
 		i = 0
 	while i < n:
+		var pr: Parader = _parader_nodes[i] as Parader
+		if pr != null and pr.inert_pit:
+			i += 1
+			continue
 		var fl: SignFlippable = _parader_nodes[i].get_node_or_null("SignScale/Sign") as SignFlippable
 		if fl != null and fl.flip():
 			_flip_next_index = i + 1
